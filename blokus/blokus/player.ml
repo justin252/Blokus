@@ -1,12 +1,11 @@
 type piece={
   color: string;
-  orientation: string; (* unsure about how we would implement this *)
-  shape: bool array;
+  shape: bool array array;
 }
 
 type player={
-  remaining_pieces: piece array; (* do we wanna do list or array? *)
-  total_points: int; (* do we want a function that calculates the score too? *)
+  inventory: piece array; 
+  total_points: int; 
   color: string;
 }
 

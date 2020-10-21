@@ -19,12 +19,12 @@ val game_state : t -> state
 
 (** [placed_piece p] removes the piece that [p] represents.
     Requires: [p] is a valid player piece representation. *)
-val placed_piece : piece -> game -> game
+val whose_turns : piece -> game -> game
 
 (** [valid_moves v] is set of valid moves for a piece after a piece has 
     been chosen by the player for each orientation possible
     Requires: [p] is a valid player piece representation. *)
-val valid_moves : piece -> piece array
+val change_turns : piece -> piece array
 
 (** [is_eliminated player] sees all the valid moves remaining for the 
     remaining pieces. 
