@@ -1,7 +1,5 @@
 open OUnit2
-open Adventure
-open Command
-open State
+open Player
 
 (********************************************************************
    Here are some helper functions for your testing of set-like lists. 
@@ -60,26 +58,65 @@ let cmp_demo =
    use them, too.  Any .json files in this directory will be included
    by [make zip] as part of your CMS submission. *)
 
-let adventure_tests =
+let corners_test 
+    (name : string) 
+    (input: bool array array) 
+    (expected_output : (int * int) list) : test = 
+  name >:: (fun _ -> 
+      assert_equal expected_output (Player.get_all_corners input))
+
+let is_touching_simple_test 
+    (name : string) 
+    (input: int*int) 
+    (gameboard: game)
+    (expected_output : bool) : test = 
+  name >:: (fun _ -> 
+      assert_equal expected_output (Player.is_touching_simple input gameboard))
+
+
+
+let piecearray = [|[|false;false;false;false;false|];
+                   [|false;false;false;false;false|];
+                   [|false;false;true;false;false|];
+                   [|false;false;true;false;false|];
+                   [|false;true;true;true;false|]|]
+
+let fourcorner = [|[|true;false;false;false;true|];
+                   [|false;false;false;false;false|];
+                   [|false;false;false;false;false|];
+                   [|false;false;false;false;false|];
+                   [|true;false;false;false;true|]|]
+
+let initgameboard = [|[|'W';'W';'W';'W';'W'|];
+                      [|'W';'W';'W';'W';'W'|];
+                      [|'W';'W';'R';'W';'W'|];
+                      [|'W';'R';'R';'W';'W'|];
+                      [|'W';'W';'W';'W';'W'|]|]
+
+
+let unitbool = Array.make_matrix 5 5 false 
+
+
+let testboard = {gameboard = initgameboard}
+
+let player_tests =
   [
     (* TODO: add tests for the Adventure module here *)
-  ]
+    corners_test "idk" unitbool [];
+    corners_test "checking" piecearray [(4,3);(4,1);(2,2)];
+    corners_test "another one" fourcorner [(4, 4); (4, 0); (0, 4); (0, 0)];
 
-let command_tests =
-  [
-    (* TODO: add tests for the Command module here *)
-  ]
+    is_touching_simple_test "first" (1,3) testboard true;
+    is_touching_simple_test "snd" (1,1) testboard true;
+    is_touching_simple_test "third" (4,3) testboard true;
+    is_touching_simple_test "fourth" (2,0) testboard true;
 
-let state_tests =
-  [
-    (* TODO: add tests for the State module here *)
+
   ]
 
 let suite =
   "test suite for A2"  >::: List.flatten [
-    adventure_tests;
-    command_tests;
-    state_tests;
+    player_tests;
   ]
 
 let _ = run_test_tt_main suite

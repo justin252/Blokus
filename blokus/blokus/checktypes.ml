@@ -1,4 +1,4 @@
-module type AdventureSig = sig
+(*module type AdventureSig = sig
   type t
   type room_id = string
   type exit_name = string
@@ -11,33 +11,33 @@ module type AdventureSig = sig
   val exits : t -> room_id -> exit_name list
   val next_room : t -> room_id -> exit_name -> room_id
   val next_rooms : t -> room_id -> room_id list
-end
+  end
 
-module AdventureCheck : AdventureSig = Adventure
+  module AdventureCheck : AdventureSig = Adventure
 
-module type CommandSig = sig
+  module type CommandSig = sig
   type object_phrase = string list
   type command = Go of object_phrase | Quit
   exception Empty
   exception Malformed
   val parse : string -> command
-end
+  end
 
-module CommandCheck : CommandSig = Command
+  module CommandCheck : CommandSig = Command
 
-module type StateSig = sig
+  module type StateSig = sig
   type t 
   val init_state : Adventure.t -> t
   val current_room_id : t -> string
   val visited : t -> string list
   type result = Legal of t | Illegal
   val go : Adventure.exit_name -> Adventure.t -> t -> result
-end
+  end
 
-module StateCheck : StateSig = State
+  module StateCheck : StateSig = State
 
-module type AuthorSig = sig
+  module type AuthorSig = sig
   val hours_worked : int
-end
+  end
 
-module AuthorCheck : AuthorSig = Author
+  module AuthorCheck : AuthorSig = Author*)
