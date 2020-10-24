@@ -1,13 +1,8 @@
 type piece={
   color: string;
-  shape: bool array array;
-  (* 
-  position: (i, j)
-  corners: [(i, j), ]
-  _
-  _     _ _ _
-  _ _       _
-  *)
+  mutable position: int*int;
+  corners: (int*int) list;
+  blocks: (int*int) list;
 }
 
 type game = {
@@ -15,7 +10,7 @@ type game = {
 }
 
 type player={
-  inventory: piece array; 
+  inventory: piece list; 
   total_points: int; 
   color: string;
 }
