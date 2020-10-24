@@ -1,8 +1,6 @@
-type piece={
-  color: string;
-  mutable position: int*int;
-  corners: (int*int) list;
-  blocks: (int*int) list;
+type piece = {
+  color : string;
+  shape : (int * int) list;
 }
 
 type game = {
@@ -11,14 +9,48 @@ type game = {
 
 type player={
   inventory: piece list; 
-  total_points: int; 
+  points : int;
   color: string;
 }
+
+(** same_orientation returns true if two pieces, [piece1] and [piece2] are the 
+    same piece with either the same exact orientation or a different orientation 
+    or returns false otherwise, i.e. two unique/distinct pieces.*)
+let rec same_orientation piece1 piece2 e =
+  match piece1 with
+  | [] -> true
+  | h :: t -> 
+    match piece2 with
+    | [] -> true
+    | a :: b ->
+      if (h = a) then (
+        same_orientation t b e
+      ) else (
+        false
+      )
+
+let return_inventory player =
+  player.inventory
+
+let rec placed_piece_helper inv piece =
+  match inv with
+  | [] -> failwith "Piece not in Inventory"
+  | h :: t ->
+    if (h = piece) then (
+      t
+    ) else (
+      [h] @ placed_piece_helper t piece
+    )
+
+(** [placed_piece] returns the [player] with his/her inventory modified after
+    removing the placed [piece] for their inventory. *)
+let placed_piece piece player =
+  {inventory = placed_piece_helper player.inventory piece; color = player.color; points = player.points}
 
 let valid_moves (player_piece: piece ) : piece array = 
   failwith "Unimplemented"
 
-let is_eliminated player1 player_piece = 
+let is_eliminated player_piece = 
   let pieces= valid_moves player_piece in
   if Array.length pieces= 0 then true
   else false

@@ -73,6 +73,14 @@ let is_touching_simple_test
   name >:: (fun _ -> 
       assert_equal expected_output (Player.is_touching_simple input gameboard))
 
+let placed_piece_test 
+    (name : string)
+    (player : Player.player) 
+    (piece : Player.piece) 
+    (expected_output : Player.player) : test =
+  name >:: (fun _->
+      assert_equal expected_output (placed_piece piece player))
+
 
 
 let piecearray = [|[|false;false;false;false;false|];
@@ -99,6 +107,17 @@ let unitbool = Array.make_matrix 5 5 false
 
 let testboard = {gameboard = initgameboard}
 
+let monomino_piece = [(1,1)]
+let domino_piece = [(1,1); (2,1)]
+let tromino_piece1 = [(1,1); (1,2); (2,1)]
+let tromino_piece2 = [(1,1); (2,1); (3,1)]
+let tetromino_piece1 = [(1,1); (2,1); (3,1); (4,1)]
+let tetromino_piece2 = [(1,1); (2,1); (3,1); (2,2)]
+let tetromino_piece3 = [(1,1); (2,1); (3,1); (3,2)]
+let tetromino_piece4 = [(1,1); (2,1); (1,2); (2,2)]
+let tetromino_piece5 = [(1,1); (2,1); (2,2); (3,2)]
+let pentomino_piece1 = [(1,1); (2,1); (3,1); (4,1); (5,1)]
+
 let player_tests =
   [
     (* TODO: add tests for the Adventure module here *)
@@ -109,13 +128,67 @@ let player_tests =
     is_touching_simple_test "first" (1,3) testboard true;
     is_touching_simple_test "snd" (1,1) testboard true;
     is_touching_simple_test "third" (4,3) testboard true;
-    is_touching_simple_test "fourth" (2,0) testboard true;
+    (*is_touching_simple_test "fourth" (2,0) testboard true;*)
 
+
+    placed_piece_test "Player with an inventory of just one monomino after
+    placing that one piece" {inventory = [{color = "red"; shape = monomino_piece}]; 
+                             color = "red"; points = 12} 
+      {color = "red"; shape = monomino_piece} 
+      {inventory = []; color = "red"; points = 12};
+    placed_piece_test "Player with an inventory with 4 unique pieces after 
+    placing one" {inventory = [{color = "blue"; shape = monomino_piece}; 
+                               {color = "blue"; shape = domino_piece}; 
+                               {color = "blue";  shape = tromino_piece1}; 
+                               {color = "blue"; shape = tromino_piece2}]; 
+                  color = "blue"; points = 24} 
+      {color = "blue"; shape = tromino_piece1} 
+      {inventory = [{color = "blue"; shape = monomino_piece}; 
+                    {color = "blue"; shape = domino_piece}; 
+                    {color = "blue"; shape = tromino_piece2}]; 
+       color = "blue"; points = 24};
+    placed_piece_test "Player with an inventory with 4 unique pieces after 
+    placing one" {inventory = [{color = "blue"; shape = domino_piece}; 
+                               {color = "blue"; shape = tetromino_piece1}; 
+                               {color = "blue";  shape = tromino_piece1}; 
+                               {color = "blue"; shape = tromino_piece2};
+                               {color = "blue"; shape = tetromino_piece2};
+                               {color = "blue"; shape = tetromino_piece3}]; 
+                  color = "blue"; points = 2} 
+      {color = "blue"; shape = tetromino_piece2}
+      {inventory = [{color = "blue"; shape = domino_piece}; 
+                    {color = "blue"; shape = tetromino_piece1}; 
+                    {color = "blue";  shape = tromino_piece1}; 
+                    {color = "blue"; shape = tromino_piece2};
+                    {color = "blue"; shape = tetromino_piece3}]; 
+       color = "blue"; points = 2};
+    placed_piece_test "Player with an inventory with 4 unique pieces after 
+    placing one" {inventory = [{color = "blue"; shape = domino_piece}; 
+                               {color = "blue"; shape = tetromino_piece4}; 
+                               {color = "blue";  shape = tromino_piece1}; 
+                               {color = "blue"; shape = tromino_piece2};
+                               {color = "blue"; shape = tetromino_piece5};
+                               {color = "blue"; shape = tetromino_piece3};
+                               {color = "blue"; shape = tetromino_piece1};
+                               {color = "blue"; shape = tetromino_piece2};
+                               {color = "blue"; shape = monomino_piece}
+                              ]; 
+                  color = "blue"; points = 18} 
+      {color = "blue"; shape = monomino_piece}
+      {inventory = [{color = "blue"; shape = domino_piece}; 
+                    {color = "blue"; shape = tetromino_piece4}; 
+                    {color = "blue";  shape = tromino_piece1}; 
+                    {color = "blue"; shape = tromino_piece2};
+                    {color = "blue"; shape = tetromino_piece5};
+                    {color = "blue"; shape = tetromino_piece3};
+                    {color = "blue"; shape = tetromino_piece1};
+                    {color = "blue"; shape = tetromino_piece2}]; 
+       color = "blue"; points = 18}
 
   ]
 
 let suite =
-  "test suite for A2"  >::: List.flatten [
+  "test suite for Blokus"  >::: List.flatten [
     player_tests;
   ]
 
