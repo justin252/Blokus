@@ -8,8 +8,11 @@
 (* TODO: change the name and NetID below to your own, then delete this TODO
    comment. *)
 
-(** CS 3110 Fall 2020 Assignment A2 Adventure
-    @author Your Name Here (your netid here) *)
+(** CS 3110 Fall 2020 Blokus
+    @author Nasredene Elyamani ne227
+            Mohamed Abdalla mja266
+            Arshia Giri ag2432
+            Justin Hsu jah574 *)
 
 (* TODO: complete the academic integrity statement below, then delete this
    TODO comment. *)
