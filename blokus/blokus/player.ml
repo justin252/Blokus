@@ -1,10 +1,17 @@
-type piece = {
-  color : string;
-  shape : (int * int) list;
-}
 
 type game = {
   gameboard: char array array
+}
+
+type orientation={
+  coordinates: (int * int) list;
+  corners: (int * int) list
+}
+
+type piece = {
+  color : string;
+  positiononboard: (int*int) list;
+  shape : orientation list
 }
 
 type player={
@@ -12,6 +19,246 @@ type player={
   points : int;
   color: string;
 }
+
+let monomino_piece = [(1,1)]
+let monomino_piece_corner = [(1,1)]
+
+let domino_piece_orientation1 = [(1,1); (2,1)]
+let domino_piece_orientation1_corner = [(1,1); (2,1)]
+let domino_piece_orientation2 = [(1,1); (1,2)]
+let domino_piece_orientation2_corner = [(1,1); (1,2)]
+
+(* 
+    x x
+    x 
+
+    x x
+      x
+
+      x
+    x x
+
+    x 
+    x x
+
+     *)
+
+let tromino_piece1_orientation1 = [(1,1); (1,2); (2,1)]
+let tromino_piece1_orientation1_corners = [(1,1); (1,2); (2,1)]
+let tromino_piece1_orientation2 = [(1,1); (1,2); (2,2)]
+let tromino_piece1_orientation2_corners = [(1,1); (1,2); (2,2)]
+let tromino_piece1_orientation3 = [(1,2); (2,1); (2,2)]
+let tromino_piece1_orientation3_corners = [(1,2); (2,1); (2,2)]
+let tromino_piece1_orientation4 = [(1,1); (2,1); (2,2)]
+let tromino_piece1_orientation4_corners = [(1,1); (2,1); (2,2)]
+
+
+let tromino_piece2 = [(1,1); (2,1); (3,1)]
+let tromino_piece2_orientation1 = [(1,1); (1,2); (1,3)]
+(*
+  x
+  x
+  x
+  x
+
+  x x x x
+*)
+let tetromino_piece1_orientation1 = [(1,1); (2,1); (3,1); (4,1)]
+let tetromino_piece1_orientation1_corners = [(1,1); (4,1)]
+
+let tetromino_piece1_orientation2 = [(1,1); (1,2); (1,3); (1,4)]
+let tetromino_piece1_orientation2_corners = [(1,1); (1,4)]
+
+(*
+  x
+  x x
+  x
+
+  x x x
+    x
+
+    x
+  x x
+    x
+
+    x
+  x x x
+*)
+let tetromino_piece2_orientation1 = [(1,1); (2,1); (3,1); (2,2)]
+let tetromino_piece2_orientation1_corners = [(1,1); (3,1); (2,2)]
+let tetromino_piece2_orientation2 = [(1,1); (1,2); (1,3); (2,2)]
+let tetromino_piece2_orientation2_corners = [(1,1); (1,3); (2,2)]
+let tetromino_piece2_orientation3 = [(2,1); (1,2); (2,2); (3,2)]
+let tetromino_piece2_orientation3_corners = [(2,1); (1,2); (3,2)]
+let tetromino_piece2_orientation4 = [(2,1); (2,2); (2,3); (1,2)]
+let tetromino_piece2_orientation4_corners = [(2,1); (2,3); (1,2)]
+
+(* 
+
+    x
+    x 
+    x x
+
+    x x x
+    x
+
+    x x
+      x
+      x
+
+        x
+    x x x
+ *)
+
+
+let tetromino_piece3_orientation1 = [(1,1); (2,1); (3,1); (3,2)]
+let tetromino_piece3_orientation1_corner = [(1,1); (3,1); (3,2)]
+let tetromino_piece3_orientation2 = [(1,1); (1,2); (1,3); (2,1)]
+let tetromino_piece3_orientation2_corner = [(1,1); (1,3); (2,1)]
+let tetromino_piece3_orientation3 = [(1,1); (1,2); (2,2); (3,2)]
+let tetromino_piece3_orientation3_corner = [(1,1); (1,2); (3,2)]
+let tetromino_piece3_orientation4 = [(2,1); (2,2); (2,3); (1,3)]
+let tetromino_piece3_orientation4_corner = [(2,1); (2,3); (1,3)]
+
+
+let pentomino_piece1_orientation1 = [(1,1); (2,1); (3,1); (4,1); (5,1)]
+let pentomino_piece1_orientation1_corner = [(1,1); (5,1)]
+let pentomino_piece1_orientation2 = [(1,1); (1,2); (1,3); (1,4); (1,5)]
+let pentomino_piece1_orientation2_corner = [(1,1); (1,5)]
+
+(* regular 1 line shape *)
+
+(* 
+    x 
+    x 
+    x
+    x x
+
+    x x x x
+    x
+
+  x x
+    x
+    x
+    x
+
+        x
+  x x x x
+ *)
+
+
+let pentomino_piece2_orientation1 = [(1,1); (2,1); (3,1); (4,1); (4,2)] 
+let pentomino_piece2_orientation1_corner = [(1,1); (4,1); (4,2)] 
+let pentomino_piece2_orientation2 = [(1,1); (1,2); (1,3); (1,4); (2,1)] 
+let pentomino_piece2_orientation2_corner = [(1,1); (1,4); (2,1)] 
+let pentomino_piece2_orientation3 = [(1,1); (1,2); (2,2); (3,2); (4,2)] 
+let pentomino_piece2_orientation3_corner = [(1,1); (1,2); (4,2)] 
+let pentomino_piece2_orientation4 = [(1,4); (2,1); (2,2); (2,3); (2,4)] 
+let pentomino_piece2_orientation4_corner = [(1,4); (2,1); (2,4)] 
+
+
+(* 
+    x 
+    x x
+    x x 
+
+    x x x
+    x x
+
+    x x
+    x x
+    x
+
+    x x
+    x x x
+ *)
+
+
+let pentomino_piece3_orientation1 = [(1,1); (2,1); (3,1); (2,2); (3,2)]
+let pentomino_piece3_orientation1_corner = [(1,1); (3,1); (2,2); (3,2)]
+let pentomino_piece3_orientation2 = [(1,1); (1,2); (1,3); (2,1); (2,2)]
+let pentomino_piece3_orientation2_corner = [(1,1); (1,3); (2,1); (2,2)]
+let pentomino_piece3_orientation3 = [(1,1); (2,1); (1,2); (2,2); (3,2)]
+let pentomino_piece3_orientation3_corner = [(1,1); (2,1); (1,2); (3,2)]
+let pentomino_piece3_orientation4 = [(1,2); (1,3); (2,1); (2,2); (2,3)]
+let pentomino_piece3_orientation4_corner = [(1,2); (1,3); (2,1); (2,3)]
+
+let pentomino_piece4_orientation1 = [(1,1); (2,1); (3,1); (3,2); (4,2)]
+let pentomino_piece4_orientation1_corners = [(1,1); (3,1); (3,2); (4,2)]
+let pentomino_piece4_orientation2 = [(1,2); (2,2); (1,2); (1,3); (1,4)]
+let pentomino_piece4_orientation2_corners = [(1,2); (2,2); (1,2); (1,4)]
+let pentomino_piece4_orientation3 = [(1,1); (2,1); (2,2); (3,2); (4,2)]
+let pentomino_piece4_orientation3_corners = [(1,1); (2,1); (2,2); (4,2)]
+let pentomino_piece4_orientation4 = [(1,3); (1,4); (2,1); (2,2); (2,3)]
+let pentomino_piece4_orientation4_corners = [(1,3); (1,4);(2,1); (2,3)]
+(* 
+
+    x x
+    x
+    x x
+
+    x x x
+    x   x
+
+    x x
+    x
+    x x
+
+    x   x
+    x x x
+ *)
+
+
+let pentomino_piece5_orientation1 = [(1,1); (2,1); (3,1); (1,2); (3,2)]
+let pentomino_piece5_orientation1_corners = [(1,1); (3,1); (1,2); (3,2)]
+let pentomino_piece5_orientation2 = [(1,1); (1,2); (1,3); (2,1); (2,3)]
+let pentomino_piece5_orientation2_corners = [(1,1); (1,3); (2,1); (2,3)]
+let pentomino_piece5_orientation3 = [(1,1); (1,2); (2,2); (3,1); (3,2)]
+let pentomino_piece5_orientation3_corners = [(1,1); (1,2); (3,1); (3,2)]
+let pentomino_piece5_orientation4 = [(1,1); (1,3); (2,1); (2,2); (2,3)]
+let pentomino_piece5_orientation4_corners = [(1,1); (1,3); (2,1); (2,3)]
+
+(* 
+x
+x
+x x x
+
+x x x
+x 
+x 
+
+x x x
+    x
+    x
+
+    x
+    x
+x x x
+ *)
+
+let pentomino_piece6_orientation1 = [(1,1); (2,1); (3,1); (3,2); (3,3)]
+let pentomino_piece6_orientation1_corners = [(1,1); (3,1); (3,3)]
+
+let pentomino_piece6_orientation2 = [(1,1); (1,2); (1,3); (2,1); (3,1)]
+let pentomino_piece6_orientation2_corners = [(1,1); (1,3); (3,1)]
+
+
+let pentomino_piece6_orientation3 = [(1,1); (1,2); (1,3); (2,3); (3,3)]
+let pentomino_piece6_orientation3_corners = [(1,1); (1,3); (3,3)]
+
+let pentomino_piece6_orientation4 = [(1,3); (2,3); (3,1); (3,2); (3,3)]
+let pentomino_piece6_orientation4_corners = [(1,3); (3,1); (3,3)]
+
+(* 
+  x
+x x x
+  x
+ *)
+let pentomino_piece7_orientation1 = [(1,2); (2,2); (3,2); (2,1); (2,3)]
+let pentomino_piece7_orientation1_corners = [(1,2); (3,2); (2,1); (2,3)]
+
+
+
 
 (** same_orientation returns true if two pieces, [piece1] and [piece2] are the 
     same piece with either the same exact orientation or a different orientation 
@@ -197,6 +444,9 @@ let get_all_corners playerpiece =
   let all = check_corner_array@check_rest_of_array in
   all
 
+(** [is_touching player game] sees that the placed piece touches just the 
+    corner of one of the pieces on the board and does not touch the faces 
+    of it’s other pieces. *)
 let is_touching_simple coordinate board = 
   if board.gameboard.((fst coordinate)-1).((snd coordinate)-1) <> 'W' then true 
   else if board.gameboard.((fst coordinate)-1).((snd coordinate)+1) <> 'W'then true
