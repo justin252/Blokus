@@ -1,17 +1,24 @@
-
-type game = {
-  gameboard: char array array
+type square= {
+  color: string;
+  coordinate: (int * int);
 }
 
+(* 
+type game = {
+  gameboard: (square option) list list;
+} *)
+
+type game= (square option) array array
+
 type orientation={
-  coordinates: (int * int) list;
-  corners: (int * int) list
+  coordinate: (int * int) list;
+  corners: (int * int) list;
 }
 
 type piece = {
   color : string;
-  positiononboard: (int*int) list;
-  shape : orientation list
+  (*positiononboard: ((int*int) list) option; *)
+  shape : orientation list;
 }
 
 type player={
@@ -191,6 +198,7 @@ let pentomino_piece4_orientation3 = [(1,1); (2,1); (2,2); (3,2); (4,2)]
 let pentomino_piece4_orientation3_corners = [(1,1); (2,1); (2,2); (4,2)]
 let pentomino_piece4_orientation4 = [(1,3); (1,4); (2,1); (2,2); (2,3)]
 let pentomino_piece4_orientation4_corners = [(1,3); (1,4);(2,1); (2,3)]
+
 (* 
 
     x x
@@ -385,8 +393,6 @@ let check_left_bottom_j i playerpiece =
   let corner = if playerpiece.(i).(3) = false && playerpiece.(i+1).(4) = false then (i,4)::empty else empty in
   corner
 
-
-
 let check_j_zero i playerpiece = 
   let empty =[] in 
   if check_top_bottom_z_j i playerpiece <> [] then check_top_bottom_z_j i playerpiece
@@ -448,6 +454,7 @@ let get_all_corners playerpiece =
     corner of one of the pieces on the board and does not touch the faces 
     of it’s other pieces. *)
 let is_touching_simple coordinate board = 
+
   if board.gameboard.((fst coordinate)-1).((snd coordinate)-1) <> 'W' then true 
   else if board.gameboard.((fst coordinate)-1).((snd coordinate)+1) <> 'W'then true
 else if board.gameboard.((fst coordinate)+1).((snd coordinate)-1) <> 'W'then true
@@ -455,7 +462,76 @@ else if board.gameboard.((fst coordinate)+1).((snd coordinate)+1) <> 'W'then tru
 else false 
 
 
-let rec is_touching playerpiece coordinate board lst = 
+let is_touching_helper_corner_touching playerpiece (coordinate: (int * int)) (board: game) =
+
+  (* 
+
+  type game = (square option) list list;
+}
+
+ for i 
+ for j
+ if string = playerpiece.color then check for the conditions and add the coordinates 
+ according to the condition
+
+
+  *)
+
+  match board.((fst coordinate).(snd coordinate)) with
+  | None -> failwith " "
+  | Some st-> if st.color= playerpiece.color then 
+      begin match st with 
+      end
+    else 
+
+
+
+
+  (*
+
+  condtition 1: 
+
+  if R has R to the bottom and not the top and to the left but not the right, is_touching when coordinate if 
+  the coordinate is (x1-1,y1-1) where R is (x1,y1)
+
+  if R has R to the bottom and not the top and to the right but not the left, is_touching when coordinate if 
+  the coordinate is (x1+1,y1-1) where R is (x1,y1)
+
+  if R has R to the top and not the bottom and to the left but not the right, is_touching when coordinate if 
+  the coordinate is (x1+1,y1+1) where R is (x1,y1)
+
+  if R has R to the top and not the bottom and to the right but not the left, is_touching when coordinate if 
+  the coordinate is (x1+1,y1-1) where R is (x1,y1)
+
+   if R has R to the top and not the bottom and not to the right and not the left, is_touching when coordinate if 
+  the coordinate is (x1-1,y1+1) where R is (x1+1,y+1)
+
+   if R has R to the bottom and not the top and not to the right and not the left, is_touching when coordinate if 
+  the coordinate is (x1-1,y1-1) where R is (x1+1,y-1)
+
+  if R has R to the top and bottom, is_touching can't touch the piece anywhere
+  if R has R to the left and right, is_touching can't touch the piece anywhere
+  if R has R to the bottom and to the left and the right, is_touching can't touch the piece anywhere
+  if R has R to the top and to the left and the right, is_touching can't touch the piece anywhere
+
+  INDEX OUT OF RANGE THEN CATCH AND SAY FALSE
+
+   *)
+
+      (*                     
+      W W W W W W R R R
+      W W W W W R R W W
+      W W R W W W W W W
+      W R R W W W W W W
+      R R R R W W W W W
+
+ *)
+
+      let is_touching_helper_sides playerpiece board = 
+        failwith "Unimplemented
+
+
+let rec is_touching playerpiece board = 
   (*let allcorners = find_corners_in_player_piece playerpiece in*)
   match lst with
   |[] -> false
