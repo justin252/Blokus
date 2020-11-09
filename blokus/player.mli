@@ -1,23 +1,31 @@
 
-
-(** The type of player's piece. *)
-type piece = {
-  color : string;
-  shape : (int * int) list;
+type square= {
+  color: string;
+  (* coordinate: (int * int); *)
 }
 
-(** The abstract type of values representing player. *)
+type game = square array array
+
+
+type orientation={
+  coordinate: (int * int) list;
+  corners: (int * int) list;
+}
+
+type piece = {
+  color : string;
+  position_on_board: (int*int) list;
+  position_on_board_corners: (int*int) list;
+  shape : orientation list;
+}
+
 type player={
   inventory: piece list; 
   points : int;
   color: string;
-}
+} 
 
-(** The type of game board. *)
-type game = {
-  gameboard: char array array
-}
-
+(*
 (** [placed_piece p] removes the piece that [p] represents.
     Requires: [p] is a valid player piece representation present in 
     the player's inventory. *)
@@ -39,8 +47,9 @@ val is_eliminated : piece -> bool
 (*val is_touching : piece -> (int * int) -> game -> bool*)
 
 val get_all_corners: bool array array -> (int*int) list
+ *)
 
-val is_touching_simple: int * int -> game -> bool
+(* val is_touching_simple: int * int -> game -> bool *)
 
 (*type player_piece
 

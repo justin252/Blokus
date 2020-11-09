@@ -2,30 +2,70 @@ open OUnit2
 open Player
 
 (********************************************************************
-   Here are some helper functions for your testing of set-like lists. 
+   Hard-coded board 
  ********************************************************************)
 
+
+let board1 = [|
+  [|"R";"R";"W";"W";"W";"W";"W";"W"|];
+  [|"R";"R";"W";"W";"W";"W";"W";"W"|];
+  [|"W";"W";"R";"W";"W";"W";"W";"W"|];
+  [|"W";"W";"R";"W";"W";"W";"W";"W"|];
+  [|"W";"W";"W";"W";"W";"W";"W";"W"|];
+  [|"W";"W";"W";"W";"W";"W";"W";"W"|];
+  [|"W";"W";"W";"W";"W";"W";"W";"W"|];
+  [|"W";"W";"W";"W";"W";"W";"W";"W"|]
+|]
+
+let piece1 = {color = "R"; position_on_board = [(3, 3); (4, 3)]; position_on_board_corners= [(3, 3); (4, 3)]
+             ; shape = [{coordinate = []; corners = []}]}
+
+
+let is_touching_corner_test 
+    (name : string) 
+    (input: Player.piece) 
+    (input2: Player.game) 
+    (expected_output : bool) : test = 
+  name >:: (fun _ -> 
+      assert_equal expected_output (Player.is_touching_corner input input2))
+
+let corner_tests =[
+  is_touching_corner_test "Generic test" piece1 board1 true;
+]
+
+
+let suite = 
+  "test suite"  >::: List.flatten [
+    corner_tests;
+  ]
+let _ = run_test_tt_main suite
+
+
+
+(********************************************************************
+   Here are some helper functions for your testing of set-like lists. 
+ ********************************************************************)
 (** [cmp_set_like_lists lst1 lst2] compares two lists to see whether
     they are equivalent set-like lists.  That means checking two things.
     First, they must both be {i set-like}, meaning that they do not
     contain any duplicates.  Second, they must contain the same elements,
     though not necessarily in the same order. *)
-let cmp_set_like_lists lst1 lst2 =
-  let uniq1 = List.sort_uniq compare lst1 in
-  let uniq2 = List.sort_uniq compare lst2 in
-  List.length lst1 = List.length uniq1
-  &&
-  List.length lst2 = List.length uniq2
-  &&
-  uniq1 = uniq2
+(* let cmp_set_like_lists lst1 lst2 =
+   let uniq1 = List.sort_uniq compare lst1 in
+   let uniq2 = List.sort_uniq compare lst2 in
+   List.length lst1 = List.length uniq1
+   &&
+   List.length lst2 = List.length uniq2
+   &&
+   uniq1 = uniq2
 
-(** [pp_string s] pretty-prints string [s]. *)
-let pp_string s = "\"" ^ s ^ "\""
+   (** [pp_string s] pretty-prints string [s]. *)
+   let pp_string s = "\"" ^ s ^ "\""
 
-(** [pp_list pp_elt lst] pretty-prints list [lst], using [pp_elt]
+   (** [pp_list pp_elt lst] pretty-prints list [lst], using [pp_elt]
     to pretty-print each element of [lst]. *)
-let pp_list pp_elt lst =
-  let pp_elts lst =
+   let pp_list pp_elt lst =
+   let pp_elts lst =
     let rec loop n acc = function
       | [] -> acc
       | [h] -> acc ^ pp_elt h
@@ -33,12 +73,12 @@ let pp_list pp_elt lst =
         if n = 100 then acc ^ "..."  (* stop printing long list *)
         else loop (n + 1) (acc ^ (pp_elt h1) ^ "; ") t'
     in loop 0 "" lst
-  in "[" ^ pp_elts lst ^ "]"
+   in "[" ^ pp_elts lst ^ "]"
 
-(* These tests demonstrate how to use [cmp_set_like_lists] and 
+   (* These tests demonstrate how to use [cmp_set_like_lists] and 
    [pp_list] to get helpful output from OUnit. *)
-let cmp_demo = 
-  [
+   let cmp_demo = 
+   [
     "order is irrelevant" >:: (fun _ -> 
         assert_equal ~cmp:cmp_set_like_lists ~printer:(pp_list pp_string)
           ["foo"; "bar"] ["bar"; "foo"]);
@@ -47,79 +87,79 @@ let cmp_demo =
         assert_equal ~cmp:cmp_set_like_lists ~printer:(pp_list pp_string)
           ["foo"; "foo"] ["foo"]);
     *)
-  ]
+   ]
 
-(********************************************************************
+   (********************************************************************
    End helper functions.
  ********************************************************************)
 
-(* You are welcome to add strings containing JSON here, and use them as the
+   (* You are welcome to add strings containing JSON here, and use them as the
    basis for unit tests.  Or you can add .json files in this directory and
    use them, too.  Any .json files in this directory will be included
    by [make zip] as part of your CMS submission. *)
 
-let corners_test 
+   let corners_test 
     (name : string) 
     (input: bool array array) 
     (expected_output : (int * int) list) : test = 
-  name >:: (fun _ -> 
+   name >:: (fun _ -> 
       assert_equal expected_output (Player.get_all_corners input))
 
-let is_touching_simple_test 
+   let is_touching_simple_test 
     (name : string) 
     (input: int*int) 
     (gameboard: game)
     (expected_output : bool) : test = 
-  name >:: (fun _ -> 
+   name >:: (fun _ -> 
       assert_equal expected_output (Player.is_touching_simple input gameboard))
 
-let placed_piece_test 
+   let placed_piece_test 
     (name : string)
     (player : Player.player) 
     (piece : Player.piece) 
     (expected_output : Player.player) : test =
-  name >:: (fun _->
+   name >:: (fun _->
       assert_equal expected_output (placed_piece piece player))
 
 
 
-let piecearray = [|[|false;false;false;false;false|];
+   let piecearray = [|[|false;false;false;false;false|];
                    [|false;false;false;false;false|];
                    [|false;false;true;false;false|];
                    [|false;false;true;false;false|];
                    [|false;true;true;true;false|]|]
 
-let fourcorner = [|[|true;false;false;false;true|];
+   let fourcorner = [|[|true;false;false;false;true|];
                    [|false;false;false;false;false|];
                    [|false;false;false;false;false|];
                    [|false;false;false;false;false|];
                    [|true;false;false;false;true|]|]
 
-let initgameboard = [|[|'W';'W';'W';'W';'W'|];
+   let initgameboard = [|[|'W';'W';'W';'W';'W'|];
                       [|'W';'W';'W';'W';'W'|];
                       [|'W';'W';'R';'W';'W'|];
                       [|'W';'R';'R';'W';'W'|];
                       [|'W';'W';'W';'W';'W'|]|]
 
 
-let unitbool = Array.make_matrix 5 5 false 
+   let unitbool = Array.make_matrix 5 5 false 
 
 
-let testboard = {gameboard = initgameboard}
+   let testboard = {gameboard = initgameboard}
 
-let monomino_piece = [(1,1)]
-let domino_piece = [(1,1); (2,1)]
-let tromino_piece1 = [(1,1); (1,2); (2,1)]
-let tromino_piece2 = [(1,1); (2,1); (3,1)]
-let tetromino_piece1 = [(1,1); (2,1); (3,1); (4,1)]
-let tetromino_piece2 = [(1,1); (2,1); (3,1); (2,2)]
-let tetromino_piece3 = [(1,1); (2,1); (3,1); (3,2)]
-let tetromino_piece4 = [(1,1); (2,1); (1,2); (2,2)]
-let tetromino_piece5 = [(1,1); (2,1); (2,2); (3,2)]
-let pentomino_piece1 = [(1,1); (2,1); (3,1); (4,1); (5,1)]
+   let monomino_piece = [(1,1)]
+   let domino_piece = [(1,1); (2,1)]
+   let tromino_piece1 = [(1,1); (1,2); (2,1)]
+   let tromino_piece2 = [(1,1); (2,1); (3,1)]
+   let tetromino_piece1 = [(1,1); (2,1); (3,1); (4,1)]
+   let tetromino_piece2 = [(1,1); (2,1); (3,1); (2,2)]
+   let tetromino_piece3 = [(1,1); (2,1); (3,1); (3,2)]
+   let tetromino_piece4 = [(1,1); (2,1); (1,2); (2,2)]
+   let tetromino_piece5 = [(1,1); (2,1); (2,2); (3,2)]
+   let pentomino_piece1 = [(1,1); (2,1); (3,1); (4,1); (5,1)]
 
-let player_tests =
-  [
+   let player_tests =
+   [
     (* TODO: add tests for the Adventure module here *)
     corners_test "idk" unitbool [];
     corners_test "checking" piecearray [(4,3);(4,1);(2,2)];
@@ -185,11 +225,11 @@ let player_tests =
                     {color = "blue"; shape = tetromino_piece2}]; 
        color = "blue"; points = 18}
 
-  ]
+   ]
 
-let suite =
-  "test suite for Blokus"  >::: List.flatten [
+   let suite =
+   "test suite for Blokus"  >::: List.flatten [
     player_tests;
-  ]
+   ]
 
-let _ = run_test_tt_main suite
+   let _ = run_test_tt_main suite *)

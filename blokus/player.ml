@@ -1,6 +1,6 @@
 type square= {
   color: string;
-  coordinate: (int * int);
+  (* coordinate: (int * int); *)
 }
 
 (* 
@@ -8,7 +8,9 @@ type game = {
   gameboard: (square option) list list;
 } *)
 
-type game= (square option) array array
+type game = square array array
+
+
 
 type orientation={
   coordinate: (int * int) list;
@@ -17,7 +19,8 @@ type orientation={
 
 type piece = {
   color : string;
-  (*positiononboard: ((int*int) list) option; *)
+  position_on_board: (int*int) list;
+  position_on_board_corners: (int*int) list;
   shape : orientation list;
 }
 
@@ -453,45 +456,71 @@ let get_all_corners playerpiece =
 (** [is_touching player game] sees that the placed piece touches just the 
     corner of one of the pieces on the board and does not touch the faces 
     of it’s other pieces. *)
-let is_touching_simple coordinate board = 
+(* let is_touching_simple coordinate board = 
 
-  if board.gameboard.((fst coordinate)-1).((snd coordinate)-1) <> 'W' then true 
-  else if board.gameboard.((fst coordinate)-1).((snd coordinate)+1) <> 'W'then true
-else if board.gameboard.((fst coordinate)+1).((snd coordinate)-1) <> 'W'then true
-else if board.gameboard.((fst coordinate)+1).((snd coordinate)+1) <> 'W'then true
-else false 
+   if board.gameboard.((fst coordinate)-1).((snd coordinate)-1) <> 'W' then true 
+   else if board.gameboard.((fst coordinate)-1).((snd coordinate)+1) <> 'W'then true
+   else if board.gameboard.((fst coordinate)+1).((snd coordinate)-1) <> 'W'then true
+   else if board.gameboard.((fst coordinate)+1).((snd coordinate)+1) <> 'W'then true
+   else false  *)
 
 
-let is_touching_helper_corner_touching playerpiece (coordinate: (int * int)) (board: game) =
+let is_touching_corner playerpiece (board: game) =
 
   (* 
+  {type game = square list list; }
 
-  type game = (square option) list list;
-}
-
- for i 
- for j
- if string = playerpiece.color then check for the conditions and add the coordinates 
- according to the condition
+  for i 
+  for j
+  if string = playerpiece.color then check for the conditions and add the coordinates 
+  according to the condition
 
 
   *)
+  (* 
+  let st= board.((fst coordinate).(snd coordinate)) in
+  if st.color= playerpiece.color then 
+    begin match st with 
 
-  match board.((fst coordinate).(snd coordinate)) with
-  | None -> failwith " "
-  | Some st-> if st.color= playerpiece.color then 
-      begin match st with 
-      end
-    else 
-
-
+    end
+  else  *)
+  let corner_positions = playerpiece.position_on_board_corners in
+  let rec helper corner_positions (board: game) =
+    match corner_positions with
+    | [] -> false
+    | (x,y)::t -> let continue = begin
+        (* player.position_on_board has (x-1, y) then it has piece to the left
+           player.position_on_board has (x+1, y) then it has piece to the right
+           player.position_on_board has (x, y+1) then it has piece to the bottom
+           player.position_on_board has (x, y-1) then it has piece to the top
+        *)
+        let has_left= List.mem (x-1, y) playerpiece.position_on_board in 
+        let has_right= List.mem (x+1, y) playerpiece.position_on_board in 
+        let has_top= List.mem (x, y-1) playerpiece.position_on_board in 
+        let has_bottom= List.mem (x, y+1) playerpiece.position_on_board in 
+        if has_bottom && has_top <> true && has_left && has_right <> true then 
+          begin if (board.(x-1).(y-1)).color = playerpiece.color then true else false end  
+        else if has_bottom && has_top <> true && has_left <> true && has_right  then begin
+          if (board.(x+1).(y-1)).color = playerpiece.color then true else false end 
+        else if has_bottom <> true && has_top && has_left && has_right <> true then begin
+          if (board.(x+1).(y+1)).color = playerpiece.color then true else false end 
+        else if has_bottom <> true && has_top && has_left <> true && has_right then begin
+          if (board.(x+1).(y-1)).color = playerpiece.color then true else false end 
+        else if has_bottom <> true && has_top && has_left <> true && has_right <> true then begin
+          if ((board.(x-1).(y+1)).color = playerpiece.color || (board.(x+1).(y+1)).color = playerpiece.color) then true else false end 
+        else if has_bottom <> true && has_top && has_left <> true && has_right <> true then begin
+          if ((board.(x-1).(y-1)).color = playerpiece.color || (board.(x+1).(y-1)).color = playerpiece.color) then true else false end 
+        else if has_bottom && has_top then false 
+        else if has_right && has_left then false 
+        else false end 
+      in if continue then true else helper t board
+  in 
+  helper corner_positions board
 
 
   (*
 
-  condtition 1: 
-
-  if R has R to the bottom and not the top and to the left but not the right, is_touching when coordinate if 
+if R has R to the bottom and not the top and to the left but not the right, is_touching when coordinate if 
   the coordinate is (x1-1,y1-1) where R is (x1,y1)
 
   if R has R to the bottom and not the top and to the right but not the left, is_touching when coordinate if 
@@ -503,11 +532,11 @@ let is_touching_helper_corner_touching playerpiece (coordinate: (int * int)) (bo
   if R has R to the top and not the bottom and to the right but not the left, is_touching when coordinate if 
   the coordinate is (x1+1,y1-1) where R is (x1,y1)
 
-   if R has R to the top and not the bottom and not to the right and not the left, is_touching when coordinate if 
-  the coordinate is (x1-1,y1+1) where R is (x1+1,y+1)
+  if R has R to the top and not the bottom and not to the right and not the left, is_touching when coordinate if 
+  the coordinate is (x1-1,y1+1) or (x1+1,y+1)
 
-   if R has R to the bottom and not the top and not to the right and not the left, is_touching when coordinate if 
-  the coordinate is (x1-1,y1-1) where R is (x1+1,y-1)
+  if R has R to the bottom and not the top and not to the right and not the left, is_touching when coordinate if 
+  the coordinate is (x1-1,y1-1) or (x1+1,y-1)
 
   if R has R to the top and bottom, is_touching can't touch the piece anywhere
   if R has R to the left and right, is_touching can't touch the piece anywhere
@@ -516,27 +545,16 @@ let is_touching_helper_corner_touching playerpiece (coordinate: (int * int)) (bo
 
   INDEX OUT OF RANGE THEN CATCH AND SAY FALSE
 
-   *)
+  *)
 
-      (*                     
-      W W W W W W R R R
-      W W W W W R R W W
-      W W R W W W W W W
-      W R R W W W W W W
-      R R R R W W W W W
+(*                     
+  W W W W W W R R R
+  W W W W W R R W W
+  W W R W W W W W W
+  W R R W W W W W W
+  R R R R W W W W W
 
- *)
+  *)
 
-      let is_touching_helper_sides playerpiece board = 
-        failwith "Unimplemented
-
-
-let rec is_touching playerpiece board = 
-  (*let allcorners = find_corners_in_player_piece playerpiece in*)
-  match lst with
-  |[] -> false
-  |(x,y)::t-> if (x-1) = (fst coordinate) && (y+1) = (snd coordinate)then true 
-    else if (x+1) = (fst coordinate) && (y-1) = (snd coordinate)then true
-    else if (x-1) = (fst coordinate) && (y-1) = (snd coordinate)then true
-    else if (x+1) = (fst coordinate) && (y+1) = (snd coordinate)then true
-    else is_touching playerpiece coordinate board t
+let is_touching_helper_sides playerpiece board = 
+  failwith "Unimplemented"
