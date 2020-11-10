@@ -7,9 +7,11 @@ type square= {
 type game = {
   gameboard: (square option) list list;
 } *)
+(* 
+type game = square array array *)
 
-type game = square array array
 
+type game = string array array
 
 
 type orientation={
@@ -493,23 +495,37 @@ let is_touching_corner playerpiece (board: game) =
            player.position_on_board has (x+1, y) then it has piece to the right
            player.position_on_board has (x, y+1) then it has piece to the bottom
            player.position_on_board has (x, y-1) then it has piece to the top
+
+           wwwwww
+           rwwwww
+           wwwwww
+
+
         *)
-        let has_left= List.mem (x-1, y) playerpiece.position_on_board in 
-        let has_right= List.mem (x+1, y) playerpiece.position_on_board in 
-        let has_top= List.mem (x, y-1) playerpiece.position_on_board in 
-        let has_bottom= List.mem (x, y+1) playerpiece.position_on_board in 
+        let has_left= (y - 1 < 0) || (List.mem (x, y-1) playerpiece.position_on_board) 
+        in 
+        let has_right= (y + 1 >= Array.length board) || List.mem (x, y+1) playerpiece.position_on_board 
+        in 
+        let has_top= (x - 1 < 0) || List.mem (x-1, y) playerpiece.position_on_board 
+        in 
+        let has_bottom= (x + 1 >= Array.length board) || List.mem (x+1, y) playerpiece.position_on_board 
+        in 
         if has_bottom && has_top <> true && has_left && has_right <> true then 
-          begin if (board.(x-1).(y-1)).color = playerpiece.color then true else false end  
+          begin if (board.(x-1).(y+1)) = playerpiece.color then true else false end  
         else if has_bottom && has_top <> true && has_left <> true && has_right  then begin
-          if (board.(x+1).(y-1)).color = playerpiece.color then true else false end 
+          if (board.(x-1).(y-1)) = playerpiece.color then true else false end 
         else if has_bottom <> true && has_top && has_left && has_right <> true then begin
-          if (board.(x+1).(y+1)).color = playerpiece.color then true else false end 
-        else if has_bottom <> true && has_top && has_left <> true && has_right then begin
-          if (board.(x+1).(y-1)).color = playerpiece.color then true else false end 
-        else if has_bottom <> true && has_top && has_left <> true && has_right <> true then begin
-          if ((board.(x-1).(y+1)).color = playerpiece.color || (board.(x+1).(y+1)).color = playerpiece.color) then true else false end 
-        else if has_bottom <> true && has_top && has_left <> true && has_right <> true then begin
-          if ((board.(x-1).(y-1)).color = playerpiece.color || (board.(x+1).(y-1)).color = playerpiece.color) then true else false end 
+          if (board.(x+1).(y+1)) = playerpiece.color then true else false end 
+        else if (has_top && has_right) && not (has_bottom && has_left) then begin
+          if (board.(x+1).(y-1)) = playerpiece.color then true else false end 
+        else if has_top && has_bottom <> true && has_left <> true && has_right <> true then begin
+          if ((board.(x+1).(y-1)) = playerpiece.color || (board.(x+1).(y+1)) = playerpiece.color) then true else false end 
+        else if has_bottom && has_top <> true && has_left <>true  && has_right <> true then begin (* change *)
+          if ((board.(x-1).(y-1)) = playerpiece.color || (board.(x-1).(y+1)) = playerpiece.color) then true else false end 
+        else if has_left && has_bottom <> true && has_top <> true && has_right <>true then begin
+          if ((board.(x-1).(y+1)) = playerpiece.color || (board.(x+1).(y+1)) = playerpiece.color) then true else false end 
+        else if has_right && not has_bottom && not has_top && not has_left then begin
+          if ((board.(x-1).(y-1)) = playerpiece.color || (board.(x+1).(y-1)) = playerpiece.color) then true else false end 
         else if has_bottom && has_top then false 
         else if has_right && has_left then false 
         else false end 
@@ -517,35 +533,38 @@ let is_touching_corner playerpiece (board: game) =
   in 
   helper corner_positions board
 
+(* has right only 
+   has left only 
+   has top only
+   has bottom only
+   has rig
 
-  (*
+   if R has R to the bottom and not the top and to the left but not the right, is_touching when coordinate if 
+   the coordinate is (x1-1,y1-1) where R is (x1,y1)
 
-if R has R to the bottom and not the top and to the left but not the right, is_touching when coordinate if 
-  the coordinate is (x1-1,y1-1) where R is (x1,y1)
+   if R has R to the bottom and not the top and to the right but not the left, is_touching when coordinate if 
+   the coordinate is (x1+1,y1-1) where R is (x1,y1)
 
-  if R has R to the bottom and not the top and to the right but not the left, is_touching when coordinate if 
-  the coordinate is (x1+1,y1-1) where R is (x1,y1)
+   if R has R to the top and not the bottom and to the left but not the right, is_touching when coordinate if 
+   the coordinate is (x1+1,y1+1) where R is (x1,y1)
 
-  if R has R to the top and not the bottom and to the left but not the right, is_touching when coordinate if 
-  the coordinate is (x1+1,y1+1) where R is (x1,y1)
+   if R has R to the top and not the bottom and to the right but not the left, is_touching when coordinate if 
+   the coordinate is (x1+1,y1-1) where R is (x1,y1)
 
-  if R has R to the top and not the bottom and to the right but not the left, is_touching when coordinate if 
-  the coordinate is (x1+1,y1-1) where R is (x1,y1)
+   if R has R to the top and not the bottom and not to the right and not the left, is_touching when coordinate if 
+   the coordinate is (x1-1,y1+1) or (x1+1,y+1)
 
-  if R has R to the top and not the bottom and not to the right and not the left, is_touching when coordinate if 
-  the coordinate is (x1-1,y1+1) or (x1+1,y+1)
+   if R has R to the bottom and not the top and not to the right and not the left, is_touching when coordinate if 
+   the coordinate is (x1-1,y1-1) or (x1+1,y-1)
 
-  if R has R to the bottom and not the top and not to the right and not the left, is_touching when coordinate if 
-  the coordinate is (x1-1,y1-1) or (x1+1,y-1)
+   if R has R to the top and bottom, is_touching can't touch the piece anywhere
+   if R has R to the left and right, is_touching can't touch the piece anywhere
+   if R has R to the bottom and to the left and the right, is_touching can't touch the piece anywhere
+   if R has R to the top and to the left and the right, is_touching can't touch the piece anywhere
 
-  if R has R to the top and bottom, is_touching can't touch the piece anywhere
-  if R has R to the left and right, is_touching can't touch the piece anywhere
-  if R has R to the bottom and to the left and the right, is_touching can't touch the piece anywhere
-  if R has R to the top and to the left and the right, is_touching can't touch the piece anywhere
+   INDEX OUT OF RANGE THEN CATCH AND SAY FALSE
 
-  INDEX OUT OF RANGE THEN CATCH AND SAY FALSE
-
-  *)
+*)
 
 (*                     
   W W W W W W R R R
@@ -554,7 +573,31 @@ if R has R to the bottom and not the top and to the left but not the right, is_t
   W R R W W W W W W
   R R R R W W W W W
 
+  R R W
+  R W W
+  x x W
+
+if for each block we want to look at all four sides and if its a the same color then we want to check
+if it is the member of the piece coordinate list, if its not then its touching the face so return false
+
+loop over the player piece coordinates and 
+check for each box if (x-1, y) (x+1, y) (x, y+1) (x, y-1) has the same color as the piece. 
+if it does then we wanna have a if else statement where
+if it is a member of the piece coordinate list then continue looping else return false
   *)
 
-let is_touching_helper_sides playerpiece board = 
-  failwith "Unimplemented"
+let is_not_touching_face playerpiece board = 
+  let all_positions = playerpiece.position_on_board in 
+  let rec helper all_positions (board: game) =
+    match all_positions with
+    | [] -> true
+    | (x,y)::t -> begin
+        if ((x-1) >= 0) && board.(x-1).(y) = playerpiece.color then false 
+        else if (x+ 1 < Array.length board) && board.(x+1).(y) = playerpiece.color then false 
+        else if (y+ 1 < Array.length board) && board.(x).(y+1) = playerpiece.color then false 
+        else if ((y-1) >= 0) && board.(x).(y-1) = playerpiece.color then false
+        else helper t board end 
+  in helper all_positions board
+
+
+

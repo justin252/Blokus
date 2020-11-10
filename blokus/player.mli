@@ -1,10 +1,10 @@
 
-type square= {
-  color: string;
-  (* coordinate: (int * int); *)
-}
+(* type square= {
+   color: string;
+   (* coordinate: (int * int); *)
+   } *)
 
-type game = square array array
+type game = string array array
 
 
 type orientation={
@@ -39,8 +39,13 @@ val placed_piece : piece -> player -> player
 (** [is_eliminated player] sees all the valid moves remaining for the 
     remaining pieces. 
     Returns: true if nothing and false if there are still moves.  *)
-val is_eliminated : piece -> bool
+val is_eliminated : piece -> bool *)
 
+val is_touching_corner: piece -> game -> bool 
+
+val is_not_touching_face: piece -> game -> bool
+
+(*
 (** [is_touching player game] sees that the placed piece touches just the 
     corner of one of the pieces on the board and does not touch the faces 
     of it’s other pieces. *)

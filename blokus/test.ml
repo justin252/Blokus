@@ -9,17 +9,59 @@ open Player
 let board1 = [|
   [|"R";"R";"W";"W";"W";"W";"W";"W"|];
   [|"R";"R";"W";"W";"W";"W";"W";"W"|];
-  [|"W";"W";"R";"W";"W";"W";"W";"W"|];
-  [|"W";"W";"R";"W";"W";"W";"W";"W"|];
+  [|"W";"W";"W";"W";"W";"W";"W";"W"|];
+  [|"W";"W";"W";"W";"W";"W";"W";"W"|];
   [|"W";"W";"W";"W";"W";"W";"W";"W"|];
   [|"W";"W";"W";"W";"W";"W";"W";"W"|];
   [|"W";"W";"W";"W";"W";"W";"W";"W"|];
   [|"W";"W";"W";"W";"W";"W";"W";"W"|]
 |]
 
-let piece1 = {color = "R"; position_on_board = [(3, 3); (4, 3)]; position_on_board_corners= [(3, 3); (4, 3)]
-             ; shape = [{coordinate = []; corners = []}]}
+let board2 = [|
+  [|"R";"R";"W";"W";"W";"W";"W";"W"|];
+  [|"R";"R";"R";"W";"W";"W";"W";"W"|];
+  [|"W";"R";"R";"W";"W";"W";"W";"W"|];
+  [|"W";"W";"R";"W";"W";"W";"W";"W"|];
+  [|"W";"W";"x";"W";"W";"W";"W";"W"|];
+  [|"W";"W";"x";"x";"x";"W";"W";"W"|];
+  [|"W";"W";"W";"W";"W";"W";"W";"W"|];
+  [|"W";"W";"W";"W";"W";"W";"W";"W"|]
+|]
 
+let board_edge = [|
+  [|"R";"R";"W";"R";"R";"x";"W";"W"|];
+  [|"R";"R";"R";"W";"R";"x";"W";"W"|];
+  [|"W";"R";"R";"W";"W";"x";"W";"W"|];
+  [|"x";"x";"W";"W";"W";"W";"W";"W"|];
+  [|"x";"x";"W";"W";"W";"W";"W";"W"|];
+  [|"W";"W";"W";"W";"W";"W";"W";"W"|];
+  [|"W";"W";"W";"W";"W";"W";"W";"W"|];
+  [|"W";"W";"W";"W";"W";"W";"W";"W"|]
+|]
+
+(* 
+has_left = true
+has_bottom = true
+has_top = false
+has_right = false
+*)
+
+let piece1 = {color = "R"; position_on_board = [(2, 2); (3, 2)]; position_on_board_corners= [(2, 2); (3, 2)]
+             ; shape = [{coordinate = []; corners = []}]}
+let piece2 = {color = "R"; position_on_board = [(3, 0); (4, 0); (5, 0); (5,1)]; position_on_board_corners= [(3, 0); (5, 0); (5,1)]
+             ; shape = [{coordinate = []; corners = []}]}
+let piece3 = {color = "R"; position_on_board = [(4, 2); (5, 2); (5, 3); (5,4)]; position_on_board_corners= [(4, 2); (5, 2); (5, 4)]
+             ; shape = [{coordinate = []; corners = []}]}
+let piece4 = {color = "R"; position_on_board = [(3, 0); (4, 0); (4, 1); (4,2)]; position_on_board_corners= [(3, 0); (4, 0); (4,2)]
+             ; shape = [{coordinate = []; corners = []}]}
+let piece5= {color = "R"; position_on_board = [(7, 7); (7, 6); (6, 7); (5,7)]; position_on_board_corners= [(7, 7); (7, 6); (5,7)]
+            ; shape = [{coordinate = []; corners = []}]}
+let piece_top = {color = "R"; position_on_board = [(0, 5); (1, 5); (2,5)]; position_on_board_corners= [(0, 5); (2, 5)]
+                ; shape = [{coordinate = []; corners = []}]}
+let piece6= {color = "R"; position_on_board = [(6, 0); (7, 0); (6, 1); (7,1)]; position_on_board_corners= [(6, 0); (7, 0); (6, 1); (7,1)]
+            ; shape = [{coordinate = []; corners = []}]}
+let piece7= {color = "R"; position_on_board = [(3, 0); (3, 1); (4, 0); (4,1)]; position_on_board_corners= [(3, 0); (3, 1); (4, 0); (4,1)]
+            ; shape = [{coordinate = []; corners = []}]}
 
 let is_touching_corner_test 
     (name : string) 
@@ -31,12 +73,41 @@ let is_touching_corner_test
 
 let corner_tests =[
   is_touching_corner_test "Generic test" piece1 board1 true;
+  is_touching_corner_test "Generic test 2" piece2 board2 true;
+  is_touching_corner_test "Not touching, box piece" piece3 board2 false; 
+  is_touching_corner_test "left edge" piece4 board_edge true;
+  is_touching_corner_test "right corner edge" piece5 board_edge false;
+  is_touching_corner_test "left corner edge" piece6 board_edge false;
+  is_touching_corner_test "passes touching corner but fails touching face" 
+    piece7 board_edge true;
 ]
+
+let is_not_touching_face_test
+    (name : string) 
+    (input: Player.piece) 
+    (input2: Player.game) 
+    (expected_output : bool) : test = 
+  name >:: (fun _ -> 
+      assert_equal expected_output (Player.is_not_touching_face input input2))
+
+let face_tests =[
+  is_not_touching_face_test "top edge" piece_top board_edge false; 
+  is_not_touching_face_test "Generic test" piece1 board1 true;
+  is_not_touching_face_test "Generic test 2" piece2 board2 true;
+  is_not_touching_face_test "Not touching, box piece" piece3 board2 false;  
+  is_not_touching_face_test "left edge" piece4 board_edge true;
+  is_not_touching_face_test "right corner edge" piece5 board_edge true;
+  is_not_touching_face_test "left corner edge" piece6 board_edge true;
+  is_not_touching_face_test "passes touching corner but fails touching face"
+    piece7 board_edge false;
+]
+
 
 
 let suite = 
   "test suite"  >::: List.flatten [
     corner_tests;
+    face_tests;
   ]
 let _ = run_test_tt_main suite
 
