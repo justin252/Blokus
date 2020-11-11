@@ -1,21 +1,23 @@
-
-
-(** The type of player's piece. *)
-type piece = {
-  color : string;
-  shape : (int * int) list;
+type orientation={
+  coordinates: (int * int) list;
+  corners: (int * int) list
 }
 
-(** The abstract type of values representing player. *)
+type piece = {
+  color : string;
+  positiononboard: (int * int) list;
+  corneronboard: (int * int) list;
+  shape : orientation list
+}
+
+type game = {
+  gameboard: char array array
+}
+
 type player={
   inventory: piece list; 
   points : int;
   color: string;
-}
-
-(** The type of game board. *)
-type game = {
-  gameboard: char array array
 }
 
 (** [placed_piece p] removes the piece that [p] represents.
@@ -31,16 +33,14 @@ val placed_piece : piece -> player -> player
 (** [is_eliminated player] sees all the valid moves remaining for the 
     remaining pieces. 
     Returns: true if nothing and false if there are still moves.  *)
-val is_eliminated : piece -> bool
+(*val is_eliminated : piece -> bool*)
 
 (** [is_touching player game] sees that the placed piece touches just the 
     corner of one of the pieces on the board and does not touch the faces 
     of it’s other pieces. *)
 (*val is_touching : piece -> (int * int) -> game -> bool*)
 
-val get_all_corners: bool array array -> (int*int) list
-
-val is_touching_simple: int * int -> game -> bool
+val place_piece: (int * int) list -> int * int -> (int * int) list
 
 (*type player_piece
 

@@ -26,7 +26,7 @@ finalcheck: check
 	bash finalcheck.sh
 
 zip:
-	zip blokus.zip *.ml* *.json _tags Makefile
+	zip blokus.zip *.ml* *.json* *.txt _tags Makefile
 	
 clean:
 	ocamlbuild -clean
