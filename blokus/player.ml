@@ -1,21 +1,7 @@
-type square= {
-  color: string;
-  (* coordinate: (int * int); *)
-}
-
-(* 
-type game = {
-  gameboard: (square option) list list;
-} *)
-(* 
-type game = square array array *)
-
-
 type game = string array array
 
-
 type orientation={
-  coordinate: (int * int) list;
+  coordinates: (int * int) list;
   corners: (int * int) list;
 }
 
@@ -271,8 +257,6 @@ let pentomino_piece7_orientation1 = [(1,2); (2,2); (3,2); (2,1); (2,3)]
 let pentomino_piece7_orientation1_corners = [(1,2); (3,2); (2,1); (2,3)]
 
 
-
-
 (** same_orientation returns true if two pieces, [piece1] and [piece2] are the 
     same piece with either the same exact orientation or a different orientation 
     or returns false otherwise, i.e. two unique/distinct pieces.*)
@@ -316,178 +300,11 @@ let is_eliminated player_piece =
   else false
 
 
-let corners_of_player_piece playerpiece = 
-  let corner = [] in
-  let corner1 = if playerpiece.(0).(0) then (0,0)::corner else corner in
-  let corner2 = if playerpiece.(0).(4) then (0,4)::corner1 else corner1 in
-  let corner3 = if playerpiece.(4).(0) then (4,0)::corner2 else corner2 in
-  let corner4 = if playerpiece.(4).(4) then (4,4)::corner3 else corner3 in
-  corner4
-
-let check_right_left_i_z j playerpiece = 
-  let empty = [] in
-  let corner = if playerpiece.(0).(j+1) = false && playerpiece.(0).(j-1) = false then (0,j)::empty else empty in
-  corner
-
-let check_right_left_i_f j playerpiece = 
-  let empty = [] in
-  let corner = if playerpiece.(4).(j+1) = false && playerpiece.(4).(j-1) = false then (4,j)::empty else empty in
-  corner
-
-let check_right_bottom_i j playerpiece = 
-  let empty = [] in
-  let corner = if playerpiece.(0).(j+1) = false  && playerpiece.(1).(j) = false then (0,j)::empty else empty in
-  corner
-
-let check_right_top_i j playerpiece = 
-  let empty = [] in
-  let corner = if playerpiece.(4).(j+1) = false  && playerpiece.(3).(j) = false then (4,j)::empty else empty in
-  corner
-
-let check_left_bottom_i j playerpiece = 
-  let empty = [] in
-  let corner = if playerpiece.(0).(j-1) = false && playerpiece.(1).(j) = false then (0,j)::empty else empty in
-  corner
-
-let check_left_top_i j playerpiece = 
-  let empty = [] in
-  let corner = if playerpiece.(4).(j-1) = false && playerpiece.(3).(j) = false then (4,j)::empty else empty in
-  corner
-
-let check_i_zero j playerpiece = 
-  let empty = [] in 
-  if check_right_left_i_z j playerpiece <> [] then check_right_left_i_z j playerpiece
-  else if check_right_bottom_i j playerpiece <> [] then check_right_bottom_i j playerpiece
-  else if check_left_bottom_i j playerpiece <> [] then check_left_bottom_i j playerpiece
-  else empty
-
-let check_i_four j playerpiece = 
-  let empty = [] in 
-  if check_right_left_i_f j playerpiece <> [] then check_right_left_i_f j playerpiece
-  else if check_right_top_i j playerpiece <> [] then check_right_top_i j playerpiece
-  else if check_left_top_i j playerpiece <> [] then check_left_top_i j playerpiece
-  else empty
-
-let check_top_bottom_z_j i playerpiece = 
-  let empty = [] in
-  let corner = if playerpiece.(i-1).(0) = false && playerpiece.(i+1).(0) = false then (i,0)::empty else empty in
-  corner
-
-let check_right_bottom_j i playerpiece = 
-  let empty = [] in
-  let corner = if playerpiece.(i).(1) = false && playerpiece.(i-1).(0) = false then (i,0)::empty else empty in
-  corner
-
-let check_right_top i playerpiece = 
-  let empty = [] in
-  let corner = if playerpiece.(i).(1) = false && playerpiece.(i-1).(0) = false then (i,0)::empty else empty in
-  corner
-
-let check_top_bottom_f_j i playerpiece = 
-  let empty = [] in
-  let corner = if playerpiece.(i-1).(4) = false && playerpiece.(i+1).(4) = false then (i,4)::empty else empty in
-  corner
-
-let check_left_top_j i playerpiece = 
-  let empty = [] in
-  let corner = if playerpiece.(i).(3) = false && playerpiece.(i-1).(4) = false then (i,4)::empty else empty in
-  corner
-
-let check_left_bottom_j i playerpiece = 
-  let empty = [] in
-  let corner = if playerpiece.(i).(3) = false && playerpiece.(i+1).(4) = false then (i,4)::empty else empty in
-  corner
-
-let check_j_zero i playerpiece = 
-  let empty =[] in 
-  if check_top_bottom_z_j i playerpiece <> [] then check_top_bottom_z_j i playerpiece
-  else if check_right_bottom_j i playerpiece <> [] then check_right_bottom_j i playerpiece
-  else if check_right_top i playerpiece <> [] then check_right_top i playerpiece
-  else empty
-
-let check_j_four i playerpiece = 
-  let empty =[] in 
-  if check_top_bottom_f_j i playerpiece <> [] then check_top_bottom_f_j i playerpiece
-  else if check_left_top_j i playerpiece <> [] then check_left_top_j i playerpiece
-  else if check_left_bottom_j i playerpiece <> [] then check_left_bottom_j i playerpiece
-  else empty
-
-let check_right_left_top i j playerpiece = 
-  let empty = [] in
-  let corner = if playerpiece.(i).(j+1) = false && playerpiece.(i).(j-1) = false && playerpiece.(i-1).(j) = false then (i,j)::empty else empty in
-  corner
-
-let check_bottom_left_top i j playerpiece = 
-  let empty = [] in
-  let corner = if playerpiece.(i+1).(j) = false && playerpiece.(i).(j-1) = false && playerpiece.(i-1).(j) = false then (i,j)::empty else empty in
-  corner
-
-let check_bottom_right_top i j playerpiece = 
-  let empty = [] in
-  let corner = if playerpiece.(i+1).(j) = false && playerpiece.(i).(j-1) = false && playerpiece.(i-1).(j) = false then (i,j)::empty else empty in
-  corner
-
-let check_any i j playerpiece = 
-  let empty =[] in 
-  if check_right_left_top i j playerpiece <> [] then check_right_left_top i j playerpiece
-  else if check_bottom_left_top i j playerpiece <> [] then check_bottom_left_top i j playerpiece
-  else if check_bottom_right_top i j playerpiece <> [] then check_bottom_right_top i j playerpiece
-  else empty
-
-
-let find_corners_in_player_piece playerpiece = 
-  let all_corners = ref [] in
-  for i = 0 to 4 do
-    for j = 0 to 4 do
-      if i=0 && j<>0 && j<>4 && playerpiece.(i).(j) then all_corners := (check_i_zero j playerpiece)@ !all_corners
-      else if j=0 && i<>0 && i<>4 && playerpiece.(i).(j) then all_corners := (check_j_zero i playerpiece)@ !all_corners
-      else if i<>0 && j<>0 && j<>4 && i<>4 && playerpiece.(i).(j) then all_corners := (check_any i j playerpiece)@ !all_corners
-      else if i=4 && j<>0 && j<>4 && playerpiece.(i).(j) then all_corners := (check_i_four j playerpiece)@ !all_corners
-      else if j=4 && i<>0 && i<>4 && playerpiece.(i).(j) then all_corners := (check_j_four i playerpiece)@ !all_corners
-      else all_corners := !all_corners
-    done
-  done;
-  !all_corners
-
-let get_all_corners playerpiece = 
-  let check_corner_array = corners_of_player_piece playerpiece in
-  let check_rest_of_array = find_corners_in_player_piece playerpiece in
-  let all = check_corner_array@check_rest_of_array in
-  all
-
-(** [is_touching player game] sees that the placed piece touches just the 
-    corner of one of the pieces on the board and does not touch the faces 
-    of it’s other pieces. *)
-(* let is_touching_simple coordinate board = 
-
-   if board.gameboard.((fst coordinate)-1).((snd coordinate)-1) <> 'W' then true 
-   else if board.gameboard.((fst coordinate)-1).((snd coordinate)+1) <> 'W'then true
-   else if board.gameboard.((fst coordinate)+1).((snd coordinate)-1) <> 'W'then true
-   else if board.gameboard.((fst coordinate)+1).((snd coordinate)+1) <> 'W'then true
-   else false  *)
-
-
-let is_touching_corner playerpiece (board: game) =
-
-  (* 
-  {type game = square list list; }
-
-  for i 
-  for j
-  if string = playerpiece.color then check for the conditions and add the coordinates 
-  according to the condition
-
-
-  *)
-  (* 
-  let st= board.((fst coordinate).(snd coordinate)) in
-  if st.color= playerpiece.color then 
-    begin match st with 
-
-    end
-  else  *)
+(* [is_touching_corner playerpiece game] checks that the placed piece touches the 
+    corner of one of the pieces on the board *)
+let is_touching_corner playerpiece board =
   let corner_positions = playerpiece.position_on_board_corners in
-  let rec helper corner_positions (board: game) =
+  let rec helper corner_positions board =
     match corner_positions with
     | [] -> false
     | (x,y)::t -> let continue = begin
@@ -533,59 +350,8 @@ let is_touching_corner playerpiece (board: game) =
   in 
   helper corner_positions board
 
-(* has right only 
-   has left only 
-   has top only
-   has bottom only
-   has rig
-
-   if R has R to the bottom and not the top and to the left but not the right, is_touching when coordinate if 
-   the coordinate is (x1-1,y1-1) where R is (x1,y1)
-
-   if R has R to the bottom and not the top and to the right but not the left, is_touching when coordinate if 
-   the coordinate is (x1+1,y1-1) where R is (x1,y1)
-
-   if R has R to the top and not the bottom and to the left but not the right, is_touching when coordinate if 
-   the coordinate is (x1+1,y1+1) where R is (x1,y1)
-
-   if R has R to the top and not the bottom and to the right but not the left, is_touching when coordinate if 
-   the coordinate is (x1+1,y1-1) where R is (x1,y1)
-
-   if R has R to the top and not the bottom and not to the right and not the left, is_touching when coordinate if 
-   the coordinate is (x1-1,y1+1) or (x1+1,y+1)
-
-   if R has R to the bottom and not the top and not to the right and not the left, is_touching when coordinate if 
-   the coordinate is (x1-1,y1-1) or (x1+1,y-1)
-
-   if R has R to the top and bottom, is_touching can't touch the piece anywhere
-   if R has R to the left and right, is_touching can't touch the piece anywhere
-   if R has R to the bottom and to the left and the right, is_touching can't touch the piece anywhere
-   if R has R to the top and to the left and the right, is_touching can't touch the piece anywhere
-
-   INDEX OUT OF RANGE THEN CATCH AND SAY FALSE
-
-*)
-
-(*                     
-  W W W W W W R R R
-  W W W W W R R W W
-  W W R W W W W W W
-  W R R W W W W W W
-  R R R R W W W W W
-
-  R R W
-  R W W
-  x x W
-
-if for each block we want to look at all four sides and if its a the same color then we want to check
-if it is the member of the piece coordinate list, if its not then its touching the face so return false
-
-loop over the player piece coordinates and 
-check for each box if (x-1, y) (x+1, y) (x, y+1) (x, y-1) has the same color as the piece. 
-if it does then we wanna have a if else statement where
-if it is a member of the piece coordinate list then continue looping else return false
-  *)
-
+(* [is_not_touching_face playerpiece game] checks that the placed piece does not 
+   touch faces of pieces the same color. *)
 let is_not_touching_face playerpiece board = 
   let all_positions = playerpiece.position_on_board in 
   let rec helper all_positions (board: game) =

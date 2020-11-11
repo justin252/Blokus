@@ -38,7 +38,13 @@ let board_edge = [|
   [|"W";"W";"W";"W";"W";"W";"W";"W"|];
   [|"W";"W";"W";"W";"W";"W";"W";"W"|]
 |]
-
+let board5x5 = [|
+  [|"R";"x";"R";"W";"W"|];
+  [|"W";"x";"W";"W";"W"|];
+  [|"W";"W";"W";"W";"W"|];
+  [|"W";"W";"W";"W";"W"|];
+  [|"W";"W";"W";"W";"W"|]
+|]
 (* 
 has_left = true
 has_bottom = true
@@ -47,22 +53,24 @@ has_right = false
 *)
 
 let piece1 = {color = "R"; position_on_board = [(2, 2); (3, 2)]; position_on_board_corners= [(2, 2); (3, 2)]
-             ; shape = [{coordinate = []; corners = []}]}
+             ; shape = [{coordinates = []; corners = []}]}
 let piece2 = {color = "R"; position_on_board = [(3, 0); (4, 0); (5, 0); (5,1)]; position_on_board_corners= [(3, 0); (5, 0); (5,1)]
-             ; shape = [{coordinate = []; corners = []}]}
+             ; shape = [{coordinates = []; corners = []}]}
 let piece3 = {color = "R"; position_on_board = [(4, 2); (5, 2); (5, 3); (5,4)]; position_on_board_corners= [(4, 2); (5, 2); (5, 4)]
-             ; shape = [{coordinate = []; corners = []}]}
+             ; shape = [{coordinates = []; corners = []}]}
 let piece4 = {color = "R"; position_on_board = [(3, 0); (4, 0); (4, 1); (4,2)]; position_on_board_corners= [(3, 0); (4, 0); (4,2)]
-             ; shape = [{coordinate = []; corners = []}]}
+             ; shape = [{coordinates = []; corners = []}]}
 let piece5= {color = "R"; position_on_board = [(7, 7); (7, 6); (6, 7); (5,7)]; position_on_board_corners= [(7, 7); (7, 6); (5,7)]
-            ; shape = [{coordinate = []; corners = []}]}
+            ; shape = [{coordinates = []; corners = []}]}
 let piece_top = {color = "R"; position_on_board = [(0, 5); (1, 5); (2,5)]; position_on_board_corners= [(0, 5); (2, 5)]
-                ; shape = [{coordinate = []; corners = []}]}
+                ; shape = [{coordinates = []; corners = []}]}
 let piece6= {color = "R"; position_on_board = [(6, 0); (7, 0); (6, 1); (7,1)]; position_on_board_corners= [(6, 0); (7, 0); (6, 1); (7,1)]
-            ; shape = [{coordinate = []; corners = []}]}
+            ; shape = [{coordinates = []; corners = []}]}
 let piece7= {color = "R"; position_on_board = [(3, 0); (3, 1); (4, 0); (4,1)]; position_on_board_corners= [(3, 0); (3, 1); (4, 0); (4,1)]
-            ; shape = [{coordinate = []; corners = []}]}
+            ; shape = [{coordinates = []; corners = []}]}
 
+let piece5x5 = {color = "R"; position_on_board = [(0, 1); (1, 1)]; position_on_board_corners = [(0, 1); (1, 1)]
+               ; shape = [{coordinates = []; corners = []}]}
 let is_touching_corner_test 
     (name : string) 
     (input: Player.piece) 
@@ -80,6 +88,7 @@ let corner_tests =[
   is_touching_corner_test "left corner edge" piece6 board_edge false;
   is_touching_corner_test "passes touching corner but fails touching face" 
     piece7 board_edge true;
+  (* is_touching_corner_test "touch_corner also checks touching edge" piece5x5 board5x5 true; *)
 ]
 
 let is_not_touching_face_test
@@ -100,6 +109,8 @@ let face_tests =[
   is_not_touching_face_test "left corner edge" piece6 board_edge true;
   is_not_touching_face_test "passes touching corner but fails touching face"
     piece7 board_edge false;
+  is_not_touching_face_test "corner touches but block above it touches face" piece5x5 board5x5 false;
+
 ]
 
 

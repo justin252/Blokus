@@ -8,7 +8,7 @@ type game = string array array
 
 
 type orientation={
-  coordinate: (int * int) list;
+  coordinates: (int * int) list;
   corners: (int * int) list;
 }
 
