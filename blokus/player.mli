@@ -1,31 +1,24 @@
-
-(* type square= {
-   color: string;
-   (* coordinate: (int * int); *)
-   } *)
-
-type game = string array array
-
-
 type orientation={
   coordinates: (int * int) list;
   corners: (int * int) list;
 }
 
 type piece = {
-  color : string;
-  position_on_board: (int*int) list;
-  position_on_board_corners: (int*int) list;
+  color : char;
+  mutable position_on_board: (int*int) list;
+  mutable position_on_board_corners: (int*int) list;
   shape : orientation list;
 }
+
+type gameboard = char array array
 
 type player={
   inventory: piece list; 
   points : int;
-  color: string;
-} 
+  color: char;
+}
 
-(*
+
 (** [placed_piece p] removes the piece that [p] represents.
     Requires: [p] is a valid player piece representation present in 
     the player's inventory. *)
@@ -39,11 +32,12 @@ val placed_piece : piece -> player -> player
 (** [is_eliminated player] sees all the valid moves remaining for the 
     remaining pieces. 
     Returns: true if nothing and false if there are still moves.  *)
-val is_eliminated : piece -> bool *)
+val is_eliminated : piece -> bool
 
-val is_touching_corner: piece -> game -> bool 
+val check_corners: piece -> gameboard -> bool 
 
-val is_not_touching_face: piece -> game -> bool
+val check_faces: piece -> gameboard -> bool
+
 
 (*
 (** [is_touching player game] sees that the placed piece touches just the 
@@ -62,4 +56,4 @@ val get_all_corners: bool array array -> (int*int) list
 
   val is_touching: (int * int) -> player_piece -> game_board -> bool
 
-  val valid_moves: (int * int) -> player_piece -> game_board -> (int * int) list*)
+  val valid_moves: (int * int) -> player_piece -> game_board -> (int * int) list
