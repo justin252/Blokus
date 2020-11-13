@@ -1,5 +1,6 @@
 open OUnit2
 open Player
+open Game
 
 (********************************************************************
    Here are some helper functions for your testing of set-like lists. 
@@ -90,31 +91,6 @@ let place_piece_test
       assert_equal expected_output (place_piece piece coordinate))
 
 
-
-let piecearray = [|[|false;false;false;false;false|];
-                   [|false;false;false;false;false|];
-                   [|false;false;true;false;false|];
-                   [|false;false;true;false;false|];
-                   [|false;true;true;true;false|]|]
-
-let fourcorner = [|[|true;false;false;false;true|];
-                   [|false;false;false;false;false|];
-                   [|false;false;false;false;false|];
-                   [|false;false;false;false;false|];
-                   [|true;false;false;false;true|]|]
-
-let initgameboard = [|[|'W';'W';'W';'W';'W'|];
-                      [|'W';'W';'W';'W';'W'|];
-                      [|'W';'W';'R';'W';'W'|];
-                      [|'W';'R';'R';'W';'W'|];
-                      [|'W';'W';'W';'W';'W'|]|]
-
-
-let unitbool = Array.make_matrix 5 5 false 
-
-
-let testboard = {gameboard = initgameboard}
-
 let monomino_piece = [(1,1)]
 let domino_piece = [(1,1); (2,1)]
 let tromino_piece1 = [(1,1); (1,2); (2,1)]
@@ -197,14 +173,187 @@ let player_tests =
     place_piece_test "Testing dom" domino_piece (14,14) [(14,14);(15,14)];
     place_piece_test "Testing tro" tromino_piece1 (14,14) [(14,14);(14,15);(15,14)];
     place_piece_test "Testing dom bad" domino_piece (19,19) [(19,19)];
+    place_piece_test "Testing tetr" tetromino_piece1 (18,18) [(18,18); (19,18)]
 
 
 
   ]
 
-let suite =
-  "test suite for Blokus"  >::: List.flatten [
+(********************************************************************
+   Hard-coded board 
+ ********************************************************************)
+
+
+let board1 = [|
+  [|'R';'R';'W';'W';'W';'W';'W';'W'|];
+  [|'R';'R';'W';'W';'W';'W';'W';'W'|];
+  [|'W';'W';'W';'W';'W';'W';'W';'W'|];
+  [|'W';'W';'W';'W';'W';'W';'W';'W'|];
+  [|'W';'W';'W';'W';'W';'W';'W';'W'|];
+  [|'W';'W';'W';'W';'W';'W';'W';'W'|];
+  [|'W';'W';'W';'W';'W';'W';'W';'W'|];
+  [|'W';'W';'W';'W';'W';'W';'W';'W'|]
+|]
+
+let board2 = [|
+  [|'R';'R';'W';'W';'W';'W';'W';'W'|];
+  [|'R';'R';'R';'W';'W';'W';'W';'W'|];
+  [|'W';'R';'R';'W';'W';'W';'W';'W'|];
+  [|'W';'W';'R';'W';'W';'W';'W';'W'|];
+  [|'W';'W';'x';'W';'W';'W';'W';'W'|];
+  [|'W';'W';'x';'x';'x';'W';'W';'W'|];
+  [|'W';'W';'W';'W';'W';'W';'W';'W'|];
+  [|'W';'W';'W';'W';'W';'W';'W';'W'|]
+|]
+
+let board_edge = [|
+  [|'R';'R';'W';'R';'R';'x';'W';'W'|];
+  [|'R';'R';'R';'W';'R';'x';'W';'W'|];
+  [|'W';'R';'R';'W';'W';'x';'W';'W'|];
+  [|'x';'x';'W';'W';'W';'W';'W';'W'|];
+  [|'x';'x';'W';'W';'W';'W';'W';'W'|];
+  [|'W';'W';'W';'W';'W';'W';'W';'W'|];
+  [|'W';'W';'W';'W';'W';'W';'W';'W'|];
+  [|'W';'W';'W';'W';'W';'W';'W';'W'|]
+|]
+let board5x5 = [|
+  [|'R';'x';'R';'W';'W'|];
+  [|'W';'x';'W';'W';'W'|];
+  [|'W';'W';'W';'W';'W'|];
+  [|'W';'W';'W';'W';'W'|];
+  [|'W';'W';'W';'W';'W'|]
+|]
+(* 
+has_left = true
+has_bottom = true
+has_top = false
+has_right = false
+*)
+let piece1 = {color = 'R'; position_on_board = [(2, 2); (3, 2)]; position_on_board_corners= [(2, 2); (3, 2)]
+             ; shape = [{coordinates = []; corners = []}]}
+let piece2 = {color = 'R'; position_on_board = [(3, 0); (4, 0); (5, 0); (5,1)]; position_on_board_corners= [(3, 0); (5, 0); (5,1)]
+             ; shape = [{coordinates = []; corners = []}]}
+let piece3 = {color = 'R'; position_on_board = [(4, 2); (5, 2); (5, 3); (5,4)]; position_on_board_corners= [(4, 2); (5, 2); (5, 4)]
+             ; shape = [{coordinates = []; corners = []}]}
+let piece4 = {color = 'R'; position_on_board = [(3, 0); (4, 0); (4, 1); (4,2)]; position_on_board_corners= [(3, 0); (4, 0); (4,2)]
+             ; shape = [{coordinates = []; corners = []}]}
+let piece5= {color = 'R'; position_on_board = [(7, 7); (7, 6); (6, 7); (5,7)]; position_on_board_corners= [(7, 7); (7, 6); (5,7)]
+            ; shape = [{coordinates = []; corners = []}]}
+let piece_top = {color = 'R'; position_on_board = [(0, 5); (1, 5); (2,5)]; position_on_board_corners= [(0, 5); (2, 5)]
+                ; shape = [{coordinates = []; corners = []}]}
+let piece6= {color = 'R'; position_on_board = [(6, 0); (7, 0); (6, 1); (7,1)]; position_on_board_corners= [(6, 0); (7, 0); (6, 1); (7,1)]
+            ; shape = [{coordinates = []; corners = []}]}
+let piece7= {color = 'R'; position_on_board = [(3, 0); (3, 1); (4, 0); (4,1)]; position_on_board_corners= [(3, 0); (3, 1); (4, 0); (4,1)]
+            ; shape = [{coordinates = []; corners = []}]}
+
+let piece5x5 = {color = 'R'; position_on_board = [(0, 1); (1, 1)]; position_on_board_corners = [(0, 1); (1, 1)]
+               ; shape = [{coordinates = []; corners = []}]}
+let is_touching_corner_test 
+    (name : string) 
+    (input: Player.piece) 
+    (input2: Player.gameboard) 
+    (expected_output : bool) : test = 
+  name >:: (fun _ -> 
+      assert_equal expected_output (Player.check_corners input input2))
+
+let corner_tests =[
+  is_touching_corner_test "Generic test" piece1 board1 true;
+  is_touching_corner_test "Generic test 2" piece2 board2 true;
+  is_touching_corner_test "Not touching, box piece" piece3 board2 false; 
+  is_touching_corner_test "left edge" piece4 board_edge true;
+  is_touching_corner_test "right corner edge" piece5 board_edge false;
+  is_touching_corner_test "left corner edge" piece6 board_edge false;
+  is_touching_corner_test "passes touching corner but fails touching face" 
+    piece7 board_edge true;
+  (* is_touching_corner_test "touch_corner also checks touching edge" piece5x5 board5x5 true; *)
+]
+
+let is_not_touching_face_test
+    (name : string) 
+    (input: Player.piece) 
+    (input2: Player.gameboard) 
+    (expected_output : bool) : test = 
+  name >:: (fun _ -> 
+      assert_equal expected_output (Player.check_faces input input2))
+
+let face_tests =[
+  is_not_touching_face_test "top edge" piece_top board_edge false; 
+  is_not_touching_face_test "Generic test" piece1 board1 true;
+  is_not_touching_face_test "Generic test 2" piece2 board2 true;
+  is_not_touching_face_test "Not touching, box piece" piece3 board2 false;  
+  is_not_touching_face_test "left edge" piece4 board_edge true;
+  is_not_touching_face_test "right corner edge" piece5 board_edge true;
+  is_not_touching_face_test "left corner edge" piece6 board_edge true;
+  is_not_touching_face_test "passes touching corner but fails touching face"
+    piece7 board_edge false;
+  is_not_touching_face_test "corner touches but block above it touches face" piece5x5 board5x5 false;
+
+]
+
+let piece12 = {color = 'R'; position_on_board = []; position_on_board_corners= []
+              ; shape = [{coordinates = []; corners = []}]}
+let piece22 = {color = 'R'; position_on_board = []; position_on_board_corners= []
+              ; shape = [{coordinates = []; corners = []}]}
+
+let lst1 = [(2, 2); (3, 2)]
+let lst2 = [(2, 2); (3, 2)]
+
+let lst3 = [(3, 0); (4, 0); (5, 0); (5,1)]
+let lst4 = [(3, 0); (5, 0); (5,1)]
+
+let is_valid_test 
+    (name : string)
+    (input1: Player.piece) 
+    (input2: (int * int) list) 
+    (input3: (int * int) list)
+    (input4: Player.gameboard)
+    (input5: int * int) 
+    (expected_output : bool) : test = 
+  name >:: (fun _ -> 
+      assert_equal expected_output (Player.is_valid input1 input2 input3 input4 input5))
+
+let is_valid_several_tests = [
+  is_valid_test "" piece12 lst1 lst2 board1 (2,2) true;
+  is_valid_test "" piece12 lst1 lst2 board1 (5,5) false;
+  is_valid_test "" piece22 lst3 lst4 board2 (3,0) true;
+  is_valid_test "" piece12 lst1 lst2 board1 (1,1) false;
+  is_valid_test "" piece12 lst1 lst2 board1 (5,5) false;
+
+
+] 
+
+
+let print_board_test
+    (name : string)  
+    (input: Player.gameboard) 
+    (expected_output : unit) : test = 
+  name >:: (fun _ -> 
+      assert_equal expected_output (Game.print_board input))
+
+let print_pieces_test
+    (name : string)  
+    (input: Player.player) 
+    (expected_output : unit) : test = 
+  name >:: (fun _ -> 
+      assert_equal expected_output (Game.print_pieces input))
+
+let print_tests = [
+  print_board_test "" board1 ();
+  print_board_test "" board2 ();
+
+  print_pieces_test "" Player.player_yellow ();
+
+] 
+
+
+let suite = 
+  "test suite"  >::: List.flatten [
+    corner_tests;
+    face_tests;
     player_tests;
-  ]
+    is_valid_several_tests;
 
+    (*print_tests;*)
+
+  ]
 let _ = run_test_tt_main suite

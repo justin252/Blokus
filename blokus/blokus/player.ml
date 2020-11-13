@@ -1,26 +1,297 @@
 type orientation={
   coordinates: (int * int) list;
-  corners: (int * int) list
+  corners: (int * int) list;
 }
 
 type piece = {
-  color : string;
-  mutable position_on_board: (int * int) list;
-  mutable position_on_board_corners: (int * int) list;
-  shape : orientation list
+  color : char;
+  mutable position_on_board: (int*int) list;
+  mutable position_on_board_corners: (int*int) list;
+  shape : orientation list;
 }
 
-type game = {
-  gameboard: char array array
-}
+type gameboard = char array array
 
 type player={
   inventory: piece list; 
   points : int;
-  color: string;
+  color: char;
 }
 
+let monomino_o1 = [(0,0)]
+let monomino_o1_corners = [(0,0)]
+let monomino = 
+  {color = 'W'; position_on_board = []; position_on_board_corners = [];
+   shape = [{coordinates = monomino_o1; corners = monomino_o1_corners}]}
 
+let domino_o1 = [(0,0); (0,1)]
+let domino_o1_corners = [(0,0); (0,1)]
+let domino_o2 = [(0,0); (1,0)]
+let domino_o2_corners = [(0,0); (1,0)]
+let domino = 
+  {color = 'W'; position_on_board = []; position_on_board_corners = [];
+   shape = [{coordinates = domino_o1; corners = domino_o1_corners}; 
+            {coordinates = domino_o2; corners = domino_o2_corners}]}
+
+let tromino_p1_o1 = [(0,0); (0,1); (1,1)]
+let tromino_p1_o1_corners = [(0,0); (0,1); (1,1)]
+let tromino_p1_o2 = [(0,1); (1,0); (1,1)]
+let tromino_p1_o2_corners = [(0,1); (1,0); (1,1)]
+let tromino_p1_o3 = [(0,0); (1,0); (1,1)]
+let tromino_p1_o3_corners = [(0,0); (1,0); (1,1)]
+let tromino_p1_o4 = [(0,0); (0,1); (1,0)]
+let tromino_p1_o4_corners = [(0,0); (0,1); (1,0)]
+let tromino_p1 = 
+  {color = 'W'; position_on_board = []; position_on_board_corners = [];
+   shape = [{coordinates = tromino_p1_o1; corners = tromino_p1_o1_corners};
+            {coordinates = tromino_p1_o2; corners = tromino_p1_o2_corners}; 
+            {coordinates = tromino_p1_o3; corners = tromino_p1_o3_corners};
+            {coordinates = tromino_p1_o4; corners = tromino_p1_o4_corners}]}
+
+let tromino_p2_o1 = [(0,0); (0,1); (0,2)]
+let tromino_p2_o1_corners = [(0,0); (0,2)]
+let tromino_p2_o2 = [(0,0); (1,0); (2,0)]
+let tromino_p2_o2_corners = [(0,0); (2,0)]
+let tromino_p2 = 
+  {color = 'W'; position_on_board = []; position_on_board_corners = [];
+   shape = [{coordinates = tromino_p2_o1; corners = tromino_p2_o1_corners};
+            {coordinates = tromino_p2_o2; corners = tromino_p2_o2_corners}]}
+
+let tetromino_p1_o1 = [(0,0); (0,1); (1,0); (1,1)]
+let tetromino_p1_o1_corners = [(0,0); (0,1); (1,0); (1,1)]
+let tetromino_p1 =
+  {color = 'W'; position_on_board = []; position_on_board_corners = [];
+   shape = [{coordinates = tetromino_p1_o1; corners = tetromino_p1_o1_corners}]}
+
+let tetromino_p2_o1 = [(0,1); (1,0); (1,1); (1,2)]
+let tetromino_p2_o1_corners = [(0,1); (1,0); (1,2)]
+let tetromino_p2_o2 = [(0,0); (1,0); (1,1); (2,0)]
+let tetromino_p2_o2_corners = [(0,0); (1,1); (2,0)]
+let tetromino_p2_o3 = [(0,0); (0,1); (0,2); (1,1)]
+let tetromino_p2_o3_corners = [(0,0); (0,2); (1,1)]
+let tetromino_p2_o4 = [(0,1); (1,0); (1,1); (2,1)]
+let tetromino_p2_o4_corners = [(0,1); (1,0); (2,1)]
+let tetromino_p2 =
+  {color = 'W'; position_on_board = []; position_on_board_corners = [];
+   shape = [{coordinates = tetromino_p2_o1; corners = tetromino_p2_o1_corners};
+            {coordinates = tetromino_p2_o2; corners = tetromino_p2_o2_corners}; 
+            {coordinates = tetromino_p2_o3; corners = tetromino_p2_o3_corners};
+            {coordinates = tetromino_p2_o4; corners = tetromino_p2_o4_corners}]}
+
+let tetromino_p3_o1 = [(0,0); (0,1); (0,2); (0,3)]
+let tetromino_p3_o1_corners = [(0,0); (0,3)]
+let tetromino_p3_o2 = [(0,0); (1,0); (2,0); (3,0)]
+let tetromino_p3_o2_corners = [(0,0); (3,0)]
+let tetromino_p3 =
+  {color = 'W'; position_on_board = []; position_on_board_corners = [];
+   shape = [{coordinates = tetromino_p3_o1; corners = tetromino_p3_o1_corners};
+            {coordinates = tetromino_p3_o2; corners = tetromino_p3_o2_corners}]}
+
+let tetromino_p4_o1 = [(0,2); (1,0); (1,1); (1,2)]
+let tetromino_p4_o1_corners = [(0,2); (1,0); (1,2);]
+let tetromino_p4_o2 = [(0,0); (1,0); (2,0); (2,1)]
+let tetromino_p4_o2_corners = [(0,0); (2,0); (2,1)]
+let tetromino_p4_o3 = [(0,0); (0,1); (0,2); (1,0)]
+let tetromino_p4_o3_corners = [(0,0); (0,2); (1,0)]
+let tetromino_p4_o4 = [(0,0); (0,1); (1,1); (2,1)]
+let tetromino_p4_o4_corners = [(0,0); (0,1); (2,1)]
+let tetromino_p4 =
+  {color = 'W'; position_on_board = []; position_on_board_corners = [];
+   shape = [{coordinates = tetromino_p4_o1; corners = tetromino_p4_o1_corners};
+            {coordinates = tetromino_p4_o2; corners = tetromino_p4_o2_corners}; 
+            {coordinates = tetromino_p4_o3; corners = tetromino_p4_o3_corners};
+            {coordinates = tetromino_p4_o4; corners = tetromino_p4_o4_corners}]}
+
+let tetromino_p5_o1 = [(0,1); (0,2); (1,0); (1,1)]
+let tetromino_p5_o1_corners = [(0,1); (0,2); (1,0); (1,1)]
+let tetromino_p5_o2 = [(0,0); (1,0); (1,1); (2,1)]
+let tetromino_p5_o2_corners = [(0,0); (1,0); (1,1); (2,1)]
+let tetromino_p5 =
+  {color = 'W'; position_on_board = []; position_on_board_corners = [];
+   shape = [{coordinates = tetromino_p5_o1; corners = tetromino_p5_o1_corners};
+            {coordinates = tetromino_p5_o2; corners = tetromino_p5_o2_corners};]}
+
+let pentomino_p1_o1 = [(0,0); (1,0); (1,1); (1,2)]
+let pentomino_p1_o1_corners = [(0,0); (1,0); (1,2)]
+let pentomino_p1_o2 = [(0,0); (0,1); (1,0); (2,0)]
+let pentomino_p1_o2_corners = [(0,0); (0,1); (2,0)]
+let pentomino_p1_o3 = [(0,0); (0,1); (0,2); (1,2)]
+let pentomino_p1_o3_corners = [(0,0); (0,2); (1,2)]
+let pentomino_p1_o4 = [(0,1); (1,1); (2,0); (2,1)]
+let pentomino_p1_o4_corners = [(0,1); (2,0); (2,1)]
+let pentomino_p1 =
+  {color = 'W'; position_on_board = []; position_on_board_corners = [];
+   shape = [{coordinates = pentomino_p1_o1; corners = pentomino_p1_o1_corners};
+            {coordinates = pentomino_p1_o2; corners = pentomino_p1_o2_corners}; 
+            {coordinates = pentomino_p1_o3; corners = pentomino_p1_o3_corners};
+            {coordinates = pentomino_p1_o4; corners = pentomino_p1_o4_corners}]}
+
+let pentomino_p2_o1 = [(0,1); (1,1); (2,0); (2,1); (2,2)]
+let pentomino_p2_corners = [(0,1); (2,0); (2,2)]
+let pentomino_p2_o2 = [(0,0); (1,0); (1,1); (1,2); (2,0)]
+let pentomino_p2_o2_corners = [(0,0); (1,2); (2,0)]
+let pentomino_p2_o3 = [(0,0); (0,1); (0,2); (1,1); (2,1)]
+let pentomino_p2_o3_corners = [(0,0); (0,2); (2,1)]
+let pentomino_p2_o4 = [(0,2); (1,0); (1,1); (1,2); (2,2)]
+let pentomino_p2_o4_corners = [(0,2); (1,0); (2,2)]
+let pentomino_p2 =
+  {color = 'W'; position_on_board = []; position_on_board_corners = [];
+   shape = [{coordinates = pentomino_p2_o1; corners = pentomino_p2_corners};
+            {coordinates = pentomino_p2_o2; corners = pentomino_p2_o2_corners}; 
+            {coordinates = pentomino_p2_o3; corners = pentomino_p2_o3_corners};
+            {coordinates = pentomino_p2_o4; corners = pentomino_p2_o4_corners}]}
+
+let pentomino_p3_o1 = [(0,0); (1,0); (2,0); (2,1); (2,2)]
+let pentomino_p3_o1_corners = [(0,0); (2,0); (2,2)]
+let pentomino_p3_o2 = [(0,0); (0,1); (0,2); (1,0); (2,0)]
+let pentomino_p3_o2_corners = [(0,0); (0,2); (2,0)]
+let pentomino_p3_o3 = [(0,0); (0,1); (0,2); (1,2); (2,2)]
+let pentomino_p3_o3_corners = [(0,0); (0,2); (2,2)]
+let pentomino_p3_o4 = [(0,2); (1,2); (2,0); (2,1); (2,2)]
+let pentomino_p3_o4_corners = [(0,2); (2,0); (2,2)]
+let pentomino_p3 =
+  {color = 'W'; position_on_board = []; position_on_board_corners = [];
+   shape = [{coordinates = pentomino_p3_o1; corners = pentomino_p3_o1_corners};
+            {coordinates = pentomino_p3_o2; corners = pentomino_p3_o2_corners}; 
+            {coordinates = pentomino_p3_o3; corners = pentomino_p3_o3_corners};
+            {coordinates = pentomino_p3_o4; corners = pentomino_p3_o4_corners}]}
+
+let pentomino_p4_o1 = [(0,1); (0,2); (0,3); (1,0); (1,1)]
+let pentomino_p4_o1_corners = [(0,1); (0,3); (1,0); (1,1)]
+let pentomino_p4_o2 = [(0,0); (1,0); (1,1); (2,1); (3,1)]
+let pentomino_p4_o2_corners = [(0,0); (1,0); (1,1); (3,1)]
+let pentomino_p4_o3 = [(0,2); (0,3); (1,0); (1,1); (1,2)]
+let pentomino_p4_o3_corners = [(0,2); (0,3); (1,0); (1,2)]
+let pentomino_p4_o4 = [(0,0); (1,0); (2,0); (2,1); (3,1)]
+let pentomino_p4_o4_corners = [(0,0); (2,0); (2,1); (3,1)]
+let pentomino_p4 =
+  {color = 'W'; position_on_board = []; position_on_board_corners = [];
+   shape = [{coordinates = pentomino_p4_o1; corners = pentomino_p4_o1_corners};
+            {coordinates = pentomino_p4_o2; corners = pentomino_p4_o2_corners}; 
+            {coordinates = pentomino_p4_o3; corners = pentomino_p4_o3_corners};
+            {coordinates = pentomino_p4_o4; corners = pentomino_p4_o4_corners}]}
+
+let pentomino_p5_o1 = [(0,2); (1,0); (1,1); (1,2); (2,0)]
+let pentomino_p5_o1_corners = [(0,2); (1,0); (1,2); (2,0)]
+let pentomino_p5_o2 = [(0,0); (0,1); (1,1); (2,1); (2,2)]
+let pentomino_p5_o2_corners = [(0,0); (0,1); (2,1); (2,2)]
+let pentomino_p5 =
+  {color = 'W'; position_on_board = []; position_on_board_corners = [];
+   shape = [{coordinates = pentomino_p5_o1; corners = pentomino_p5_o1_corners};
+            {coordinates = pentomino_p5_o2; corners = pentomino_p5_o2_corners}]}
+
+let pentomino_p6_o1 = [(0,0); (1,0); (2,0); (3,0); (4,0)]
+let pentomino_p6_o1_corners = [(0,0); (4,0)]
+let pentomino_p6_o2 = [(0,0); (0,1); (0,2); (0,3); (0,4)]
+let pentomino_p6_o2_corners = [(0,0); (0,4)]
+let pentomino_p6 =
+  {color = 'W'; position_on_board = []; position_on_board_corners = [];
+   shape = [{coordinates = pentomino_p6_o1; corners = pentomino_p6_o1_corners};
+            {coordinates = pentomino_p6_o2; corners = pentomino_p6_o2_corners}]}
+
+let pentomino_p7_o1 = [(0,0); (1,0); (1,1); (2,0); (2,1)]
+let pentomino_p7_o1_corners = [(0,0); (1,1); (2,0); (2,1)]
+let pentomino_p7_o2 = [(0,0); (0,1); (0,2); (1,0); (1,1)]
+let pentomino_p7_o2_corners = [(0,0); (0,2); (1,0); (1,1)]
+let pentomino_p7_o3 = [(0,0); (0,1); (1,0); (1,1); (2,1)]
+let pentomino_p7_o3_corners = [(0,0); (0,1); (1,0); (2,1)]
+let pentomino_p7_o4 = [(0,1); (0,2); (1,0); (1,1); (1,2)]
+let pentomino_p7_o4_corners = [(0,1); (0,2); (1,0); (1,2)]
+let pentomino_p7 =
+  {color = 'W'; position_on_board = []; position_on_board_corners = [];
+   shape = [{coordinates = pentomino_p7_o1; corners = pentomino_p7_o1_corners};
+            {coordinates = pentomino_p7_o2; corners = pentomino_p7_o2_corners}; 
+            {coordinates = pentomino_p7_o3; corners = pentomino_p7_o3_corners};
+            {coordinates = pentomino_p7_o4; corners = pentomino_p7_o4_corners}]}
+
+let pentomino_p8_o1 = [(0,1); (0,2); (1,0); (1,1); (2,0)]
+let pentomino_p8_o1_corners = [(0,1); (0,2); (1,0); (1,1); (2,0)]
+let pentomino_p8_o2 = [(0,0); (0,1); (1,1); (1,2); (2,2)]
+let pentomino_p8_o2_corners = [(0,0); (0,1); (1,1); (1,2); (2,2)]
+let pentomino_p8_o3 = [(0,2); (1,1); (1,2); (2,0); (2,1)]
+let pentomino_p8_o3_corners = [(0,2); (1,1); (1,2); (2,0); (2,1)]
+let pentomino_p8_o4 = [(0,0); (1,0); (1,1); (2,1); (2,2)]
+let pentomino_p8_o4_corners = [(0,0); (1,0); (1,1); (2,1); (2,2)]
+let pentomino_p8 =
+  {color = 'W'; position_on_board = []; position_on_board_corners = [];
+   shape = [{coordinates = pentomino_p8_o1; corners = pentomino_p8_o1_corners};
+            {coordinates = pentomino_p8_o2; corners = pentomino_p8_o2_corners}; 
+            {coordinates = pentomino_p8_o3; corners = pentomino_p8_o3_corners};
+            {coordinates = pentomino_p8_o4; corners = pentomino_p8_o4_corners}]}
+
+let pentomino_p9_o1 = [(0,0); (0,1); (1,0); (2,0); (2,1)]
+let pentomino_p9_o1_corners = [(0,0); (0,1); (2,0); (2,1)]
+let pentomino_p9_o2 = [(0,0); (0,1); (0,2); (1,0); (1,2)]
+let pentomino_p9_o2_corners = [(0,0); (0,2); (1,0); (1,2)]
+let pentomino_p9_o3 = [(0,0); (0,1); (1,1); (2,0); (2,1)]
+let pentomino_p9_o3_corners = [(0,0); (0,1); (2,0); (2,1)]
+let pentomino_p9_o4 = [(0,0); (0,2); (1,0); (1,1); (1,2)]
+let pentomino_p9_o4_corners = [(0,0); (0,2); (1,0); (1,2)]
+let pentomino_p9 =
+  {color = 'W'; position_on_board = []; position_on_board_corners = [];
+   shape = [{coordinates = pentomino_p9_o1; corners = pentomino_p9_o1_corners};
+            {coordinates = pentomino_p9_o2; corners = pentomino_p9_o2_corners}; 
+            {coordinates = pentomino_p9_o3; corners = pentomino_p9_o3_corners};
+            {coordinates = pentomino_p9_o4; corners = pentomino_p9_o4_corners}]}
+
+let pentomino_p10_o1 = [(0,1); (0,2); (1,0); (1,1); (2,1)]
+let pentomino_p10_o1_corners = [(0,1); (0,2); (1,0); (2,1)]
+let pentomino_p10_o2 = [(0,1); (1,0); (1,1); (1,2); (2,2)]
+let pentomino_p10_o2_corners = [(0,1); (1,0); (1,2); (2,2)]
+let pentomino_p10_o3 = [(0,1); (1,1); (1,2); (2,0); (2,1)]
+let pentomino_p10_o3_corners = [(0,1); (1,2); (2,0); (2,1)]
+let pentomino_p10_o4 = [(0,0); (1,0); (1,1); (1,2); (2,1)]
+let pentomino_p10_o4_corners = [(0,0); (1,0); (1,2); (2,1)]
+let pentomino_p10 =
+  {color = 'W'; position_on_board = []; position_on_board_corners = [];
+   shape = [{coordinates = pentomino_p10_o1; corners = pentomino_p10_o1_corners};
+            {coordinates = pentomino_p10_o2; corners = pentomino_p10_o2_corners}; 
+            {coordinates = pentomino_p10_o3; corners = pentomino_p10_o3_corners};
+            {coordinates = pentomino_p10_o4; corners = pentomino_p10_o4_corners}]}
+
+let pentomino_p11_o1 = [(0,1); (1,0); (1,1); (1,2); (2,1)]
+let pentomino_p11_o1_corners = [(0,1); (1,0); (1,2); (2,1)]
+let pentomino_p11 =
+  {color = 'W'; position_on_board = []; position_on_board_corners = [];
+   shape = [{coordinates = pentomino_p11_o1; corners = pentomino_p11_o1_corners}]}
+
+let pentomino_p12_o1 = [(0,1); (1,0); (1,1); (1,2); (1,3)]
+let pentomino_p12_o1_corners = [(0,1); (1,0); (1,3)]
+let pentomino_p12_o2 = [(0,0); (1,0); (1,1); (2,0); (3,0)]
+let pentomino_p12_o2_corners = [(0,0); (1,1); (3,0)]
+let pentomino_p12_o3 = [(0,0); (0,1); (0,2); (0,3); (1,2)]
+let pentomino_p12_o3_corners = [(0,0); (0,3); (1,2)]
+let pentomino_p12_o4 = [(0,1); (1,1); (2,0); (2,1); (3,1)]
+let pentomino_p12_o4_corners = [(0,1); (2,0); (3,1)]
+let pentomino_p12 =
+  {color = 'W'; position_on_board = []; position_on_board_corners = [];
+   shape = [{coordinates = pentomino_p12_o1; corners = pentomino_p12_o1_corners};
+            {coordinates = pentomino_p12_o2; corners = pentomino_p12_o2_corners}; 
+            {coordinates = pentomino_p12_o3; corners = pentomino_p12_o3_corners};
+            {coordinates = pentomino_p12_o4; corners = pentomino_p12_o4_corners}]}
+
+let pieces = 
+  [monomino; domino; tromino_p1; tromino_p2; tetromino_p1; tetromino_p2;
+   tetromino_p3; tetromino_p4; tetromino_p5; pentomino_p1; pentomino_p2;
+   pentomino_p3; pentomino_p4; pentomino_p5; pentomino_p6; pentomino_p7; 
+   pentomino_p8; pentomino_p9; pentomino_p10; pentomino_p11; pentomino_p12]
+
+let set_color c (piece : piece) = 
+  { piece with color = c; }
+
+(* [inventory_generator] returns a list of piece objects with color field
+   equal to [c]. *)
+let inventory_generator c = 
+  List.map (set_color c) pieces
+
+let player_red =
+  { inventory = inventory_generator 'R'; points = 0; color = 'R' }
+let player_green = 
+  { inventory = inventory_generator 'G'; points = 0; color = 'G' }
+let player_blue = 
+  { inventory = inventory_generator 'B'; points = 0; color = 'B' }
+let player_yellow = 
+  { inventory = inventory_generator 'Y'; points = 0; color = 'Y' }
 
 (** same_orientation returns true if two pieces, [piece1] and [piece2] are the 
     same piece with either the same exact orientation or a different orientation 
@@ -55,6 +326,7 @@ let rec placed_piece_helper inv piece =
     removing the placed [piece] for their inventory. *)
 let placed_piece piece player =
   {inventory = placed_piece_helper player.inventory piece; color = player.color; points = player.points}
+
 
 let is_eliminated player = 
   if player.inventory = [] then true else false
@@ -133,19 +405,64 @@ let update_corn_on_board piece lst coordinate =
 let can_place_piece piece board coordinate =
   if piece.position_on_board = [] then false else check_board piece.position_on_board board
 
-let check_corners piece board = 
-  failwith "unimplemented"
+(* [check_corners piece game] checks that the placed piece touches the 
+    corner of one of the pieces on the board *)
+let check_corners piece board =
+  let corner_positions = piece.position_on_board_corners in
+  let rec helper corner_positions board =
+    match corner_positions with
+    | [] -> false
+    | (x,y)::t -> let continue = begin
+        let has_left= (y - 1 < 0) || (List.mem (x, y-1) piece.position_on_board) 
+        in 
+        let has_right= (y + 1 >= Array.length board) || List.mem (x, y+1) piece.position_on_board 
+        in 
+        let has_top= (x - 1 < 0) || List.mem (x-1, y) piece.position_on_board 
+        in 
+        let has_bottom= (x + 1 >= Array.length board) || List.mem (x+1, y) piece.position_on_board 
+        in 
+        if has_bottom && has_top <> true && has_left && has_right <> true then 
+          begin if (board.(x-1).(y+1)) = piece.color then true else false end  
+        else if has_bottom && has_top <> true && has_left <> true && has_right  then begin
+          if (board.(x-1).(y-1)) = piece.color then true else false end 
+        else if has_bottom <> true && has_top && has_left && has_right <> true then begin
+          if (board.(x+1).(y+1)) = piece.color then true else false end 
+        else if (has_top && has_right) && not (has_bottom && has_left) then begin
+          if (board.(x+1).(y-1)) = piece.color then true else false end 
+        else if has_top && has_bottom <> true && has_left <> true && has_right <> true then begin
+          if ((board.(x+1).(y-1)) = piece.color || (board.(x+1).(y+1)) = piece.color) then true else false end 
+        else if has_bottom && has_top <> true && has_left <>true  && has_right <> true then begin (* change *)
+          if ((board.(x-1).(y-1)) = piece.color || (board.(x-1).(y+1)) = piece.color) then true else false end 
+        else if has_left && has_bottom <> true && has_top <> true && has_right <>true then begin
+          if ((board.(x-1).(y+1)) = piece.color || (board.(x+1).(y+1)) = piece.color) then true else false end 
+        else if has_right && not has_bottom && not has_top && not has_left then begin
+          if ((board.(x-1).(y-1)) = piece.color || (board.(x+1).(y-1)) = piece.color) then true else false end 
+        else if has_bottom && has_top then false 
+        else if has_right && has_left then false 
+        else false end 
+      in if continue then true else helper t board
+  in 
+  helper corner_positions board
 
-let check_faces piece board =
-  failwith "unimplemented"
-
-let is_touching piece board =
-  failwith "unimplemented"
+(* [check_faces piece game] checks that the placed piece does not 
+   touch faces of pieces the same color. *)
+let check_faces piece board = 
+  let all_positions = piece.position_on_board in 
+  let rec helper all_positions (board : gameboard) =
+    match all_positions with
+    | [] -> true
+    | (x,y)::t -> begin
+        if ((x-1) >= 0) && board.(x-1).(y) = piece.color then false 
+        else if (x+ 1 < Array.length board) && board.(x+1).(y) = piece.color then false 
+        else if (y+ 1 < Array.length board) && board.(x).(y+1) = piece.color then false 
+        else if ((y-1) >= 0) && board.(x).(y-1) = piece.color then false
+        else helper t board end 
+  in helper all_positions board
 
 let is_valid piece coordlst cornerlst board coordinate = 
   update_pos_on_board piece coordlst coordinate;
   update_corn_on_board piece cornerlst coordinate;
-  if can_place_piece piece board coordinate && is_touching piece board then true else false
-
-
-
+  if can_place_piece piece board coordinate 
+  && check_corners piece board 
+  && check_faces piece board then true
+  else false
