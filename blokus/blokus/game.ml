@@ -50,8 +50,16 @@ let print_pieces piecesplayer =
   helper allpieces;
   ()
 
-let update_board board = 
-  failwith "unimplemented"
+let player_list = [player_blue;player_green;player_red;player_yellow]
+
+let update_board piece coordinate board =  
+  let rec helper coordinate = 
+    match coordinate with
+    |[]->[]
+    |(x,y)::t -> board.(x).(y) <- piece.color; helper t
+  in
+  helper coordinate;
+  board
 
 let print_orientation piece = 
   failwith "unimplemented"

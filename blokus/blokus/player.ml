@@ -344,14 +344,16 @@ let is_eliminated player =
 let rec corner_place_algo piece coordinate = 
   match piece with
   |[]->[]
-  |(x,y)::t -> if (x + (fst coordinate)) < 20 && (y + (snd coordinate)) < 20 && (x + (fst coordinate)) >= 0 && (y + (snd coordinate)) >= 0
+  |(x,y)::t -> if (x + (fst coordinate)) < 20 && (y + (snd coordinate)) < 20 
+                  && (x + (fst coordinate)) >= 0 && (y + (snd coordinate)) >= 0
     then ((x + (fst coordinate)), (y + (snd coordinate)))::(corner_place_algo t coordinate) 
     else []
 
 let rec place_algo piece coordinate = 
   match piece with
   |[]->[]
-  |(x,y)::t -> if (x + (fst coordinate)) < 20 && (y + (snd coordinate)) < 20 && (x + (fst coordinate)) >= 0 && (y + (snd coordinate)) >= 0 
+  |(x,y)::t -> if (x + (fst coordinate)) < 20 && (y + (snd coordinate)) < 20 
+                  && (x + (fst coordinate)) >= 0 && (y + (snd coordinate)) >= 0 
     then ((x + (fst coordinate)), (y + (snd coordinate)))::(place_algo t coordinate) 
     else []
 
@@ -394,16 +396,19 @@ let rec check_board piece board =
 let update_pos_on_board piece lst coordinate = 
   let posonboard = place_piece lst coordinate in
   let check_cond = if List.length posonboard = List.length lst then true else false in
-  if check_cond = true then piece.position_on_board <- posonboard else piece.position_on_board <- []
+  if check_cond = true then piece.position_on_board <- posonboard 
+  else piece.position_on_board <- []
 
 let update_corn_on_board piece lst coordinate = 
   let cornonbord = place_piece_corner lst coordinate in
   let check_cond = if List.length cornonbord = List.length lst then true else false in
-  if check_cond = true then piece.position_on_board_corners <- cornonbord else piece.position_on_board_corners <- []
+  if check_cond = true then piece.position_on_board_corners <- cornonbord 
+  else piece.position_on_board_corners <- []
 
 (** see if we can actually place piece*)
 let can_place_piece piece board coordinate =
-  if piece.position_on_board = [] then false else check_board piece.position_on_board board
+  if piece.position_on_board = [] then false 
+  else check_board piece.position_on_board board
 
 (* [check_corners piece game] checks that the placed piece touches the 
     corner of one of the pieces on the board *)
