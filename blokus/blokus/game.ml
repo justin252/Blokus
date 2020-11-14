@@ -61,6 +61,44 @@ let update_board piece coordinate board =
   helper coordinate;
   board
 
+let base_piece = [['W'; 'W'; 'W'; 'W'; 'W']; ['W'; 'W'; 'W'; 'W'; 'W']; ['W'; 'W'; 'W'; 'W'; 'W']; ['W'; 'W'; 'W'; 'W'; 'W']; ['W'; 'W'; 'W'; 'W'; 'W']]
+
+let print_char_list lst =
+  let string_of_char_list l = String.concat " " (List.map (Char.escaped) l) in
+  let char_list_to_string l = String.concat "\n" (List.map string_of_char_list l) in
+  Printf.printf "%s" (char_list_to_string lst)
+
+let rec change_val_cols b row color y =
+  match row with
+  | [] -> row
+  | h :: t ->
+    if b = y then color :: change_val_cols b t color (y+1) else h :: change_val_cols b t color (y+1) 
+
+let rec change_val_rows a b lst color x y =
+  match lst with
+  | [] -> lst
+  | h :: t ->
+    if a = x then change_val_cols b h color y :: change_val_rows a b t color (x+1) y else h :: change_val_rows a b t color (x+1) y
+
+let rec fill_in_base base coordlst color =
+  match coordlst with
+  | [] -> base
+  | (a, b) :: t -> 
+    let newbase = change_val_rows a b base color 0 0 in
+    fill_in_base newbase t color
+
 let print_orientation piece = 
-  failwith "unimplemented"
+  let ori = List.hd (piece.shape) in
+  let coordlst = ori.coordinates in
+  print_char_list (fill_in_base base_piece coordlst piece.color)
+
+let check_isvalid piece coordlst cornerlst board coordinate =
+  is_valid piece coordlst cornerlst board coordinate
+
+let check_inventory player =
+  match player with
+  | {inventory = inv; points = p; color = c} -> 
+    match inv with
+    | [] -> false
+    | _ -> true
 
