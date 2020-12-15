@@ -40,11 +40,9 @@ val check_faces: piece -> gameboard -> bool
 
 val place_piece: (int * int) list -> int * int -> (int * int) list
 
-val check_corners: piece -> gameboard -> bool
-
-val check_faces: piece -> gameboard -> bool
-
-val is_valid: piece -> (int * int) list -> (int * int) list -> gameboard -> int * int -> bool
+val is_valid: 
+  piece -> 
+  (int * int) list -> (int * int) list -> gameboard -> int * int -> bool
 
 val player_red: player
 
@@ -64,9 +62,9 @@ val remove_player: player list -> player -> player list
 
 val can_place_piece: piece -> char array array -> bool
 
-val update_pos_on_board: piece -> (int * int) list -> int * int -> unit
+(*val update_pos_on_board: piece -> (int * int) list -> int * int -> unit*)
 
-val update_corn_on_board: piece -> (int * int) list -> int * int -> unit
+(*val update_corn_on_board: piece -> (int * int) list -> int * int -> unit*)
 
 (*
 (** [is_touching player game] sees that the placed piece touches just the 

@@ -424,7 +424,7 @@ let place_piece_corner piece coordinate =
 let rec check_board piece board = 
   match piece with 
   | [] -> true
-  |(x,y)::t -> if board.(x).(y) = 'W' then check_board t board else false
+  |(x,y)::t -> if board.(x).(y) = '_' then check_board t board else false
 
 let update_pos_on_board piece lst coordinate = 
   let posonboard = place_piece lst coordinate in
@@ -497,15 +497,34 @@ let check_faces piece board =
         else helper t board end 
   in helper all_positions board
 
+let rec starting_pos_helper lst =
+  match lst with
+  | [] -> false
+  | (a, b) :: t -> 
+    if ((a = 0 && b = 0) || 
+        (a = 0 && b = 19) ||
+        (a = 19 && b = 0) || 
+        (a = 19 && b = 19)) 
+    then true else starting_pos_helper t
+
+let starting_pos piece =
+  starting_pos_helper piece.position_on_board
+
 let is_valid piece coordlst cornerlst board coordinate = 
   update_pos_on_board piece coordlst coordinate;
   update_corn_on_board piece cornerlst coordinate;
-  if begin
-    can_place_piece piece board 
-    && check_corners piece board 
-    && check_faces piece board 
+  let can_we_place = can_place_piece piece board in
+  if can_we_place = true then begin
+    let cornerchecker = 
+      if starting_pos piece 
+      then true else check_corners piece board in
+    if begin
+      (cornerchecker)
+      && (check_faces piece board = true) 
+    end
+    then true
+    else false
   end
-  then false
-  else true
+  else false
 
 let actually_place_piece piece baord = ()

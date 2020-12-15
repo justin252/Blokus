@@ -42,12 +42,17 @@ let print_individual_piece indpiece color =
 
 let print_pieces piecesplayer = 
   let allpieces = piecesplayer.inventory in
-  let rec helper allpieces = 
+  let rec helper allpieces index = 
     match allpieces with
     |[] -> []
-    |h::t -> print_individual_piece h piecesplayer.color; helper t
+    |h::t -> begin
+        print_newline();
+        print_string("Piece: "^ string_of_int(index)); 
+        print_individual_piece h piecesplayer.color; 
+        helper t (index+1)
+      end
   in 
-  helper allpieces;
+  helper allpieces 0;
   ()
 
 let player_list = [player_blue;player_green;player_red;player_yellow]

@@ -62,9 +62,9 @@ let rec play_game_helper playerlist board currplayer  =
         print_endline "Choose orientation you want to place.";
         let spec_int = parse_int (read_line ()) in
         let specific_orien = List.nth specificpiece.shape spec_int in
-        print_endline "Enter x coordinate.";
+        print_endline "Enter row # coordinate.";
         let x_coord = parse_int (read_line ()) in
-        print_endline "Enter y coordinate.";
+        print_endline "Enter column # coordinate.";
         let y_coord = parse_int (read_line ()) in
         if is_valid specificpiece specific_orien.coordinates specific_orien.corners board (x_coord,y_coord)
         then begin
@@ -88,7 +88,7 @@ let rec play_game_helper playerlist board currplayer  =
 (** [play_game f] starts the adventure in file [f]. *)
 let play_game =
   let players = player_list in
-  let official_board = Array.make_matrix 20 20 'W' in
+  let official_board = Array.make_matrix 20 20 '_' in
   let currplayer = List.hd (players) in
   play_game_helper players official_board currplayer
 
