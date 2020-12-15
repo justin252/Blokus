@@ -14,29 +14,29 @@ let piece_printer piece =
   for i = 0 to Array.length piece -1 do
     print_newline ();
     for j = 0 to Array.length piece.(i) -1 do
-      print_string piece.(i).(j)
+      print_char piece.(i).(j)
     done
   done
 
 
-let piece_to_piecearray piece = 
-  let matrix = Array.make_matrix 5 5 " " in
+let piece_to_piecearray piece color= 
+  let matrix = Array.make_matrix 5 5 ' ' in
   let rec helper piece =
     match piece with
     |[]->[]
-    |(x,y)::t -> matrix.(x).(y) <- "X"; helper t
+    |(x,y)::t -> matrix.(x).(y) <- color; helper t
   in
   helper piece;
   matrix
 
-let print_individual_piece indpiece = 
+let print_individual_piece indpiece color = 
   let orien = indpiece.shape in
   let get_first orien = 
     match orien with
     |[]->None
     |h::t -> Some h
   in
-  let matrixofpiece =  piece_to_piecearray (List.hd orien).coordinates in
+  let matrixofpiece =  piece_to_piecearray (List.hd orien).coordinates color in
   piece_printer matrixofpiece
 
 
@@ -45,23 +45,24 @@ let print_pieces piecesplayer =
   let rec helper allpieces = 
     match allpieces with
     |[] -> []
-    |h::t -> print_individual_piece h; helper t
+    |h::t -> print_individual_piece h piecesplayer.color; helper t
   in 
   helper allpieces;
   ()
 
 let player_list = [player_blue;player_green;player_red;player_yellow]
 
-let update_board piece coordinate board =  
+let update_board player coordinate board =  
   let rec helper coordinate = 
     match coordinate with
     |[]->[]
-    |(x,y)::t -> board.(x).(y) <- piece.color; helper t
+    |(x,y)::t -> board.(x).(y) <- player.color; helper t
   in
   helper coordinate;
   board
 
-let base_piece = [['W'; 'W'; 'W'; 'W'; 'W']; ['W'; 'W'; 'W'; 'W'; 'W']; ['W'; 'W'; 'W'; 'W'; 'W']; ['W'; 'W'; 'W'; 'W'; 'W']; ['W'; 'W'; 'W'; 'W'; 'W']]
+let base_piece = [[' '; ' '; ' '; ' '; ' ']; [' '; ' '; ' '; ' '; ' '];
+                  [' '; ' '; ' '; ' '; ' ']; [' '; ' '; ' '; ' '; ' ']; [' '; ' '; ' '; ' '; ' ']]
 
 let print_char_list lst =
   let string_of_char_list l = String.concat " " (List.map (Char.escaped) l) in
@@ -87,10 +88,19 @@ let rec fill_in_base base coordlst color =
     let newbase = change_val_rows a b base color 0 0 in
     fill_in_base newbase t color
 
+let rec orientation_print_helper lst num color =
+  match lst with
+  | [] -> print_newline ();
+  | h :: t -> 
+    let coordlst = h.coordinates in
+    print_string ("Orientation " ^ string_of_int num);
+    print_newline ();
+    print_char_list (fill_in_base base_piece coordlst color);
+    print_newline ();
+    orientation_print_helper t (num+1) color
+
 let print_orientation piece = 
-  let ori = List.hd (piece.shape) in
-  let coordlst = ori.coordinates in
-  print_char_list (fill_in_base base_piece coordlst piece.color)
+  orientation_print_helper piece.shape 0 piece.color
 
 let check_isvalid piece coordlst cornerlst board coordinate =
   is_valid piece coordlst cornerlst board coordinate

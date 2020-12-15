@@ -1,4 +1,4 @@
-MODULES=player author game
+MODULES=player author game main command
 OBJECTS=$(MODULES:=.cmo)
 MLS=$(MODULES:=.ml)
 MLIS=$(MODULES:=.mli)

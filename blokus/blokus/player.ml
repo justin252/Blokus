@@ -309,6 +309,39 @@ let rec same_orientation piece1 piece2 e =
         false
       )
 
+let rec get_next_index lst current x =
+  match lst with
+  | [] -> failwith "impossible"
+  | h :: t -> 
+    if h.color = current.color then x 
+    else get_next_index t current (x+1)
+
+let rec get_player_helper lst index num =
+  match lst with
+  | [] -> failwith "impo"
+  | h :: t -> 
+    if index = num then h else get_player_helper t index (num + 1)
+
+let get_next_player lst current =
+  let index = get_next_index lst current 0 in
+  if index = List.length lst - 1 
+  then get_player_helper lst 0 0
+  else get_player_helper lst (index + 1) 0
+
+let rec adjust_playerlist lst newplayer =
+  match lst with
+  | [] -> []
+  | h :: t -> 
+    if h.color = newplayer.color then newplayer :: t
+    else h :: adjust_playerlist t newplayer
+
+let rec remove_player lst playerr =
+  match lst with
+  | [] -> []
+  | h :: t -> 
+    if h.color = playerr.color then t
+    else h :: remove_player t playerr
+
 let return_inventory player =
   player.inventory
 
@@ -325,7 +358,7 @@ let rec placed_piece_helper inv piece =
 (** [placed_piece] returns the [player] with his/her inventory modified after
     removing the placed [piece] for their inventory. *)
 let placed_piece piece player =
-  {inventory = placed_piece_helper player.inventory piece; color = player.color; points = player.points}
+  {inventory = (placed_piece_helper (player.inventory) piece); color = player.color; points = player.points}
 
 
 let is_eliminated player = 
@@ -406,7 +439,7 @@ let update_corn_on_board piece lst coordinate =
   else piece.position_on_board_corners <- []
 
 (** see if we can actually place piece*)
-let can_place_piece piece board coordinate =
+let can_place_piece piece board =
   if piece.position_on_board = [] then false 
   else check_board piece.position_on_board board
 
@@ -467,7 +500,12 @@ let check_faces piece board =
 let is_valid piece coordlst cornerlst board coordinate = 
   update_pos_on_board piece coordlst coordinate;
   update_corn_on_board piece cornerlst coordinate;
-  if can_place_piece piece board coordinate 
-  && check_corners piece board 
-  && check_faces piece board then true
-  else false
+  if begin
+    can_place_piece piece board 
+    && check_corners piece board 
+    && check_faces piece board 
+  end
+  then false
+  else true
+
+let actually_place_piece piece baord = ()

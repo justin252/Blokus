@@ -54,6 +54,19 @@ val player_blue: player
 
 val player_yellow: player
 
+val actually_place_piece: piece -> gameboard -> unit
+
+val adjust_playerlist: player list -> player -> player list
+
+val get_next_player: player list -> player -> player
+
+val remove_player: player list -> player -> player list
+
+val can_place_piece: piece -> char array array -> bool
+
+val update_pos_on_board: piece -> (int * int) list -> int * int -> unit
+
+val update_corn_on_board: piece -> (int * int) list -> int * int -> unit
 
 (*
 (** [is_touching player game] sees that the placed piece touches just the 
