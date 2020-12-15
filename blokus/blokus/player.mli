@@ -14,7 +14,7 @@ type gameboard = char array array
 
 type player={
   inventory: piece list; 
-  points : int;
+  mutable points : int;
   color: char;
 }
 

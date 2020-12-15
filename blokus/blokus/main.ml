@@ -30,6 +30,7 @@ let rec play_game_helper playerlist board currplayer  =
   else begin
     print_board board;
     print_newline ();
+    (*check if inventory is empty*)
     print_pieces currplayer;
     print_endline "Choose piece you want to place. If you want to quit type 'quit'.";
     match parse (read_line ()) with
@@ -45,14 +46,6 @@ let rec play_game_helper playerlist board currplayer  =
         print_endline "Thank you for playing the game!"; 
         let updatedlist = remove_player playerlist currplayer in
         let next_player = get_next_player playerlist currplayer in
-        (*if List.length updatedlist = 0 then  begin
-          (*adjust score*)
-          print_endline "Thank you for playing blokus! Here are the final scores:";
-          (*print scores *)
-          Stdlib.exit 0 
-          end
-          else
-          print_int (List.length updatedlist);*)
         play_game_helper updatedlist board next_player
       end
     | Continue -> play_game_helper playerlist board currplayer
@@ -95,6 +88,7 @@ let play_game =
 
 (** [main ()] prompts for the game to play, then starts it. *)
 let main () =
+  (**not printing this statement!!!*)
   ANSITerminal.(print_string [red] "\n\nWelcome to the 3110 Text Adventure Game engine.\n");
   play_game
 
