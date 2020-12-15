@@ -8,4 +8,5 @@ val print_orientation: Player.piece -> unit
 
 val player_list: player list
 
-val update_board: Player.player -> (int * int) list -> char array array -> char array array
+val update_board: 
+  Player.player -> (int * int) list -> char array array -> char array array

@@ -36,7 +36,8 @@ let print_individual_piece indpiece color =
     |[]->None
     |h::t -> Some h
   in
-  let matrixofpiece =  piece_to_piecearray (List.hd orien).coordinates color in
+  let matrixofpiece =  
+    piece_to_piecearray (List.hd orien).coordinates color in
   piece_printer matrixofpiece
 
 
@@ -67,24 +68,31 @@ let update_board player coordinate board =
   board
 
 let base_piece = [[' '; ' '; ' '; ' '; ' ']; [' '; ' '; ' '; ' '; ' '];
-                  [' '; ' '; ' '; ' '; ' ']; [' '; ' '; ' '; ' '; ' ']; [' '; ' '; ' '; ' '; ' ']]
+                  [' '; ' '; ' '; ' '; ' ']; [' '; ' '; ' '; ' '; ' ']; 
+                  [' '; ' '; ' '; ' '; ' ']]
 
 let print_char_list lst =
-  let string_of_char_list l = String.concat " " (List.map (Char.escaped) l) in
-  let char_list_to_string l = String.concat "\n" (List.map string_of_char_list l) in
+  let string_of_char_list l = 
+    String.concat " " (List.map (Char.escaped) l) in
+  let char_list_to_string l = 
+    String.concat "\n" (List.map string_of_char_list l) in
   Printf.printf "%s" (char_list_to_string lst)
 
 let rec change_val_cols b row color y =
   match row with
   | [] -> row
   | h :: t ->
-    if b = y then color :: change_val_cols b t color (y+1) else h :: change_val_cols b t color (y+1) 
+    if b = y 
+    then color :: change_val_cols b t color (y+1) 
+    else h :: change_val_cols b t color (y+1) 
 
 let rec change_val_rows a b lst color x y =
   match lst with
   | [] -> lst
   | h :: t ->
-    if a = x then change_val_cols b h color y :: change_val_rows a b t color (x+1) y else h :: change_val_rows a b t color (x+1) y
+    if a = x 
+    then change_val_cols b h color y :: change_val_rows a b t color (x+1) y 
+    else h :: change_val_rows a b t color (x+1) y
 
 let rec fill_in_base base coordlst color =
   match coordlst with

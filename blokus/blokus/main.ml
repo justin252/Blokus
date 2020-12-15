@@ -55,6 +55,7 @@ let rec play_game_helper playerlist board currplayer  =
         print_endline "Choose orientation you want to place.";
         let spec_int = parse_int (read_line ()) in
         let specific_orien = List.nth specificpiece.shape spec_int in
+        (*add try catch for nth exception*)
         print_endline "Enter row # coordinate.";
         let x_coord = parse_int (read_line ()) in
         print_endline "Enter column # coordinate.";
