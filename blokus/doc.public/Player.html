@@ -1,0 +1,134 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="Start" href="index.html">
+<link rel="next" href="Author.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Player" rel="Chapter" href="Player.html">
+<link title="Author" rel="Chapter" href="Author.html">
+<link title="Game" rel="Chapter" href="Game.html">
+<link title="Command" rel="Chapter" href="Command.html"><title>Player</title>
+</head>
+<body>
+<div class="navbar">&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;<a class="post" href="Author.html" title="Author">Next</a>
+</div>
+<h1>Module <a href="type_Player.html">Player</a></h1>
+
+<pre><span id="MODULEPlayer"><span class="keyword">module</span> Player</span>: <code class="code">sig</code> <a href="Player.html">..</a> <code class="code">end</code></pre><hr width="100%">
+
+<pre><code><span id="TYPEorientation"><span class="keyword">type</span> <code class="type"></code>orientation</span> = {</code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTorientation.coordinates">coordinates</span>&nbsp;: <code class="type">(int * int) list</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTorientation.corners">corners</span>&nbsp;: <code class="type">(int * int) list</code>;</code></td>
+
+</tr></table>
+<code>}</code>
+
+
+
+<pre><code><span id="TYPEpiece"><span class="keyword">type</span> <code class="type"></code>piece</span> = {</code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTpiece.color">color</span>&nbsp;: <code class="type">char</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTpiece.position_on_board">position_on_board</span>&nbsp;: <code class="type">(int * int) list</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTpiece.position_on_board_corners">position_on_board_corners</span>&nbsp;: <code class="type">(int * int) list</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTpiece.shape">shape</span>&nbsp;: <code class="type"><a href="Player.html#TYPEorientation">orientation</a> list</code>;</code></td>
+
+</tr></table>
+<code>}</code>
+
+
+
+<pre><span id="TYPEgameboard"><span class="keyword">type</span> <code class="type"></code>gameboard</span> = <code class="type">char array array</code> </pre>
+
+
+<pre><code><span id="TYPEplayer"><span class="keyword">type</span> <code class="type"></code>player</span> = {</code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTplayer.inventory">inventory</span>&nbsp;: <code class="type"><a href="Player.html#TYPEpiece">piece</a> list</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span class="keyword">mutable&nbsp;</span><span id="TYPEELTplayer.points">points</span>&nbsp;: <code class="type">int</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTplayer.color">color</span>&nbsp;: <code class="type">char</code>;</code></td>
+
+</tr></table>
+<code>}</code>
+
+
+
+<pre><span id="VALplaced_piece"><span class="keyword">val</span> placed_piece</span> : <code class="type"><a href="Player.html#TYPEpiece">piece</a> -> <a href="Player.html#TYPEplayer">player</a> -> <a href="Player.html#TYPEplayer">player</a></code></pre><div class="info ">
+<div class="info-desc">
+<p><code class="code">placed_piece p</code> removes the piece that <code class="code">p</code> represents.
+    Requires: <code class="code">p</code> is a valid player piece representation present in 
+    the player's inventory.</p>
+</div>
+</div>
+<p><code class="code">valid_moves v</code> is set of valid moves for a piece after a piece has 
+    been chosen by the player for each orientation possible
+    Requires: <code class="code">p</code> is a valid player piece representation.</p>
+<p><code class="code">is_eliminated player</code> sees all the valid moves remaining for the 
+    remaining pieces. 
+    Returns: true if nothing and false if there are still moves.</p>
+
+<pre><span id="VALcheck_corners"><span class="keyword">val</span> check_corners</span> : <code class="type"><a href="Player.html#TYPEpiece">piece</a> -> <a href="Player.html#TYPEgameboard">gameboard</a> -> bool</code></pre>
+<pre><span id="VALcheck_faces"><span class="keyword">val</span> check_faces</span> : <code class="type"><a href="Player.html#TYPEpiece">piece</a> -> <a href="Player.html#TYPEgameboard">gameboard</a> -> bool</code></pre>
+<pre><span id="VALplace_piece"><span class="keyword">val</span> place_piece</span> : <code class="type">(int * int) list -> int * int -> (int * int) list</code></pre>
+<pre><span id="VALis_valid"><span class="keyword">val</span> is_valid</span> : <code class="type"><a href="Player.html#TYPEpiece">piece</a> -><br>       (int * int) list -> (int * int) list -> <a href="Player.html#TYPEgameboard">gameboard</a> -> int * int -> bool</code></pre>
+<pre><span id="VALplayer_red"><span class="keyword">val</span> player_red</span> : <code class="type"><a href="Player.html#TYPEplayer">player</a></code></pre>
+<pre><span id="VALplayer_green"><span class="keyword">val</span> player_green</span> : <code class="type"><a href="Player.html#TYPEplayer">player</a></code></pre>
+<pre><span id="VALplayer_blue"><span class="keyword">val</span> player_blue</span> : <code class="type"><a href="Player.html#TYPEplayer">player</a></code></pre>
+<pre><span id="VALplayer_yellow"><span class="keyword">val</span> player_yellow</span> : <code class="type"><a href="Player.html#TYPEplayer">player</a></code></pre>
+<pre><span id="VALactually_place_piece"><span class="keyword">val</span> actually_place_piece</span> : <code class="type"><a href="Player.html#TYPEpiece">piece</a> -> <a href="Player.html#TYPEgameboard">gameboard</a> -> unit</code></pre>
+<pre><span id="VALadjust_playerlist"><span class="keyword">val</span> adjust_playerlist</span> : <code class="type"><a href="Player.html#TYPEplayer">player</a> list -> <a href="Player.html#TYPEplayer">player</a> -> <a href="Player.html#TYPEplayer">player</a> list</code></pre>
+<pre><span id="VALget_next_player"><span class="keyword">val</span> get_next_player</span> : <code class="type"><a href="Player.html#TYPEplayer">player</a> list -> <a href="Player.html#TYPEplayer">player</a> -> <a href="Player.html#TYPEplayer">player</a></code></pre>
+<pre><span id="VALremove_player"><span class="keyword">val</span> remove_player</span> : <code class="type"><a href="Player.html#TYPEplayer">player</a> list -> <a href="Player.html#TYPEplayer">player</a> -> <a href="Player.html#TYPEplayer">player</a> list</code></pre>
+<pre><span id="VALcan_place_piece"><span class="keyword">val</span> can_place_piece</span> : <code class="type"><a href="Player.html#TYPEpiece">piece</a> -> char array array -> bool</code></pre></body></html>

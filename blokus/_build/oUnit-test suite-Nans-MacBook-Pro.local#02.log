@@ -1,0 +1,66 @@
+2020-12-14T07:06:31+00:00 Nans-MacBook-Pro.local#02 I: Start test test suite:1:Generic test.
+2020-12-14T07:06:31+00:00 Nans-MacBook-Pro.local#02 I: Test test suite:1:Generic test is successful.
+2020-12-14T07:06:31+00:00 Nans-MacBook-Pro.local#02 I: End test test suite:1:Generic test.
+2020-12-14T07:06:31+00:00 Nans-MacBook-Pro.local#02 I: Start test test suite:3:Not touching, box piece.
+2020-12-14T07:06:31+00:00 Nans-MacBook-Pro.local#02 I: Test test suite:3:Not touching, box piece is successful.
+2020-12-14T07:06:31+00:00 Nans-MacBook-Pro.local#02 I: End test test suite:3:Not touching, box piece.
+2020-12-14T07:06:31+00:00 Nans-MacBook-Pro.local#02 I: Start test test suite:5:right corner edge.
+2020-12-14T07:06:31+00:00 Nans-MacBook-Pro.local#02 I: Test test suite:5:right corner edge is successful.
+2020-12-14T07:06:31+00:00 Nans-MacBook-Pro.local#02 I: End test test suite:5:right corner edge.
+2020-12-14T07:06:31+00:00 Nans-MacBook-Pro.local#02 I: Start test test suite:7:passes touching corner but fails touching face.
+2020-12-14T07:06:31+00:00 Nans-MacBook-Pro.local#02 I: Test test suite:7:passes touching corner but fails touching face is successful.
+2020-12-14T07:06:31+00:00 Nans-MacBook-Pro.local#02 I: End test test suite:7:passes touching corner but fails touching face.
+2020-12-14T07:06:31+00:00 Nans-MacBook-Pro.local#02 I: Start test test suite:9:top edge.
+2020-12-14T07:06:31+00:00 Nans-MacBook-Pro.local#02 I: Test test suite:9:top edge is successful.
+2020-12-14T07:06:31+00:00 Nans-MacBook-Pro.local#02 I: End test test suite:9:top edge.
+2020-12-14T07:06:31+00:00 Nans-MacBook-Pro.local#02 I: Start test test suite:11:Generic test 2.
+2020-12-14T07:06:31+00:00 Nans-MacBook-Pro.local#02 I: Test test suite:11:Generic test 2 is successful.
+2020-12-14T07:06:31+00:00 Nans-MacBook-Pro.local#02 I: End test test suite:11:Generic test 2.
+2020-12-14T07:06:31+00:00 Nans-MacBook-Pro.local#02 I: Start test test suite:12:Not touching, box piece.
+2020-12-14T07:06:31+00:00 Nans-MacBook-Pro.local#02 I: Test test suite:12:Not touching, box piece is successful.
+2020-12-14T07:06:31+00:00 Nans-MacBook-Pro.local#02 I: End test test suite:12:Not touching, box piece.
+2020-12-14T07:06:31+00:00 Nans-MacBook-Pro.local#02 I: Start test test suite:15:left corner edge.
+2020-12-14T07:06:31+00:00 Nans-MacBook-Pro.local#02 I: Test test suite:15:left corner edge is successful.
+2020-12-14T07:06:31+00:00 Nans-MacBook-Pro.local#02 I: End test test suite:15:left corner edge.
+2020-12-14T07:06:31+00:00 Nans-MacBook-Pro.local#02 I: Start test test suite:16:passes touching corner but fails touching face.
+2020-12-14T07:06:31+00:00 Nans-MacBook-Pro.local#02 I: Test test suite:16:passes touching corner but fails touching face is successful.
+2020-12-14T07:06:31+00:00 Nans-MacBook-Pro.local#02 I: End test test suite:16:passes touching corner but fails touching face.
+2020-12-14T07:06:31+00:00 Nans-MacBook-Pro.local#02 I: Start test test suite:19:Testing dom.
+2020-12-14T07:06:31+00:00 Nans-MacBook-Pro.local#02 I: Test test suite:19:Testing dom is successful.
+2020-12-14T07:06:31+00:00 Nans-MacBook-Pro.local#02 I: End test test suite:19:Testing dom.
+2020-12-14T07:06:31+00:00 Nans-MacBook-Pro.local#02 I: Start test test suite:20:Testing tro.
+2020-12-14T07:06:31+00:00 Nans-MacBook-Pro.local#02 I: Test test suite:20:Testing tro is successful.
+2020-12-14T07:06:31+00:00 Nans-MacBook-Pro.local#02 I: End test test suite:20:Testing tro.
+2020-12-14T07:06:31+00:00 Nans-MacBook-Pro.local#02 I: Start test test suite:23:emptyboard1.
+2020-12-14T07:06:31+00:00 Nans-MacBook-Pro.local#02 E: Test test suite:23:emptyboard1 has failed.
+2020-12-14T07:06:31+00:00 Nans-MacBook-Pro.local#02 E: not equal in test test suite:23:emptyboard1.
+2020-12-14T07:06:31+00:00 Nans-MacBook-Pro.local#02 E: Raised at file "src/lib/ounit2/advanced/oUnitAssert.ml", line 45, characters 8-27
+2020-12-14T07:06:31+00:00 Nans-MacBook-Pro.local#02 E: Called from file "src/lib/ounit2/advanced/oUnitRunner.ml", line 83, characters 13-26
+2020-12-14T07:06:31+00:00 Nans-MacBook-Pro.local#02 E: 
+2020-12-14T07:06:31+00:00 Nans-MacBook-Pro.local#02 I: End test test suite:23:emptyboard1.
+2020-12-14T07:06:31+00:00 Nans-MacBook-Pro.local#02 I: Start test test suite:25:emptyboard3.
+2020-12-14T07:06:31+00:00 Nans-MacBook-Pro.local#02 E: Test test suite:25:emptyboard3 has failed.
+2020-12-14T07:06:31+00:00 Nans-MacBook-Pro.local#02 E: not equal in test test suite:25:emptyboard3.
+2020-12-14T07:06:31+00:00 Nans-MacBook-Pro.local#02 E: Raised at file "src/lib/ounit2/advanced/oUnitAssert.ml", line 45, characters 8-27
+2020-12-14T07:06:31+00:00 Nans-MacBook-Pro.local#02 E: Called from file "src/lib/ounit2/advanced/oUnitRunner.ml", line 83, characters 13-26
+2020-12-14T07:06:31+00:00 Nans-MacBook-Pro.local#02 E: 
+2020-12-14T07:06:31+00:00 Nans-MacBook-Pro.local#02 I: End test test suite:25:emptyboard3.
+2020-12-14T07:06:31+00:00 Nans-MacBook-Pro.local#02 I: Start test test suite:26:emptyboard4.
+2020-12-14T07:06:31+00:00 Nans-MacBook-Pro.local#02 E: Test test suite:26:emptyboard4 has failed.
+2020-12-14T07:06:31+00:00 Nans-MacBook-Pro.local#02 E: not equal in test test suite:26:emptyboard4.
+2020-12-14T07:06:31+00:00 Nans-MacBook-Pro.local#02 E: Raised at file "src/lib/ounit2/advanced/oUnitAssert.ml", line 45, characters 8-27
+2020-12-14T07:06:31+00:00 Nans-MacBook-Pro.local#02 E: Called from file "src/lib/ounit2/advanced/oUnitRunner.ml", line 83, characters 13-26
+2020-12-14T07:06:31+00:00 Nans-MacBook-Pro.local#02 E: 
+2020-12-14T07:06:31+00:00 Nans-MacBook-Pro.local#02 I: End test test suite:26:emptyboard4.
+2020-12-14T07:06:31+00:00 Nans-MacBook-Pro.local#02 I: Start test test suite:27:yo.
+2020-12-14T07:06:31+00:00 Nans-MacBook-Pro.local#02 I: Test test suite:27:yo is successful.
+2020-12-14T07:06:31+00:00 Nans-MacBook-Pro.local#02 I: End test test suite:27:yo.
+2020-12-14T07:06:31+00:00 Nans-MacBook-Pro.local#02 I: Start test test suite:31:yup.
+2020-12-14T07:06:31+00:00 Nans-MacBook-Pro.local#02 I: Test test suite:31:yup is successful.
+2020-12-14T07:06:31+00:00 Nans-MacBook-Pro.local#02 I: End test test suite:31:yup.
+2020-12-14T07:06:31+00:00 Nans-MacBook-Pro.local#02 I: Start test test suite:33:can 2.
+2020-12-14T07:06:31+00:00 Nans-MacBook-Pro.local#02 I: Test test suite:33:can 2 is successful.
+2020-12-14T07:06:31+00:00 Nans-MacBook-Pro.local#02 I: End test test suite:33:can 2.
+2020-12-14T07:06:31+00:00 Nans-MacBook-Pro.local#02 I: Start test test suite:35:can 4.
+2020-12-14T07:06:31+00:00 Nans-MacBook-Pro.local#02 I: Test test suite:35:can 4 is successful.
+2020-12-14T07:06:31+00:00 Nans-MacBook-Pro.local#02 I: End test test suite:35:can 4.
