@@ -169,12 +169,16 @@ let player_tests =
                     {color = "blue"; shape = tetromino_piece2}]; 
        color = "blue"; points = 18}*)
 
-    place_piece_test "Testing mono" monomino_piece (14,14) [(14,14)];
-    place_piece_test "Testing dom" domino_piece (14,14) [(14,14);(15,14)];
+    place_piece_test "Testing mono" 
+      monomino_piece (14,14) [(14,14)];
+    place_piece_test "Testing dom" 
+      domino_piece (14,14) [(14,14);(15,14)];
     place_piece_test "Testing tro" 
       tromino_piece1 (14,14) [(14,14);(14,15);(15,14)];
-    place_piece_test "Testing dom bad" domino_piece (19,19) [(19,19)];
-    place_piece_test "Testing tetr" tetromino_piece1 (18,18) [(18,18); (19,18)]
+    place_piece_test "Testing dom bad" 
+      domino_piece (19,19) [(19,19)];
+    place_piece_test "Testing tetr" 
+      tetromino_piece1 (18,18) [(18,18); (19,18)]
 
 
 
@@ -241,34 +245,53 @@ has_bottom = true
 has_top = false
 has_right = false
 *)
-let piece1 = {color = 'R'; position_on_board = [(2, 2); (3, 2)]; 
-              position_on_board_corners= [(2, 2); (3, 2)]
-             ; shape = [{coordinates = []; corners = []}]}
-let piece2 = {color = 'R'; position_on_board = [(3, 0); (4, 0); (5, 0); (5,1)]; 
-              position_on_board_corners= [(3, 0); (5, 0); (5,1)]
-             ; shape = [{coordinates = []; corners = []}]}
-let piece3 = {color = 'R'; position_on_board = [(4, 2); (5, 2); (5, 3); (5,4)]; 
-              position_on_board_corners= [(4, 2); (5, 2); (5, 4)]
-             ; shape = [{coordinates = []; corners = []}]}
-let piece4 = {color = 'R'; position_on_board = [(3, 0); (4, 0); (4, 1); (4,2)]; 
-              position_on_board_corners= [(3, 0); (4, 0); (4,2)]
-             ; shape = [{coordinates = []; corners = []}]}
-let piece5= {color = 'R'; position_on_board = [(7, 7); (7, 6); (6, 7); (5,7)]; 
-             position_on_board_corners= [(7, 7); (7, 6); (5,7)]
-            ; shape = [{coordinates = []; corners = []}]}
-let piece_top = {color = 'R'; position_on_board = [(0, 5); (1, 5); (2,5)]; 
-                 position_on_board_corners= [(0, 5); (2, 5)]
-                ; shape = [{coordinates = []; corners = []}]}
-let piece6= {color = 'R'; position_on_board = [(6, 0); (7, 0); (6, 1); (7,1)]; 
-             position_on_board_corners= [(6, 0); (7, 0); (6, 1); (7,1)]
-            ; shape = [{coordinates = []; corners = []}]}
-let piece7= {color = 'R'; position_on_board = [(3, 0); (3, 1); (4, 0); (4,1)]; 
-             position_on_board_corners= [(3, 0); (3, 1); (4, 0); (4,1)]
-            ; shape = [{coordinates = []; corners = []}]}
+let piece1 = {color = 'R'; 
+              position_on_board = [(2, 2); (3, 2)]; 
+              position_on_board_corners= [(2, 2); (3, 2)]; 
+              shape = [{coordinates = []; 
+                        corners = []}]}
+let piece2 = {color = 'R'; 
+              position_on_board = [(3, 0); (4, 0); (5, 0); (5,1)]; 
+              position_on_board_corners= [(3, 0); (5, 0); (5,1)]; 
+              shape = [{coordinates = []; 
+                        corners = []}]}
+let piece3 = {color = 'R'; 
+              position_on_board = [(4, 2); (5, 2); (5, 3); (5,4)]; 
+              position_on_board_corners= [(4, 2); (5, 2); (5, 4)]; 
+              shape = [{coordinates = []; 
+                        corners = []}]}
+let piece4 = {color = 'R'; 
+              position_on_board = [(3, 0); (4, 0); (4, 1); (4,2)]; 
+              position_on_board_corners= [(3, 0); (4, 0); (4,2)]; 
+              shape = [{coordinates = []; 
+                        corners = []}]}
+let piece5= {color = 'R'; 
+             position_on_board = [(7, 7); (7, 6); (6, 7); (5,7)]; 
+             position_on_board_corners= [(7, 7); (7, 6); (5,7)]; 
+             shape = [{coordinates = []; 
+                       corners = []}]}
+let piece_top = {color = 'R'; 
+                 position_on_board = [(0, 5); (1, 5); (2,5)]; 
+                 position_on_board_corners= [(0, 5); (2, 5)]; 
+                 shape = [{coordinates = []; 
+                           corners = []}]}
+let piece6= {color = 'R'; 
+             position_on_board = [(6, 0); (7, 0); (6, 1); (7,1)]; 
+             position_on_board_corners= [(6, 0); (7, 0); (6, 1); (7,1)]; 
+             shape = [{coordinates = []; 
+                       corners = []}]}
+let piece7= {color = 'R'; 
+             position_on_board = [(3, 0); (3, 1); (4, 0); (4,1)]; 
+             position_on_board_corners= [(3, 0); (3, 1); (4, 0); (4,1)]; 
+             shape = [{coordinates = []; 
+                       corners = []}]}
 
-let piece5x5 = {color = 'R'; position_on_board = [(0, 1); (1, 1)]; 
-                position_on_board_corners = [(0, 1); (1, 1)]
-               ; shape = [{coordinates = []; corners = []}]}
+let piece5x5 = {color = 'R'; 
+                position_on_board = [(0, 1); (1, 1)]; 
+                position_on_board_corners = [(0, 1); (1, 1)]; 
+                shape = [{coordinates = []; 
+                          corners = []}]}
+
 let is_touching_corner_test 
     (name : string) 
     (input: Player.piece) 
@@ -314,12 +337,14 @@ let face_tests =[
 
 ]
 
-let piece12 = {color = 'R'; position_on_board = []; 
-               position_on_board_corners= []
-              ; shape = [{coordinates = []; corners = []}]}
-let piece22 = {color = 'R'; position_on_board = []; 
-               position_on_board_corners= []
-              ; shape = [{coordinates = []; corners = []}]}
+let piece12 = {color = 'R'; 
+               position_on_board = []; 
+               position_on_board_corners= []; 
+               shape = [{coordinates = []; corners = []}]}
+let piece22 = {color = 'R'; 
+               position_on_board = []; 
+               position_on_board_corners= []; 
+               shape = [{coordinates = []; corners = []}]}
 
 let lst1 = [(2, 2); (3, 2)]
 let lst2 = [(2, 2); (3, 2)]

@@ -18,13 +18,6 @@ test:
 play:
 	$(OCAMLBUILD) $(MAIN) && ./$(MAIN)
 
-check:
-	bash checkenv.sh && bash checktypes.sh
-	
-finalcheck: check
-	bash checkzip.sh
-	bash finalcheck.sh
-
 zip:
 	zip blokus.zip *.ml* *.json* *.txt _tags Makefile
 	

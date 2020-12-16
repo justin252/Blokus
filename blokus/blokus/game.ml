@@ -31,11 +31,6 @@ let piece_to_piecearray piece color=
 
 let print_individual_piece indpiece color = 
   let orien = indpiece.shape in
-  let get_first orien = 
-    match orien with
-    |[]->None
-    |h::t -> Some h
-  in
   let matrixofpiece =  
     piece_to_piecearray (List.hd orien).coordinates color in
   piece_printer matrixofpiece
@@ -56,7 +51,10 @@ let print_pieces piecesplayer =
   helper allpieces 0;
   ()
 
-let player_list = [player_blue;player_green;player_red;player_yellow]
+let player_list = [player_blue;
+                   player_green;
+                   player_red;
+                   player_yellow]
 
 let update_board player coordinate board =  
   let rec helper coordinate = 

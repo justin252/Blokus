@@ -2,24 +2,6 @@ open Game
 open Player
 open Command
 
-(*let play_blokus board player_list = 
-  let players = ref player_list in
-  while List.length !players <> 0 do
-    print_board board;
-    match parse (read_line ()) with
-    | exception Malformed-> begin
-        print_endline "Your command isn't right! Try again!";
-        play_game_helper playerlist board playerpiece
-      end
-    | exception Empty-> begin
-        print_endline "Your command is empty! Please enter a command!";
-        play_game_helper playerlist board playerpiece
-      end
-    | Quit-> print_endline "Exit. Thank you for playing the game!"; Stdlib.exit 0
-    | Continue -> play_game_helper playerlist board playerpiece
-    | Choose t-> begin
-      end*)
-
 let rec play_game_helper playerlist board currplayer  =
   if List.length (playerlist) = 0 then  begin
     (*adjust score*)
@@ -32,7 +14,8 @@ let rec play_game_helper playerlist board currplayer  =
     print_newline ();
     (*check if inventory is empty*)
     print_pieces currplayer;
-    print_endline "Choose piece you want to place. If you want to quit type 'quit'.";
+    print_endline 
+      "Choose piece you want to place. If you want to quit type 'quit'.";
     match parse (read_line ()) with
     | exception Malformed-> begin
         print_endline "Your command isn't right! Try again!";
@@ -60,12 +43,14 @@ let rec play_game_helper playerlist board currplayer  =
         let x_coord = parse_int (read_line ()) in
         print_endline "Enter column # coordinate.";
         let y_coord = parse_int (read_line ()) in
-        if is_valid specificpiece specific_orien.coordinates specific_orien.corners board (x_coord,y_coord)
+        if is_valid specificpiece specific_orien.coordinates 
+            specific_orien.corners board (x_coord,y_coord)
         then begin
           let coordonboard = specificpiece.position_on_board in
           let newboard = update_board currplayer coordonboard board in
           let adjustedplayer = placed_piece specificpiece currplayer in
-          let adjustedplayerlist = adjust_playerlist playerlist adjustedplayer in
+          let adjustedplayerlist = 
+            adjust_playerlist playerlist adjustedplayer in
           let next_player = get_next_player playerlist currplayer in
           print_int (List.length adjustedplayerlist);
           play_game_helper adjustedplayerlist newboard next_player
@@ -90,7 +75,8 @@ let play_game =
 (** [main ()] prompts for the game to play, then starts it. *)
 let main () =
   (**not printing this statement!!!*)
-  ANSITerminal.(print_string [red] "\n\nWelcome to the 3110 Text Adventure Game engine.\n");
+  ANSITerminal.(print_string [red] 
+                  "\n\nWelcome to the 3110 Text Adventure Game engine.\n");
   play_game
 
 (* Execute the game engine. *)

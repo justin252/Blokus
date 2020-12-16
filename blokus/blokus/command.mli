@@ -22,17 +22,12 @@
       again [["clock"; "tower"]]. 
 
     An [object_phrase] is not permitted to be the empty list. *)
-type object_phrase = string list
 
 (** The type [command] represents a player command that is decomposed
     into a verb and possibly an object phrase. *)
 type command = 
   | Quit 
   | Continue 
-  (*| Choose_piece of int
-    | Orientation of int
-    | Placementx of int
-    | Placementy of int*)
   | Choose of int
 
 
