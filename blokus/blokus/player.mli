@@ -62,6 +62,8 @@ val remove_player: player list -> player -> player list
 
 val can_place_piece: piece -> char array array -> bool
 
+val add_player: player list -> player -> player list
+
 (*val update_pos_on_board: piece -> (int * int) list -> int * int -> unit*)
 
 (*val update_corn_on_board: piece -> (int * int) list -> int * int -> unit*)

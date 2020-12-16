@@ -123,3 +123,28 @@ let check_inventory player =
     | [] -> false
     | _ -> true
 
+let match_color color score =
+  if color = 'R'
+  then ANSITerminal.(print_string [red] ("Red Player: " ^ string_of_int score))
+  else if color = 'Y'
+  then ANSITerminal.(print_string [yellow] ("Yellow Player: " ^ string_of_int score))
+  else if color = 'G' 
+  then ANSITerminal.(print_string [green] ("Green Player: " ^ string_of_int score))
+  else if color = 'B' 
+  then ANSITerminal.(print_string [blue] ("Blue Player: " ^ string_of_int score))
+  else failwith "impossible"
+
+let rec loop_inventory inv =
+  match inv with
+  | [] -> 0
+  | h :: t -> 
+    List.length (h.position_on_board) + loop_inventory t
+
+let rec print_scores playerlst =
+  match playerlst with
+  | [] -> print_newline ()
+  | h :: t -> 
+    let score = loop_inventory h.inventory in
+    print_newline ();
+    match_color h.color score;
+    print_scores t

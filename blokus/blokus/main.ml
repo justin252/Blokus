@@ -2,11 +2,11 @@ open Game
 open Player
 open Command
 
-let rec play_game_helper playerlist board currplayer  =
+let rec play_game_helper playerlist board currplayer player_scores =
   if List.length (playerlist) = 0 then  begin
     (*adjust score*)
     print_endline "Thank you for playing blokus! Here are the final scores:";
-    (*print scores *)
+    print_scores player_scores;
     Stdlib.exit 0 
   end 
   else begin
@@ -19,19 +19,20 @@ let rec play_game_helper playerlist board currplayer  =
     match parse (read_line ()) with
     | exception Malformed-> begin
         print_endline "Your command isn't right! Try again!";
-        play_game_helper playerlist board currplayer
+        play_game_helper playerlist board currplayer player_scores
       end
     | exception Empty-> begin
         print_endline "Your command is empty! Please enter a command!";
-        play_game_helper playerlist board currplayer
+        play_game_helper playerlist board currplayer player_scores
       end
     | Quit-> begin
         print_endline "Thank you for playing the game!"; 
         let updatedlist = remove_player playerlist currplayer in
+        let update_scorelist = add_player playerlist currplayer in
         let next_player = get_next_player playerlist currplayer in
-        play_game_helper updatedlist board next_player
+        play_game_helper updatedlist board next_player update_scorelist
       end
-    | Continue -> play_game_helper playerlist board currplayer
+    | Continue -> play_game_helper playerlist board currplayer player_scores
     | Choose t-> begin
         let specificpiece = List.nth currplayer.inventory t in
         print_orientation specificpiece;
@@ -53,12 +54,12 @@ let rec play_game_helper playerlist board currplayer  =
             adjust_playerlist playerlist adjustedplayer in
           let next_player = get_next_player playerlist currplayer in
           print_int (List.length adjustedplayerlist);
-          play_game_helper adjustedplayerlist newboard next_player
+          play_game_helper adjustedplayerlist newboard next_player player_scores
         end
         else begin
           print_endline "Invalid move! Your turn has been skipped!"; 
           let next_player = get_next_player playerlist currplayer in
-          play_game_helper playerlist board next_player
+          play_game_helper playerlist board next_player player_scores
         end
       end
   end
@@ -69,7 +70,7 @@ let play_game =
   let players = player_list in
   let official_board = Array.make_matrix 20 20 '_' in
   let currplayer = List.hd (players) in
-  play_game_helper players official_board currplayer
+  play_game_helper players official_board currplayer []
 
 
 (** [main ()] prompts for the game to play, then starts it. *)

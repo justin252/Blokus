@@ -10,3 +10,5 @@ val player_list: player list
 
 val update_board: 
   Player.player -> (int * int) list -> char array array -> char array array
+
+val print_scores: Player.player list -> unit
