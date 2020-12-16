@@ -578,7 +578,7 @@ let place_piece_corner piece coordinate =
 let rec check_board piece board = 
   match piece with 
   | [] -> true
-  |(x,y)::t -> if board.(x).(y) = '_' 
+  |(x,y)::t -> if board.(x).(y) = '-' 
     then check_board t board 
     else false
 

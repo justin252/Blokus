@@ -2,10 +2,21 @@ open Player
 
 let print_board (board:gameboard) =
   let printerbaord = board in
+  print_string("  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9");
   for i = 0 to Array.length printerbaord - 1 do 
     print_newline ();
+    print_string (string_of_int(i mod 10) ^ " ");
     for j = 0 to Array.length printerbaord.(i) - 1 do
-      print_char printerbaord.(i).(j);
+      if printerbaord.(i).(j) = 'R' then 
+        ANSITerminal.(print_string [red] (String.make 1 (printerbaord.(i).(j))))
+      else if printerbaord.(i).(j) = 'B' then 
+        ANSITerminal.(print_string [blue] (String.make 1 (printerbaord.(i).(j))))
+      else if printerbaord.(i).(j) = 'G' then 
+        ANSITerminal.(print_string [green] (String.make 1 (printerbaord.(i).(j))))
+      else if printerbaord.(i).(j) = 'Y' then 
+        ANSITerminal.(print_string [yellow] (String.make 1 (printerbaord.(i).(j))))
+      else 
+        print_char printerbaord.(i).(j);
       print_char ' ';
     done
   done
@@ -14,7 +25,16 @@ let piece_printer piece =
   for i = 0 to Array.length piece -1 do
     print_newline ();
     for j = 0 to Array.length piece.(i) -1 do
-      print_char piece.(i).(j)
+      if piece.(i).(j) = 'R' then 
+        ANSITerminal.(print_string [red] (String.make 1 (piece.(i).(j))))
+      else if piece.(i).(j) = 'B' then 
+        ANSITerminal.(print_string [blue] (String.make 1 (piece.(i).(j))))
+      else if piece.(i).(j) = 'Y' then 
+        ANSITerminal.(print_string [yellow] (String.make 1 (piece.(i).(j))))
+      else if piece.(i).(j) = 'G' then 
+        ANSITerminal.(print_string [green] (String.make 1 (piece.(i).(j))))
+      else
+        print_char piece.(i).(j)
     done
   done
 
