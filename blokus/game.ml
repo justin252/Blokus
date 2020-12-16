@@ -5,7 +5,16 @@ let print_board (board:gameboard) =
   for i = 0 to Array.length printerbaord - 1 do 
     print_newline ();
     for j = 0 to Array.length printerbaord.(i) - 1 do
-      print_char printerbaord.(i).(j);
+      if printerbaord.(i).(j) = 'R' then 
+        ANSITerminal.(print_string [red] (String.make 1 (printerbaord.(i).(j))))
+      else if printerbaord.(i).(j) = 'B' then 
+        ANSITerminal.(print_string [blue] (String.make 1 (printerbaord.(i).(j))))
+      else if printerbaord.(i).(j) = 'G' then 
+        ANSITerminal.(print_string [green] (String.make 1 (printerbaord.(i).(j))))
+      else if printerbaord.(i).(j) = 'Y' then 
+        ANSITerminal.(print_string [yellow] (String.make 1 (printerbaord.(i).(j))))
+      else 
+        print_char printerbaord.(i).(j);
       print_char ' ';
     done
   done
@@ -14,7 +23,14 @@ let piece_printer piece =
   for i = 0 to Array.length piece -1 do
     print_newline ();
     for j = 0 to Array.length piece.(i) -1 do
-      print_char piece.(i).(j)
+      if piece.(i).(j) = 'R' then 
+        ANSITerminal.(print_string [red] (String.make 1 (piece.(i).(j))))
+      else if piece.(i).(j) = 'B' then 
+        ANSITerminal.(print_string [blue] (String.make 1 (piece.(i).(j))))
+      else if piece.(i).(j) = 'Y' then 
+        ANSITerminal.(print_string [yellow] (String.make 1 (piece.(i).(j))))
+      else if piece.(i).(j) = 'G' then 
+        ANSITerminal.(print_string [green] (String.make 1 (piece.(i).(j))))
     done
   done
 
@@ -31,11 +47,6 @@ let piece_to_piecearray piece color=
 
 let print_individual_piece indpiece color = 
   let orien = indpiece.shape in
-  let get_first orien = 
-    match orien with
-    |[]->None
-    |h::t -> Some h
-  in
   let matrixofpiece =  
     piece_to_piecearray (List.hd orien).coordinates color in
   piece_printer matrixofpiece
@@ -56,7 +67,10 @@ let print_pieces piecesplayer =
   helper allpieces 0;
   ()
 
-let player_list = [player_blue;player_green;player_red;player_yellow]
+let player_list = [player_blue;
+                   player_green;
+                   player_red;
+                   player_yellow]
 
 let update_board player coordinate board =  
   let rec helper coordinate = 
@@ -125,3 +139,28 @@ let check_inventory player =
     | [] -> false
     | _ -> true
 
+let match_color color score =
+  if color = 'R'
+  then ANSITerminal.(print_string [red] ("Red Player: " ^ string_of_int score))
+  else if color = 'Y'
+  then ANSITerminal.(print_string [yellow] ("Yellow Player: " ^ string_of_int score))
+  else if color = 'G' 
+  then ANSITerminal.(print_string [green] ("Green Player: " ^ string_of_int score))
+  else if color = 'B' 
+  then ANSITerminal.(print_string [blue] ("Blue Player: " ^ string_of_int score))
+  else failwith "impossible"
+
+let rec loop_inventory inv =
+  match inv with
+  | [] -> 0
+  | h :: t -> 
+    List.length (h.position_on_board) + loop_inventory t
+
+let rec print_scores playerlst =
+  match playerlst with
+  | [] -> print_newline ()
+  | h :: t -> 
+    let score = loop_inventory h.inventory in
+    print_newline ();
+    match_color h.color score;
+    print_scores t

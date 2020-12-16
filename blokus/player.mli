@@ -14,11 +14,7 @@ type gameboard = char array array
 
 type player={
   inventory: piece list; 
-<<<<<<< HEAD:blokus/player.mli
-  points : int;
-=======
   mutable points : int;
->>>>>>> Nas:blokus/blokus/player.mli
   color: char;
 }
 
@@ -56,12 +52,6 @@ val player_blue: player
 
 val player_yellow: player
 
-<<<<<<< HEAD:blokus/player.mli
-val check_corners: piece -> gameboard -> bool 
-
-val check_faces: piece -> gameboard -> bool
-
-=======
 val actually_place_piece: piece -> gameboard -> unit
 
 val adjust_playerlist: player list -> player -> player list
@@ -72,10 +62,11 @@ val remove_player: player list -> player -> player list
 
 val can_place_piece: piece -> char array array -> bool
 
+val add_player: player list -> player -> player list
+
 (*val update_pos_on_board: piece -> (int * int) list -> int * int -> unit*)
 
 (*val update_corn_on_board: piece -> (int * int) list -> int * int -> unit*)
->>>>>>> Nas:blokus/blokus/player.mli
 
 (*
 (** [is_touching player game] sees that the placed piece touches just the 
@@ -90,9 +81,4 @@ val get_all_corners: bool array array -> (int*int) list
 (*type player_piece
   type game_board
   val is_touching: (int * int) -> player_piece -> game_board -> bool
-<<<<<<< HEAD:blokus/player.mli
-
-  val valid_moves: (int * int) -> player_piece -> game_board -> (int * int) list
-=======
   val valid_moves: (int * int) -> player_piece -> game_board -> (int * int) list*)
->>>>>>> Nas:blokus/blokus/player.mli
