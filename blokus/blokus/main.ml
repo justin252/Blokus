@@ -15,7 +15,8 @@ let rec play_game_helper playerlist board currplayer player_scores =
     (*check if inventory is empty*)
     print_pieces currplayer;
     print_endline 
-      "Choose piece you want to place. If you want to quit type 'quit'.";
+      "Choose piece you want to place. If you want to quit type 'quit'. 
+      If you want to terminate game type 'end'";
     match parse (read_line ()) with
     | exception Malformed-> begin
         print_endline "Your command isn't right! Try again!";
@@ -26,9 +27,10 @@ let rec play_game_helper playerlist board currplayer player_scores =
         play_game_helper playerlist board currplayer player_scores
       end
     | Quit-> begin
-        print_endline "Thank you for playing the game!"; 
+        print_endline "Thank you for playing the game!";
+        let update_scorelist = 
+          add_player player_scores playerlist currplayer in 
         let updatedlist = remove_player playerlist currplayer in
-        let update_scorelist = add_player playerlist currplayer in
         let next_player = get_next_player playerlist currplayer in
         play_game_helper updatedlist board next_player update_scorelist
       end
@@ -57,11 +59,14 @@ let rec play_game_helper playerlist board currplayer player_scores =
             then begin
               let coordonboard = specificpiece.position_on_board in
               let newboard = update_board currplayer coordonboard board in
-              let adjustedplayer = placed_piece specificpiece currplayer in
+              let addpoints_player = add_points specificpiece currplayer in
+              let adjustedplayer = 
+                placed_piece specificpiece addpoints_player in
               let adjustedplayerlist = 
                 adjust_playerlist playerlist adjustedplayer in
               let next_player = get_next_player playerlist currplayer in
-              play_game_helper adjustedplayerlist newboard next_player player_scores
+              play_game_helper adjustedplayerlist newboard 
+                next_player player_scores
             end
             else begin
               print_endline "Invalid move! Your turn has been skipped!"; 
@@ -69,6 +74,10 @@ let rec play_game_helper playerlist board currplayer player_scores =
               play_game_helper playerlist board next_player player_scores
             end
       end
+    |EndGame ->
+      print_endline "Thank you for playing blokus! Here are the final scores:";
+      print_scores player_scores;
+      Stdlib.exit 0 
   end
 (** *)
 
@@ -121,9 +130,3 @@ let main () =
 
 
 let () = main ()
-
-
-(* if List.length currplayer.inventory =< t then 
-   print_endline "Your selection is not valid so your turn has been skipped";
-   let next_player = get_next_player playerlist currplayer in
-      play_game_helper playerlist board next_player  *)

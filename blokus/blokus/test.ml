@@ -89,6 +89,145 @@ let place_piece_test
   name >:: (fun _->
       assert_equal expected_output (place_piece piece coordinate))
 
+let monomino_o1 = [(0,0)]
+let monomino_o1_corners = [(0,0)]
+let monomino = 
+  {color = 'W'; 
+   position_on_board = []; 
+   position_on_board_corners = [];
+   shape = [{coordinates = monomino_o1; 
+             corners = monomino_o1_corners}]}
+
+let domino_o1 = [(0,0); (0,1)]
+let domino_o1_corners = [(0,0); (0,1)]
+let domino_o2 = [(0,0); (1,0)]
+let domino_o2_corners = [(0,0); (1,0)]
+let domino = 
+  {color = 'W'; 
+   position_on_board = []; 
+   position_on_board_corners = [];
+   shape = [{coordinates = domino_o1; 
+             corners = domino_o1_corners}; 
+            {coordinates = domino_o2; 
+             corners = domino_o2_corners}]}
+
+let tromino_p1_o1 = [(0,0); (0,1); (1,1)]
+let tromino_p1_o1_corners = [(0,0); (0,1); (1,1)]
+let tromino_p1_o2 = [(0,1); (1,0); (1,1)]
+let tromino_p1_o2_corners = [(0,1); (1,0); (1,1)]
+let tromino_p1_o3 = [(0,0); (1,0); (1,1)]
+let tromino_p1_o3_corners = [(0,0); (1,0); (1,1)]
+let tromino_p1_o4 = [(0,0); (0,1); (1,0)]
+let tromino_p1_o4_corners = [(0,0); (0,1); (1,0)]
+let tromino_p1 = 
+  {color = 'W'; 
+   position_on_board = []; 
+   position_on_board_corners = [];
+   shape = [{coordinates = tromino_p1_o1; 
+             corners = tromino_p1_o1_corners};
+            {coordinates = tromino_p1_o2;
+             corners = tromino_p1_o2_corners}; 
+            {coordinates = tromino_p1_o3; 
+             corners = tromino_p1_o3_corners};
+            {coordinates = tromino_p1_o4; 
+             corners = tromino_p1_o4_corners}]}
+
+let tromino_p2_o1 = [(0,0); (0,1); (0,2)]
+let tromino_p2_o1_corners = [(0,0); (0,2)]
+let tromino_p2_o2 = [(0,0); (1,0); (2,0)]
+let tromino_p2_o2_corners = [(0,0); (2,0)]
+let tromino_p2 = 
+  {color = 'W'; 
+   position_on_board = []; 
+   position_on_board_corners = [];
+   shape = 
+     [{coordinates = tromino_p2_o1; 
+       corners = tromino_p2_o1_corners};
+      {coordinates = tromino_p2_o2; 
+       corners = tromino_p2_o2_corners}]}
+
+let tetromino_p1_o1 = [(0,0); (0,1); (1,0); (1,1)]
+let tetromino_p1_o1_corners = [(0,0); (0,1); (1,0); (1,1)]
+let tetromino_p1 =
+  {color = 'W'; 
+   position_on_board = []; 
+   position_on_board_corners = [];
+   shape = 
+     [{coordinates = tetromino_p1_o1; 
+       corners = tetromino_p1_o1_corners}]}
+
+let tetromino_p2_o1 = [(0,1); (1,0); (1,1); (1,2)]
+let tetromino_p2_o1_corners = [(0,1); (1,0); (1,2)]
+let tetromino_p2_o2 = [(0,0); (1,0); (1,1); (2,0)]
+let tetromino_p2_o2_corners = [(0,0); (1,1); (2,0)]
+let tetromino_p2_o3 = [(0,0); (0,1); (0,2); (1,1)]
+let tetromino_p2_o3_corners = [(0,0); (0,2); (1,1)]
+let tetromino_p2_o4 = [(0,1); (1,0); (1,1); (2,1)]
+let tetromino_p2_o4_corners = [(0,1); (1,0); (2,1)]
+let tetromino_p2 =
+  {color = 'W'; 
+   position_on_board = []; 
+   position_on_board_corners = [];
+   shape = 
+     [{coordinates = tetromino_p2_o1; 
+       corners = tetromino_p2_o1_corners};
+      {coordinates = tetromino_p2_o2; 
+       corners = tetromino_p2_o2_corners}; 
+      {coordinates = tetromino_p2_o3; 
+       corners = tetromino_p2_o3_corners};
+      {coordinates = tetromino_p2_o4; 
+       corners = tetromino_p2_o4_corners}]}
+
+let tetromino_p3_o1 = [(0,0); (0,1); (0,2); (0,3)]
+let tetromino_p3_o1_corners = [(0,0); (0,3)]
+let tetromino_p3_o2 = [(0,0); (1,0); (2,0); (3,0)]
+let tetromino_p3_o2_corners = [(0,0); (3,0)]
+let tetromino_p3 =
+  {color = 'W'; 
+   position_on_board = []; 
+   position_on_board_corners = [];
+   shape = 
+     [{coordinates = tetromino_p3_o1; 
+       corners = tetromino_p3_o1_corners};
+      {coordinates = tetromino_p3_o2; 
+       corners = tetromino_p3_o2_corners}]}
+
+let tetromino_p4_o1 = [(0,2); (1,0); (1,1); (1,2)]
+let tetromino_p4_o1_corners = [(0,2); (1,0); (1,2);]
+let tetromino_p4_o2 = [(0,0); (1,0); (2,0); (2,1)]
+let tetromino_p4_o2_corners = [(0,0); (2,0); (2,1)]
+let tetromino_p4_o3 = [(0,0); (0,1); (0,2); (1,0)]
+let tetromino_p4_o3_corners = [(0,0); (0,2); (1,0)]
+let tetromino_p4_o4 = [(0,0); (0,1); (1,1); (2,1)]
+let tetromino_p4_o4_corners = [(0,0); (0,1); (2,1)]
+let tetromino_p4 =
+  {color = 'W'; 
+   position_on_board = []; 
+   position_on_board_corners = [];
+   shape = 
+     [{coordinates = tetromino_p4_o1; 
+       corners = tetromino_p4_o1_corners};
+      {coordinates = tetromino_p4_o2; 
+       corners = tetromino_p4_o2_corners}; 
+      {coordinates = tetromino_p4_o3; 
+       corners = tetromino_p4_o3_corners};
+      {coordinates = tetromino_p4_o4; 
+       corners = tetromino_p4_o4_corners}]}
+
+let tetromino_p5_o1 = [(0,1); (0,2); (1,0); (1,1)]
+let tetromino_p5_o1_corners = [(0,1); (0,2); (1,0); (1,1)]
+let tetromino_p5_o2 = [(0,0); (1,0); (1,1); (2,1)]
+let tetromino_p5_o2_corners = [(0,0); (1,0); (1,1); (2,1)]
+let tetromino_p5 =
+  {color = 'W'; 
+   position_on_board = []; 
+   position_on_board_corners = [];
+   shape = 
+     [{coordinates = tetromino_p5_o1; 
+       corners = tetromino_p5_o1_corners};
+      {coordinates = tetromino_p5_o2; 
+       corners = tetromino_p5_o2_corners};]}
+
 
 let monomino_piece = [(1,1)]
 let domino_piece = [(1,1); (2,1)]
@@ -111,59 +250,79 @@ let player_tests =
       is_touching_simple_test "snd" (1,1) testboard true;
       is_touching_simple_test "third" (4,3) testboard true;
       (*is_touching_simple_test "fourth" (2,0) testboard true;*)
-      placed_piece_test "Player with an inventory of just one monomino after
-      placing that one piece" {inventory = [{color = "red"; shape = monomino_piece}]; 
-                             color = "red"; points = 12} 
-      {color = "red"; shape = monomino_piece} 
-      {inventory = []; color = "red"; points = 12};
-      placed_piece_test "Player with an inventory with 4 unique pieces after 
-      placing one" {inventory = [{color = "blue"; shape = monomino_piece}; 
-                               {color = "blue"; shape = domino_piece}; 
-                               {color = "blue";  shape = tromino_piece1}; 
-                               {color = "blue"; shape = tromino_piece2}]; 
-                  color = "blue"; points = 24} 
-      {color = "blue"; shape = tromino_piece1} 
-      {inventory = [{color = "blue"; shape = monomino_piece}; 
-                    {color = "blue"; shape = domino_piece}; 
-                    {color = "blue"; shape = tromino_piece2}]; 
-       color = "blue"; points = 24};
-      placed_piece_test "Player with an inventory with 4 unique pieces after 
-      placing one" {inventory = [{color = "blue"; shape = domino_piece}; 
-                               {color = "blue"; shape = tetromino_piece1}; 
-                               {color = "blue";  shape = tromino_piece1}; 
-                               {color = "blue"; shape = tromino_piece2};
-                               {color = "blue"; shape = tetromino_piece2};
-                               {color = "blue"; shape = tetromino_piece3}]; 
-                  color = "blue"; points = 2} 
-      {color = "blue"; shape = tetromino_piece2}
-      {inventory = [{color = "blue"; shape = domino_piece}; 
-                    {color = "blue"; shape = tetromino_piece1}; 
-                    {color = "blue";  shape = tromino_piece1}; 
-                    {color = "blue"; shape = tromino_piece2};
-                    {color = "blue"; shape = tetromino_piece3}]; 
-       color = "blue"; points = 2};
-      placed_piece_test "Player with an inventory with 4 unique pieces after 
-      placing one" {inventory = [{color = "blue"; shape = domino_piece}; 
-                               {color = "blue"; shape = tetromino_piece4}; 
-                               {color = "blue";  shape = tromino_piece1}; 
-                               {color = "blue"; shape = tromino_piece2};
-                               {color = "blue"; shape = tetromino_piece5};
-                               {color = "blue"; shape = tetromino_piece3};
-                               {color = "blue"; shape = tetromino_piece1};
-                               {color = "blue"; shape = tetromino_piece2};
-                               {color = "blue"; shape = monomino_piece}
-                              ]; 
-                  color = "blue"; points = 18} 
-      {color = "blue"; shape = monomino_piece}
-      {inventory = [{color = "blue"; shape = domino_piece}; 
-                    {color = "blue"; shape = tetromino_piece4}; 
-                    {color = "blue";  shape = tromino_piece1}; 
-                    {color = "blue"; shape = tromino_piece2};
-                    {color = "blue"; shape = tetromino_piece5};
-                    {color = "blue"; shape = tetromino_piece3};
-                    {color = "blue"; shape = tetromino_piece1};
-                    {color = "blue"; shape = tetromino_piece2}]; 
-       color = "blue"; points = 18}*)
+    *)
+
+    placed_piece_test "Player with an inventory of just 1 monomino after
+      placing that one piece" {inventory = [monomino]; 
+                               points = 12; 
+                               color = 'R'} 
+      monomino {inventory = []; 
+                points = 12; 
+                color = 'R'};
+    placed_piece_test "Player with an inventory with 4 unique pieces after 
+      placing one" {inventory = [monomino; domino; tromino_p1; tromino_p2]; 
+                    points = 24; 
+                    color = 'B'} 
+      tromino_p1 {inventory = [monomino; domino; tromino_p2]; 
+                  points = 24; 
+                  color = 'B'};
+    placed_piece_test "Player with an inventory with 6 unique pieces after 
+      placing one" {inventory = [domino; tetromino_p1; tromino_p1; tromino_p2; 
+                                 tetromino_p2; tetromino_p3]; 
+                    points = 2; 
+                    color = 'B'} 
+      tetromino_p2 {inventory = [domino; tetromino_p1; tromino_p1; tromino_p2; 
+                                 tetromino_p3]; 
+                    points = 2; 
+                    color = 'B'};
+    placed_piece_test "Player with an inventory with 9 unique pieces after 
+      placing one" {inventory = [domino; tetromino_p4; tromino_p1; tromino_p2;
+                                 tetromino_p5; tetromino_p3; tetromino_p1; 
+                                 tetromino_p2; monomino]; 
+                    points = 15; 
+                    color = 'G'} 
+      monomino {inventory = [domino; tetromino_p4; tromino_p1; tromino_p2;
+                             tetromino_p5; tetromino_p3; tetromino_p1; 
+                             tetromino_p2]; 
+                points = 15; 
+                color = 'G'};
+    placed_piece_test "Player with an inventory with 7 unique pieces after 
+      placing one" {inventory = [tromino_p1; tromino_p2;
+                                 tetromino_p5; tetromino_p3; tetromino_p1; 
+                                 tetromino_p2; monomino]; 
+                    points = 50; 
+                    color = 'Y'} 
+      tetromino_p3 {inventory = [tromino_p1; tromino_p2; tetromino_p5; 
+                                 tetromino_p1; tetromino_p2; monomino]; 
+                    points = 50; 
+                    color = 'Y'};
+    placed_piece_test "Player with an inventory with 5 unique pieces after 
+      placing one" {inventory = [tromino_p1; tromino_p2; tetromino_p3; 
+                                 tetromino_p1; monomino]; 
+                    points = 10; 
+                    color = 'R'} 
+      tetromino_p1 {inventory = [tromino_p1; tromino_p2; 
+                                 tetromino_p3;  monomino]; 
+                    points = 10; 
+                    color = 'R'};
+    placed_piece_test "Player with an inventory with 3 unique pieces after 
+      placing one" {inventory = [monomino; domino; tromino_p1]; 
+                    points = 21; 
+                    color = 'Y'} 
+      domino {inventory = [monomino; tromino_p1]; 
+              points = 21; 
+              color = 'Y'};
+    placed_piece_test "Player with an inventory with 8 unique pieces after 
+      placing one" {inventory = [domino; tetromino_p4; tromino_p1;
+                                 tetromino_p5; tetromino_p3; tetromino_p1; 
+                                 tetromino_p2; monomino]; 
+                    points = 14; 
+                    color = 'G'} 
+      tetromino_p4 {inventory = [domino; tromino_p1; 
+                                 tetromino_p5; tetromino_p3; tetromino_p1; 
+                                 tetromino_p2; monomino]; 
+                    points = 14; 
+                    color = 'G'};
 
     place_piece_test "Testing mono" 
       monomino_piece (14,14) [(14,14)];
@@ -194,6 +353,17 @@ let emptyboard = [|
   [|'W';'W';'W';'W';'W';'W';'W';'W'|];
   [|'W';'W';'W';'W';'W';'W';'W';'W'|];
   [|'W';'W';'W';'W';'W';'W';'W';'W'|]
+|]
+
+let newemptyboard = [|
+  [|'-';'-';'-';'-';'-';'-';'-';'-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-'|];
 |]
 
 let board1 = [|
@@ -259,6 +429,56 @@ let board20x20 = [|
   [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
   [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
 |]
+
+let emptyboard20x20 = [|
+  [|'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-'|];
+|]
+
+
+let filled20x20 = [|
+  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
+  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
+  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
+  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
+  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
+  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
+  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
+  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
+  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
+  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
+  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
+  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
+  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
+  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
+  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
+  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
+  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
+  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
+  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
+  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
+  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
+|]
+
 (* 
 has_left = true
 has_bottom = true
@@ -386,15 +606,18 @@ let is_valid_test
 
 let is_valid_several_tests = [
 
-  is_valid_test "emptyboard1" piece12 lst1 lst2 emptyboard (1,1) true;
-  is_valid_test "emptyboard2" piece12 lst1 lst2 emptyboard (0,0) true;
-  is_valid_test "emptyboard3" piece12 lst1 lst2 emptyboard (1,2) true;
-  is_valid_test "emptyboard4" piece12 lst1 lst2 emptyboard (5,5) true;
+  is_valid_test "emptyboard1" piece12 lst1 lst2 newemptyboard (1,1) false;
+  is_valid_test "emptyboard 10x10" piece12 lst1 lst2 newemptyboard (0,0) true;
+  is_valid_test "emptyboard3" piece12 lst1 lst2 newemptyboard (1,2) false;
+  is_valid_test "emptyboard4" piece12 lst1 lst2 newemptyboard (5,5) false;
+  is_valid_test "emptyboard 20x20" piece12 lst1 lst2 emptyboard20x20 (0,0) 
+    true;
 
 
-  is_valid_test "yo" piece12 lst1 lst2 board1 (2,2) true;
-  is_valid_test "yeet" piece12 lst1 lst2 board1 (5,5) true;
-  is_valid_test "ya" piece22 lst3 lst4 emptyboard (3,0) true;
+
+  is_valid_test "yo" piece12 lst1 lst2 board1 (2,2) false;
+  is_valid_test "yeet" piece12 lst1 lst2 board1 (5,5) false;
+  is_valid_test "ya" piece22 lst3 lst4 emptyboard (3,0) false;
   is_valid_test "yun" piece12 lst1 lst2 board1 (1,1) false;
   is_valid_test "yup" piece12 lst1 lst2 board1 (5,5) false;
 
@@ -412,15 +635,11 @@ let can_place_piece_test
 
 let can_place_tests = [
 
-  can_place_piece_test "can 1" piece1 emptyboard true;
-  can_place_piece_test "can 2" piece2 emptyboard true;
-  can_place_piece_test "can 3" piece3 emptyboard true;
+  can_place_piece_test "can 1" piece1 newemptyboard true;
+  can_place_piece_test "can 2" piece2 newemptyboard true;
+  can_place_piece_test "can 3" piece3 newemptyboard true;
   can_place_piece_test "can 4" piece1 board2 false;
   can_place_piece_test "can 5" piece1 board2 false;
-
-
-
-
 
 ] 
 
@@ -452,10 +671,10 @@ let suite =
     corner_tests;
     face_tests;
     player_tests;
-    (*is_valid_several_tests;*)
+    is_valid_several_tests;
     can_place_tests;
 
-    (*print_tests;*)
+    print_tests;
 
   ]
 let _ = run_test_tt_main suite

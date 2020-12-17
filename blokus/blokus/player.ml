@@ -708,8 +708,9 @@ let is_valid piece coordlst cornerlst board coordinate =
 
 let actually_place_piece piece baord = ()
 
-let rec add_player lst playerr = 
+let rec add_player scorelst lst playerr = 
   match lst with
-  | [] -> []
+  | [] -> scorelst
   | h :: t ->
-    if h.color = playerr.color then [h] else add_player t playerr
+    if h.color = playerr.color then add_player (h :: scorelst) t playerr 
+    else add_player scorelst t playerr
