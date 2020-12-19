@@ -240,6 +240,42 @@ let tetromino_piece4 = [(1,1); (2,1); (1,2); (2,2)]
 let tetromino_piece5 = [(1,1); (2,1); (2,2); (3,2)]
 let pentomino_piece1 = [(1,1); (2,1); (3,1); (4,1); (5,1)]
 
+let add_player_test
+    (name : string)
+    (lst1 : Player.player list)
+    (lst2 : Player.player list)
+    (player : Player.player)
+    (expected_output : Player.player list) : test =
+  name >:: (fun _-> 
+      assert_equal ~cmp:cmp_set_like_lists 
+        expected_output (add_player lst1 lst2 player))
+
+let remove_player_test
+    (name : string)
+    (lst : Player.player list)
+    (player : Player.player)
+    (expected_output : Player.player list) : test =
+  name >:: (fun _-> 
+      assert_equal ~cmp:cmp_set_like_lists 
+        expected_output (remove_player lst player))
+
+let get_next_player_test
+    (name : string)
+    (lst : Player.player list)
+    (player : Player.player)
+    (expected_output : Player.player) : test =
+  name >:: (fun _-> 
+      assert_equal expected_output (get_next_player lst player))
+
+let adjust_playerlist_test
+    (name : string)
+    (lst : Player.player list)
+    (player : Player.player)
+    (expected_output : Player.player list) : test =
+  name >:: (fun _-> 
+      assert_equal ~cmp:cmp_set_like_lists 
+        expected_output (adjust_playerlist lst player))
+
 let player_tests =
   [
     (* TODO: add tests for the Adventure module here *)
@@ -333,9 +369,64 @@ let player_tests =
     place_piece_test "Testing dom bad" 
       domino_piece (19,19) [(19,19)];
     place_piece_test "Testing tetr" 
-      tetromino_piece1 (18,18) [(18,18); (19,18)]
+      tetromino_piece1 (18,18) [(18,18); (19,18)];
 
+    add_player_test "trying to add a player that doesn't exist in lst2" 
+      [] [player_red] player_blue [];
+    add_player_test "trying to add a player to an empty lst1" 
+      [] [player_blue] player_blue [player_blue];
+    add_player_test "trying to add a player to a non empty lst1" 
+      [player_green] [player_red; player_yellow] player_yellow 
+      [player_green; player_yellow];
 
+    remove_player_test "attempts to remove a player that doesn't exist in lst1"
+      [player_blue] player_green [player_blue];
+    remove_player_test "attempts to remove a player from an empty list" [] 
+      player_red [];
+    remove_player_test "removes player from a list of players"
+      [player_red; player_yellow; player_blue; player_green] player_blue
+      [player_red; player_yellow; player_green];
+
+    get_next_player_test "attempts getting next player in a list of one player"
+      [player_green] player_green player_green;
+    get_next_player_test "attempts getting next player in a list of two 
+    players" [player_green; player_blue] player_green player_blue;
+    get_next_player_test "attempts getting next player in a list of multiple 
+    players" [player_red; player_yellow; player_blue; player_green] 
+      player_green player_red;
+
+    adjust_playerlist_test "adjusting a list with a player with the same 
+    inventory, color, and points as one in the list" 
+      [player_blue; player_green; player_red; player_yellow] player_red
+      [player_blue; player_green; player_red; player_yellow];
+    adjust_playerlist_test "adjusting a list with a player with different 
+    inventory or points as one in the list"
+      [player_blue; player_green; player_red; player_yellow]
+      {inventory = [monomino; domino; tromino_p1]; 
+       points = 21; 
+       color = 'Y'}
+      [player_blue; player_green; player_red; 
+       {inventory = [monomino; domino; tromino_p1]; 
+        points = 21; 
+        color = 'Y'}];
+    adjust_playerlist_test "adjusting a list with a player with same inventory 
+    and different points as one in the list"
+      [player_blue; {inventory = [domino; tromino_p1; tetromino_p5; 
+                                  tetromino_p3; tetromino_p1; tetromino_p2; 
+                                  monomino]; 
+                     points = 14; 
+                     color = 'G'}; 
+       player_red; player_yellow]
+      {inventory = [domino; tromino_p1; tetromino_p5; tetromino_p3; 
+                    tetromino_p1; tetromino_p2; monomino]; 
+       points = 3; 
+       color = 'G'}
+      [player_blue; {inventory = [domino; tromino_p1; tetromino_p5; 
+                                  tetromino_p3; tetromino_p1; tetromino_p2; 
+                                  monomino]; 
+                     points = 3; 
+                     color = 'G'}; 
+       player_red; player_yellow];
 
   ]
 
@@ -664,6 +755,8 @@ let print_tests = [
   print_pieces_test "" Player.player_yellow ();
 
 ] 
+
+
 
 
 let suite = 

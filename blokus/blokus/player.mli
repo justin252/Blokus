@@ -32,8 +32,16 @@ type player={
     the player's inventory. *)
 val placed_piece : piece -> player -> player
 
-val check_corners: piece -> gameboard -> bool 
+(** [check_corners p g] returns true if the piece that [p] represents touches
+    one of corners of its own pieces on the gameboard that [g] represents
+    Requires: [p] is a valid player piece representation present in
+    the player's inventory. *)
+val check_corners: piece -> gameboard -> bool
 
+(** [check_faces p g] returns false if the piece that [p] represents touches
+    one of faces of its own pieces on the gameboard that [g] represents
+    Requires: [p] is a valid player piece representation present in
+    the player's inventory. *)
 val check_faces: piece -> gameboard -> bool
 
 (** [place_piece lst coord lst] takes the coordinate list [lst] of a piece
