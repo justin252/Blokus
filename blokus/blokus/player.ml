@@ -394,27 +394,10 @@ let pentomino_p12 =
        corners = pentomino_p12_o4_corners}]}
 
 let pieces = 
-  [monomino; 
-   domino; 
-   tromino_p1; 
-   tromino_p2; 
-   tetromino_p1; 
-   tetromino_p2;
-   tetromino_p3; 
-   tetromino_p4; 
-   tetromino_p5; 
-   pentomino_p1; 
-   pentomino_p2;
-   pentomino_p3; 
-   pentomino_p4; 
-   pentomino_p5; 
-   pentomino_p6; 
-   pentomino_p7; 
-   pentomino_p8; 
-   pentomino_p9; 
-   pentomino_p10; 
-   pentomino_p11; 
-   pentomino_p12]
+  [monomino; domino; tromino_p1; tromino_p2; tetromino_p1; tetromino_p2;
+   tetromino_p3; tetromino_p4; tetromino_p5; pentomino_p1; pentomino_p2;
+   pentomino_p3; pentomino_p4; pentomino_p5; pentomino_p6; pentomino_p7; 
+   pentomino_p8; pentomino_p9; pentomino_p10; pentomino_p11; pentomino_p12]
 
 let set_color c (piece : piece) = 
   { piece with color = c; }
@@ -440,22 +423,6 @@ let player_yellow =
   { inventory = inventory_generator 'Y'; 
     points = 0; 
     color = 'Y' }
-
-(** same_orientation returns true if two pieces, [piece1] and [piece2] are the 
-    same piece with either the same exact orientation or a different 
-    orientation or returns false otherwise, i.e. two unique/distinct pieces.*)
-let rec same_orientation piece1 piece2 e =
-  match piece1 with
-  | [] -> true
-  | h :: t -> 
-    match piece2 with
-    | [] -> true
-    | a :: b ->
-      if (h = a) then (
-        same_orientation t b e
-      ) else (
-        false
-      )
 
 let rec get_next_index lst current x =
   match lst with
@@ -712,9 +679,9 @@ let is_valid piece coordlst cornerlst board coordinate =
   end
   else false
 
-let rec add_player scorelst lst playerr = 
+let rec add_player scorelst lst player = 
   match lst with
   | [] -> scorelst
   | h :: t ->
-    if h.color = playerr.color then add_player (h :: scorelst) t playerr 
-    else add_player scorelst t playerr
+    if h.color = player.color then add_player (h :: scorelst) t player 
+    else add_player scorelst t player
