@@ -442,8 +442,8 @@ let player_yellow =
     color = 'Y' }
 
 (** same_orientation returns true if two pieces, [piece1] and [piece2] are the 
-    same piece with either the same exact orientation or a different orientation 
-    or returns false otherwise, i.e. two unique/distinct pieces.*)
+    same piece with either the same exact orientation or a different 
+    orientation or returns false otherwise, i.e. two unique/distinct pieces.*)
 let rec same_orientation piece1 piece2 e =
   match piece1 with
   | [] -> true
@@ -569,11 +569,6 @@ let place_piece_corner piece coordinate =
   let head = get_head piece in
   let list_to_board = subtract_from_init piece head in
   corner_place_algo list_to_board coordinate
-
-(*let place_piece_corner piece coordinate =
-  match piece with
-  |[]->[]
-  |h::t -> coordinate :: (place_algo t coordinate)*)
 
 let rec check_board piece board = 
   match piece with 
@@ -705,8 +700,6 @@ let is_valid piece coordlst cornerlst board coordinate =
     else false
   end
   else false
-
-let actually_place_piece piece baord = ()
 
 let rec add_player scorelst lst playerr = 
   match lst with

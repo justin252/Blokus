@@ -1,3 +1,28 @@
+(* Testing plan
+
+   We have used glassbox testing to test our functions. Checking to see if each of
+   our functions and it's helper functions are passing the test cases taking into
+   consideration all the possible conditions for each function.
+
+   The OUnit test cases tests the correctness of the program as it includes
+   testing if the piece is removed from the player's inventory correctly by
+   testing the placed_piece function and testing if the piece is added to the
+   board correctly by testing place_piece function. It tests if the chosen move
+   is valid by testing the main isvalid function that tests if it matches all
+   the conditions for the move to be valid in addition to testing it's helper
+   functions is_touching_corner that checks if the piece meets the condition of
+   touching the corner of one of its pieces on the board, is_not_touching_face
+   function that checks if the piece meets the condition of not touching the
+   face of any of its pieces on the board, can_place_piece to check if the
+   piece is not placed outside the board or on top of any existing pieces on the
+   board.
+
+   We have not tested functions like the printer functions because we tested it out
+   using the make play function and seeing if it prints the desired output
+   correctly at each step.
+
+*)
+
 open OUnit2
 open Player
 open Game
@@ -50,28 +75,6 @@ let cmp_demo =
     *)
   ]
 
-(********************************************************************
-   End helper functions.
- ********************************************************************)
-
-(* You are welcome to add strings containing JSON here, and use them as the
-   basis for unit tests.  Or you can add .json files in this directory and
-   use them, too.  Any .json files in this directory will be included
-   by [make zip] as part of your CMS submission. *)
-
-(*let corners_test 
-    (name : string) 
-    (input: bool array array) 
-    (expected_output : (int * int) list) : test = 
-  name >:: (fun _ -> 
-      assert_equal expected_output (Player.get_all_corners input))
-  let is_touching_simple_test 
-    (name : string) 
-    (input: int*int) 
-    (gameboard: game)
-    (expected_output : bool) : test = 
-  name >:: (fun _ -> 
-      assert_equal expected_output (Player.is_touching_simple input gameboard))*)
 
 let placed_piece_test 
     (name : string)
@@ -278,15 +281,6 @@ let adjust_playerlist_test
 
 let player_tests =
   [
-    (* TODO: add tests for the Adventure module here *)
-    (*corners_test "idk" unitbool [];
-      corners_test "checking" piecearray [(4,3);(4,1);(2,2)];
-      corners_test "another one" fourcorner [(4, 4); (4, 0); (0, 4); (0, 0)];
-      is_touching_simple_test "first" (1,3) testboard true;
-      is_touching_simple_test "snd" (1,1) testboard true;
-      is_touching_simple_test "third" (4,3) testboard true;
-      (*is_touching_simple_test "fourth" (2,0) testboard true;*)
-    *)
 
     placed_piece_test "Player with an inventory of just 1 monomino after
       placing that one piece" {inventory = [monomino]; 
@@ -497,29 +491,7 @@ let board5x5 = [|
   [|'W';'W';'W';'W';'W'|]
 |]
 
-let board20x20 = [|
-  [|'B';'B';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'B';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'B';'B';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'B';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-|]
+
 
 let emptyboard20x20 = [|
   [|'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-'|];
@@ -570,12 +542,30 @@ let filled20x20 = [|
   [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
 |]
 
-(* 
-has_left = true
-has_bottom = true
-has_top = false
-has_right = false
-*)
+
+let board20x20 = [|
+  [|'B';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_'|];(*0 *)
+  [|'_';'B';'B';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_'|];(*1 *)
+  [|'_';'_';'B';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_'|];(*2 *)
+  [|'_';'_';'B';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_'|];(*3 *)
+  [|'_';'_';'B';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_'|];(*4 *)
+  [|'_';'_';'_';'B';'B';'B';'B';'B';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_'|];(*5 *)
+  [|'_';'_';'_';'_';'_';'_';'_';'_';'B';'B';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_'|];(*6 *)
+  [|'_';'_';'_';'_';'_';'_';'_';'_';'B';'B';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_'|];(*7 *)
+  [|'_';'_';'_';'_';'_';'_';'_';'B';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_'|];(*8 *)
+  [|'_';'_';'_';'_';'_';'_';'_';'B';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_'|];(*9 *)
+  [|'_';'_';'_';'_';'_';'_';'B';'B';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_'|];(*10 *)
+  [|'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_'|];(*11 *)
+  [|'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_'|];(*12 *)
+  [|'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'R';'R';'_';'_';'_';'_';'_';'_';'_';'_'|];(*13 *)
+  [|'_';'_';'_';'R';'R';'_';'_';'_';'_';'R';'R';'_';'_';'_';'_';'_';'_';'_';'G';'_'|];(*14 *)
+  [|'_';'_';'_';'_';'R';'_';'_';'_';'_';'R';'_';'_';'_';'_';'_';'_';'_';'_';'G';'_'|];(*15 *)
+  [|'_';'_';'_';'_';'R';'_';'_';'R';'R';'_';'_';'_';'_';'_';'_';'_';'_';'_';'G';'_'|];(*16 *)
+  [|'_';'_';'_';'_';'_';'R';'R';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'G';'_'|];(*17 *)
+  [|'_';'_';'_';'_';'_';'R';'R';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'G';'_'|];(*18 *)
+  [|'R';'R';'R';'R';'R';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'G'|];(*19 *)
+|]
+
 let piece1 = {color = 'R'; 
               position_on_board = [(2, 2); (3, 2)]; 
               position_on_board_corners= [(2, 2); (3, 2)]; 
@@ -623,6 +613,177 @@ let piece5x5 = {color = 'R';
                 shape = [{coordinates = []; 
                           corners = []}]}
 
+let piece_for_face1 = {color = 'R'; 
+                       position_on_board = 
+                         [(12, 12); (11, 13); (12,13); (12, 14)]; 
+                       position_on_board_corners= []; 
+                       shape = [{coordinates = []; 
+                                 corners = []}]}
+
+let piece_for_face2 = {color = 'Y'; 
+                       position_on_board = [(0, 19)]; 
+                       position_on_board_corners= []; 
+                       shape = [{coordinates = []; 
+                                 corners = []}]} 
+
+let piece_for_face3 = {color = 'Y'; 
+                       position_on_board = 
+                         [(0, 19);(1,19);(2,19);(3,19);(4,19)]; 
+                       position_on_board_corners= []; 
+                       shape = [{coordinates = []; 
+                                 corners = []}]} 
+
+let piece_for_face4 = {color = 'B'; 
+                       position_on_board = [(6, 10);(6,11)]; 
+                       position_on_board_corners= []; 
+                       shape = [{coordinates = []; 
+                                 corners = []}]} 
+
+let piece_for_face5 = {color = 'B'; 
+                       position_on_board = [(6, 10); (7,10)]; 
+                       position_on_board_corners= []; 
+                       shape = [{coordinates = []; 
+                                 corners = []}]} 
+
+let piece_for_face6 = {color = 'R'; 
+                       position_on_board = [(6, 10); (7,10)]; 
+                       position_on_board_corners= []; 
+                       shape = [{coordinates = []; 
+                                 corners = []}]} 
+
+let piece_for_face7 = {color = 'Y'; 
+                       position_on_board = [(6, 1); (7,1);(8,1);(9,1);(10,1)]; 
+                       position_on_board_corners= []; 
+                       shape = [{coordinates = []; 
+                                 corners = []}]} 
+
+let piece_for_face8 = {color = 'G'; 
+                       position_on_board = [(5, 0); (6,0);(7,0);(8,0);(9,0)]; 
+                       position_on_board_corners= []; 
+                       shape = [{coordinates = []; 
+                                 corners = []}]} 
+
+let piece_for_face9 = {color = 'G'; 
+                       position_on_board = 
+                         [(5, 19); (6,19);(7,19);(8,19);(9,19)]; 
+                       position_on_board_corners= []; 
+                       shape = [{coordinates = []; 
+                                 corners = []}]} 
+
+let piece_for_face10 = {color = 'R'; 
+                        position_on_board = 
+                          [(19, 7); (19,8);(19,9);(19,10);(19,11)]; 
+                        position_on_board_corners= []; 
+                        shape = [{coordinates = []; 
+                                  corners = []}]} 
+
+let piece_for_face11 = {color = 'Y'; 
+                        position_on_board = 
+                          [(0,7); (0,8);(0,9);(0,10);(0,11)]; 
+                        position_on_board_corners= []; 
+                        shape = [{coordinates = []; 
+                                  corners = []}]} 
+
+let piece_for_face12 = {color = 'R'; 
+                        position_on_board = 
+                          [(11,13); (12,12);(12,13);(12,14);(12,13)]; 
+                        position_on_board_corners= []; 
+                        shape = [{coordinates = []; 
+                                  corners = []}]} 
+
+let piece_for_face13 = {color = 'B'; 
+                        position_on_board = 
+                          [(7,11); (8,10);(8,11);(8,12);(9,11)]; 
+                        position_on_board_corners= []; 
+                        shape = [{coordinates = []; 
+                                  corners = []}]} 
+
+let piece_for_face14 = {color = 'G'; 
+                        position_on_board = [(12,15); (12,16);(13,15);(13,16);
+                                             (13,17)]; 
+                        position_on_board_corners= []; 
+                        shape = [{coordinates = []; 
+                                  corners = []}]} 
+
+let piece_for_face15 = {color = 'Y'; 
+                        position_on_board = 
+                          [(18,0); (19,0);(17,1);(18,1);(17,2)]; 
+                        position_on_board_corners= []; 
+                        shape = [{coordinates = []; 
+                                  corners = []}]} 
+
+let piece_for_face16 = {color = 'B'; 
+                        position_on_board = 
+                          [(3,2); (4,2);(4,3);(5,3);(5,4)]; 
+                        position_on_board_corners= []; 
+                        shape = [{coordinates = []; 
+                                  corners = []}]}
+
+
+let is_not_touching_face_test
+    (name : string) 
+    (input: Player.piece) 
+    (input2: Player.gameboard) 
+    (expected_output : bool) : test = 
+  name >:: (fun _ -> 
+      assert_equal expected_output (Player.check_faces input input2))
+
+
+let face_tests =[
+  is_not_touching_face_test "empty face" piece1 emptyboard true; 
+  is_not_touching_face_test "top edge" piece_top board_edge false; 
+  is_not_touching_face_test "Generic test" piece1 board1 true;
+  is_not_touching_face_test "Generic test 2" piece2 board2 true;
+  is_not_touching_face_test "Not touching, box piece" piece3 board2 false;  
+  is_not_touching_face_test "left edge" piece4 board_edge true;
+  is_not_touching_face_test "right corner edge" piece5 board_edge true;
+  is_not_touching_face_test "left corner edge" piece6 board_edge true;
+  is_not_touching_face_test "passes touching corner but fails touching face"
+    piece7 board_edge false;
+  is_not_touching_face_test "corner touches but block above it touches face" 
+    piece5x5 board5x5 false;
+  is_not_touching_face_test "Adding monomino to the corner: does not touch face"
+    piece_for_face2 board20x20 true;
+  is_not_touching_face_test "Adding pentomino to the corner: does not touch face"
+    piece_for_face3 board20x20 true;
+  is_not_touching_face_test 
+    "Adding a piece for red player: does not touch face" piece_for_face1 
+    board20x20 true;
+  is_not_touching_face_test 
+    "Adding domino for blue player: touches one blocks' face" piece_for_face4
+    board20x20 false;
+  is_not_touching_face_test 
+    "Adding domino for blue player: touches two block's face" piece_for_face5
+    board20x20 false;
+  is_not_touching_face_test 
+    "Adding domino for red player: touches two blue face: passes" piece_for_face6
+    board20x20 true;
+  is_not_touching_face_test 
+    "Adding pentomino for yellow player: touches no corners, touches no faces" 
+    piece_for_face7 board20x20 true;
+  is_not_touching_face_test 
+    "Checking for index out of bounds: left" piece_for_face8 board20x20 true;
+  is_not_touching_face_test 
+    "Checking for index out of bounds: right" piece_for_face9 board20x20 true;
+  is_not_touching_face_test 
+    "Checking for index out of bounds: bottom" piece_for_face10 board20x20 true;
+  is_not_touching_face_test 
+    "Checking for index out of bounds: top" piece_for_face11 board20x20 true;
+  is_not_touching_face_test "trying out a valid game move for red player"
+    piece_for_face12 board20x20 true;
+  is_not_touching_face_test "trying out a valid game move for blue player"
+    piece_for_face13 board20x20 true;
+  is_not_touching_face_test "trying out a valid game move for green player"
+    piece_for_face14 board20x20 true;
+  is_not_touching_face_test "trying out a valid game move for yellow player"
+    piece_for_face15 board20x20 true;
+  is_not_touching_face_test "overlapping a piece and touching face"
+    piece_for_face16 board20x20 false;
+  is_not_touching_face_test "adding blue piece to an empty board"
+    piece_for_face16 emptyboard20x20 true;
+]
+
+
 let is_touching_corner_test 
     (name : string) 
     (input: Player.piece) 
@@ -644,29 +805,6 @@ let corner_tests =[
   (* is_touching_corner_test "touch_corner also checks touching edge" piece5x5 board5x5 true; *)
 ]
 
-let is_not_touching_face_test
-    (name : string) 
-    (input: Player.piece) 
-    (input2: Player.gameboard) 
-    (expected_output : bool) : test = 
-  name >:: (fun _ -> 
-      assert_equal expected_output (Player.check_faces input input2))
-
-let face_tests =[
-  is_not_touching_face_test "empty face" piece1 emptyboard true; 
-  is_not_touching_face_test "top edge" piece_top board_edge false; 
-  is_not_touching_face_test "Generic test" piece1 board1 true;
-  is_not_touching_face_test "Generic test 2" piece2 board2 true;
-  is_not_touching_face_test "Not touching, box piece" piece3 board2 false;  
-  is_not_touching_face_test "left edge" piece4 board_edge true;
-  is_not_touching_face_test "right corner edge" piece5 board_edge true;
-  is_not_touching_face_test "left corner edge" piece6 board_edge true;
-  is_not_touching_face_test "passes touching corner but fails touching face"
-    piece7 board_edge false;
-  is_not_touching_face_test "corner touches but block above it touches face" 
-    piece5x5 board5x5 false;
-
-]
 
 let piece12 = {color = 'R'; 
                position_on_board = []; 
@@ -697,12 +835,16 @@ let is_valid_test
 
 let is_valid_several_tests = [
 
-  is_valid_test "emptyboard1" piece12 lst1 lst2 newemptyboard (1,1) false;
-  is_valid_test "emptyboard 10x10" piece12 lst1 lst2 newemptyboard (0,0) true;
-  is_valid_test "emptyboard3" piece12 lst1 lst2 newemptyboard (1,2) false;
-  is_valid_test "emptyboard4" piece12 lst1 lst2 newemptyboard (5,5) false;
-  is_valid_test "emptyboard 20x20" piece12 lst1 lst2 emptyboard20x20 (0,0) 
-    true;
+  is_valid_test "placing initial at wrong coord" piece12 lst1 lst2 
+    newemptyboard (1,1) false;
+  is_valid_test "emptyboard 10x10 placing initial correctly" piece12 lst1 lst2 
+    newemptyboard (0,0) true;
+  is_valid_test "placing initial incorrectly" piece12 lst1 lst2 
+    newemptyboard (1,2) false;
+  is_valid_test "placing initial in middle" piece12 lst1 lst2 
+    newemptyboard (5,5) false;
+  is_valid_test "emptyboard 20x20 placing initial correctly" piece12 lst1 lst2 
+    emptyboard20x20 (0,0) true;
 
 
 
@@ -751,12 +893,84 @@ let print_pieces_test
 let print_tests = [
   print_board_test "" board1 ();
   print_board_test "" board2 ();
-
   print_pieces_test "" Player.player_yellow ();
 
 ] 
 
+let update_board_test
+    (name : string)  
+    (input1: Player.player) 
+    (input2: (int*int) list)
+    (input3: Player.gameboard)
+    (expected_output : Player.gameboard) : test = 
+  name >:: (fun _ -> 
+      assert_equal expected_output (Game.update_board input1 input2 input3))
 
+
+let emptybrdforupdating = [|
+  [|'-';'-';'-';'-';'-';'-';'-';'-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-'|];
+|]
+
+let boardafter1st = [|
+  [|'B';'-';'-';'-';'-';'-';'-';'-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-'|];
+|]
+
+
+let boardafter2nd = [|
+  [|'B';'B';'B';'B';'-';'-';'-';'-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-'|];
+|]
+
+let emptybrdforrandom = [|
+  [|'-';'-';'-';'-';'-';'-';'-';'-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-'|];
+|]
+
+let randomplaceboard = [|
+  [|'B';'B';'-';'-';'-';'-';'-';'-'|];
+  [|'-';'B';'B';'-';'-';'-';'-';'-'|];
+  [|'-';'-';'B';'-';'-';'-';'-';'-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-'|];
+|]
+
+let board_tests = [
+  update_board_test "testing corner placement" player_blue [0,0] 
+    emptybrdforupdating boardafter1st;
+  update_board_test "testing long piece placement" player_blue 
+    [(0,0);(0,1);(0,2);(0,3)] emptybrdforupdating boardafter2nd;
+  update_board_test "testing random placement" player_blue 
+    [(0,0);(0,1);(1,1);(1,2);(2,2)] emptybrdforrandom randomplaceboard;
+]
 
 
 let suite = 
@@ -768,6 +982,7 @@ let suite =
     can_place_tests;
 
     print_tests;
+    board_tests;
 
   ]
 let _ = run_test_tt_main suite
