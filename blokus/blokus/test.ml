@@ -517,22 +517,21 @@ let emptyboard20x20 = [|
   [|'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-'|];
 |]
 
-
-let filled20x20 = [|
+let board_20x20_c = [|
+  [|'B';'W';'W';'B';'W';'W';'W';'B';'B';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
   [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
+  [|'W';'W';'W';'W';'W';'W';'W';'B';'B';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
+  [|'B';'W';'W';'B';'W';'W';'W';'W';'W';'W';'W';'W';'B';'W';'B';'W';'B';'W';'W';'W'|];
+  [|'W';'W';'W';'W';'W';'W';'W';'B';'B';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
+  [|'W';'W';'W';'B';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
+  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'B';'W';'W';'B';'W';'W';'W';'W'|];
+  [|'B';'W';'B';'W';'W';'W';'B';'W';'W';'B';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
   [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
+  [|'B';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
+  [|'W';'W';'B';'W';'W';'B';'W';'B';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
+  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'B';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
+  [|'W';'W';'W';'W';'W';'B';'W';'B';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
+  [|'B';'W';'W';'B';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
   [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
   [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
   [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
@@ -783,7 +782,6 @@ let face_tests =[
     piece_for_face16 emptyboard20x20 true;
 ]
 
-
 let is_touching_corner_test 
     (name : string) 
     (input: Player.piece) 
@@ -792,18 +790,279 @@ let is_touching_corner_test
   name >:: (fun _ -> 
       assert_equal expected_output (Player.check_corners input input2))
 
+let piece1c = 
+  {color = 'B'; position_on_board = [(1, 1)]; 
+   position_on_board_corners= [(1, 1)]; 
+   shape = [{coordinates = []; 
+             corners = []
+            }]
+  }
+let piece2c = 
+  {color = 'B'; position_on_board = [(1, 3)]; 
+   position_on_board_corners= [(1, 3)]; 
+   shape = [{coordinates = []; 
+             corners = []
+            }]
+  }
+let piece3c = 
+  {color = 'B'; position_on_board = [(4, 2)]; 
+   position_on_board_corners= [(4, 2)]; 
+   shape = [{coordinates = []; 
+             corners = []
+            }]
+  }
+let piece3c = 
+  {color = 'B'; position_on_board = [(4, 2)]; 
+   position_on_board_corners= [(4, 2)]; 
+   shape = [{coordinates = []; 
+             corners = []
+            }]
+  }
+let piece4c = 
+  {color = 'B'; position_on_board = [(5, 2)]; 
+   position_on_board_corners= [(5, 2)]; 
+   shape = [{coordinates = []; 
+             corners = []
+            }]
+  }
+let piece5c = 
+  {color = 'B'; position_on_board = [(6, 1)]; 
+   position_on_board_corners= [(6, 1)]; 
+   shape = [{coordinates = []; 
+             corners = []
+            }]
+  }
+let piece6c = 
+  {color = 'B'; position_on_board = [(6, 0)]; 
+   position_on_board_corners= [(6, 0)]; 
+   shape = [{coordinates = []; 
+             corners = []
+            }]
+  }
+let piece7c = 
+  {color = 'B'; position_on_board = [(8, 1)]; 
+   position_on_board_corners= [(8, 1)]; 
+   shape = [{coordinates = []; 
+             corners = []
+            }]
+  }
+let piece8c = 
+  {color = 'B'; position_on_board = [(3, 1)]; 
+   position_on_board_corners= [(3, 1)]; 
+   shape = [{coordinates = []; 
+             corners = []
+            }]
+  }
+let piece9c = 
+  {color = 'B'; position_on_board = [(1, 5); (1, 6)]; 
+   position_on_board_corners= [(1, 5); (1, 6)]; 
+   shape = [{coordinates = []; 
+             corners = []
+            }]
+  }
+let piece10c = 
+  {color = 'B'; position_on_board = [(2, 5); (2, 6)]; 
+   position_on_board_corners= [(2, 5); (2, 6)]; 
+   shape = [{coordinates = []; 
+             corners = []
+            }]
+  }
+let piece11c = 
+  {color = 'B'; position_on_board = [(3, 5); (3, 6)]; 
+   position_on_board_corners= [(3, 5); (3, 6)]; 
+   shape = [{coordinates = []; 
+             corners = []
+            }]
+  }
+let piece12c = 
+  {color = 'B'; position_on_board = [(6, 5); (6, 6)]; 
+   position_on_board_corners= [(6, 5); (6, 6)]; 
+   shape = [{coordinates = []; 
+             corners = []
+            }]
+  }
+let piece13c = 
+  {color = 'B'; position_on_board = [(8, 5); (8, 6)]; 
+   position_on_board_corners= [(8, 5); (8, 6)]; 
+   shape = [{coordinates = []; 
+             corners = []
+            }]
+  }
+let piece14c = 
+  {color = 'B'; position_on_board = [(1, 9); (1, 10)]; 
+   position_on_board_corners= [(1, 9); (1, 10)]; 
+   shape = [{coordinates = []; 
+             corners = []
+            }]
+  }
+let piece15c = 
+  {color = 'B'; position_on_board = [(2, 9); (2, 10)]; 
+   position_on_board_corners= [(2, 9); (2, 10)]; 
+   shape = [{coordinates = []; 
+             corners = []
+            }]
+  }
+let piece16c = 
+  {color = 'B'; position_on_board = [(3, 9); (3, 10)]; 
+   position_on_board_corners= [(3, 9); (3, 10)]; 
+   shape = [{coordinates = []; 
+             corners = []
+            }]
+  }
+let piece17c = 
+  {color = 'B'; position_on_board = [(6, 9); (6, 10)]; 
+   position_on_board_corners= [(6, 9); (6, 10)]; 
+   shape = [{coordinates = []; 
+             corners = []
+            }]
+  }
+let piece18c = 
+  {color = 'B'; position_on_board = [(8, 9); (8, 10)]; 
+   position_on_board_corners= [(8, 9); (8, 10)]; 
+   shape = [{coordinates = []; 
+             corners = []
+            }]
+  }
+let piece18c = 
+  {color = 'B'; position_on_board = [(8, 9); (8, 10)]; 
+   position_on_board_corners= [(8, 9); (8, 10)]; 
+   shape = [{coordinates = []; 
+             corners = []
+            }]
+  }
+let piece19c = 
+  {color = 'B'; position_on_board = [(1, 13); (2, 13)]; 
+   position_on_board_corners= [(1, 13); (2, 13)]; 
+   shape = [{coordinates = []; 
+             corners = []
+            }]
+  }
+let piece20c = 
+  {color = 'B'; position_on_board = [(1, 14); (2, 14)]; 
+   position_on_board_corners= [(1, 14); (2, 14)]; 
+   shape = [{coordinates = []; 
+             corners = []
+            }]
+  }
+let piece21c = 
+  {color = 'B'; position_on_board = [(1, 15); (2, 15)]; 
+   position_on_board_corners= [(1, 15); (2, 15)]; 
+   shape = [{coordinates = []; 
+             corners = []
+            }]
+  }
+let piece22c = 
+  {color = 'B'; position_on_board = [(5, 13); (6, 13)]; 
+   position_on_board_corners= [(5, 13); (6, 13)]; 
+   shape = [{coordinates = []; 
+             corners = []
+            }]
+  }
+let piece23c = 
+  {color = 'B'; position_on_board = [(5, 14); (6, 14)]; 
+   position_on_board_corners= [(5, 14); (6, 14)]; 
+   shape = [{coordinates = []; 
+             corners = []
+            }]
+  }
+let piece24c = 
+  {color = 'B'; position_on_board = [(10, 0); (11, 0)]; 
+   position_on_board_corners= [(10, 0); (11, 0)]; 
+   shape = [{coordinates = []; 
+             corners = []
+            }]
+  }
+let piece25c = 
+  {color = 'B'; position_on_board = [(11, 1); (12, 1)]; 
+   position_on_board_corners= [(11, 1); (12, 1)]; 
+   shape = [{coordinates = []; 
+             corners = []
+            }]
+  }
+let piece26c = 
+  {color = 'B'; position_on_board = [(11, 3); (12, 3)]; 
+   position_on_board_corners= [(11, 3); (12, 3)]; 
+   shape = [{coordinates = []; 
+             corners = []
+            }]
+  }
+let piece27c = 
+  {color = 'B'; position_on_board = [(13, 1); (14, 1)]; 
+   position_on_board_corners= [(13, 1); (14, 1)]; 
+   shape = [{coordinates = []; 
+             corners = []
+            }]
+  }
+let piece28c = 
+  {color = 'B'; position_on_board = [(13, 2); (14, 2)]; 
+   position_on_board_corners= [(13, 2); (14, 2)]; 
+   shape = [{coordinates = []; 
+             corners = []
+            }]
+  }
+let piece29c = 
+  {color = 'B'; position_on_board = [(11, 6); (11, 5); (11, 7); (10, 6); (12, 6)]; 
+   position_on_board_corners= [(11, 5); (11, 7); (10, 6); (12, 6)]; 
+   shape = [{coordinates = []; 
+             corners = []
+            }]
+  }
+let piece30c = 
+  {color = 'B'; position_on_board = [(10, 9); (10, 10); (12, 9); (12, 10); (11, 10)]; 
+   position_on_board_corners= [(10, 9); (10, 10); (12, 9); (12, 10)]; 
+   shape = [{coordinates = []; 
+             corners = []
+            }]
+  }
+let piece31c = 
+  {color = 'B'; position_on_board = [(10, 13); (12, 13); (12, 14); (11, 14); (11, 13)]; 
+   position_on_board_corners= [(10, 13); (12, 13); (12, 14); (11, 14);]; 
+   shape = [{coordinates = []; 
+             corners = []
+            }]
+  }
+
 let corner_tests =[
-  is_touching_corner_test "empty corner" piece1 emptyboard false;
-  is_touching_corner_test "Generic test" piece1 board1 true;
-  is_touching_corner_test "Generic test 2" piece2 board2 true;
-  is_touching_corner_test "Not touching, box piece" piece3 board2 false; 
-  is_touching_corner_test "left edge" piece4 board_edge true;
-  is_touching_corner_test "right corner edge" piece5 board_edge false;
-  is_touching_corner_test "left corner edge" piece6 board_edge false;
-  is_touching_corner_test "passes touching corner but fails touching face" 
-    piece7 board_edge true;
-  (* is_touching_corner_test "touch_corner also checks touching edge" piece5x5 board5x5 true; *)
+  is_touching_corner_test "has none, touch TL" piece1c board_20x20_c true;
+  is_touching_corner_test "has none, touch T" piece2c board_20x20_c false;
+  is_touching_corner_test "has none, touch TR" piece3c board_20x20_c true;
+  is_touching_corner_test "has none, touch R" piece4c board_20x20_c false;
+  is_touching_corner_test "has none, touch BR" piece5c board_20x20_c true;
+  is_touching_corner_test "has none, touch B" piece6c board_20x20_c false;
+  is_touching_corner_test "has none, touch BL" piece7c board_20x20_c true;
+  is_touching_corner_test "has none, touch L" piece8c board_20x20_c false;
+
+  is_touching_corner_test "has left, touch TR, BR" piece9c board_20x20_c true;
+  is_touching_corner_test "has left, touch R" piece10c board_20x20_c false;
+  is_touching_corner_test "has left, touch BR, TR" piece11c board_20x20_c true;
+  is_touching_corner_test "has left, touch B" piece12c board_20x20_c false;
+  is_touching_corner_test "has left, touch T" piece13c board_20x20_c false;
+
+  is_touching_corner_test "has right, touch TL, BL" piece14c board_20x20_c true;
+  is_touching_corner_test "has right, touch L" piece15c board_20x20_c false;
+  is_touching_corner_test "has right, touch BL, TL" piece16c board_20x20_c true;
+  is_touching_corner_test "has right, touch B" piece17c board_20x20_c false;
+  is_touching_corner_test "has right, touch T" piece18c board_20x20_c false;
+
+  is_touching_corner_test "has bot, touch BL, BR" piece19c board_20x20_c true;
+  is_touching_corner_test "has bot, touch B" piece20c board_20x20_c false;
+  is_touching_corner_test "has bot, touch BR, BL" piece21c board_20x20_c true;
+  is_touching_corner_test "has bot, touch L" piece22c board_20x20_c false;
+  is_touching_corner_test "has bot, touch R" piece23c board_20x20_c false;
+
+  is_touching_corner_test "has top, touch T" piece24c board_20x20_c false;
+  is_touching_corner_test "has bot, touch TR" piece25c board_20x20_c true;
+  is_touching_corner_test "has bot, touch TL" piece26c board_20x20_c true;
+  is_touching_corner_test "has bot, touch L" piece27c board_20x20_c false;
+  is_touching_corner_test "has bot, touch R" piece28c board_20x20_c false;
+
+  is_touching_corner_test "has BTRL, 4 spots, " piece29c board_20x20_c false;
+
+  is_touching_corner_test "5 blocks engulf 1, " piece30c board_20x20_c false;
+  is_touching_corner_test "pent7 touches nothing" piece31c board_20x20_c false;
+
 ]
+
 
 
 let piece12 = {color = 'R'; 
