@@ -601,56 +601,67 @@ let can_place_piece piece board =
   then false 
   else check_board piece.position_on_board board
 
-(* [check_corners piece game] checks that the placed piece touches the 
-    corner of one of the pieces on the board *)
+(* [check_corners piece game] checks that the placed piece touches the
+   corner of one of the pieces on the board *)
 let check_corners piece board =
   let corner_positions = piece.position_on_board_corners in
   let rec helper corner_positions board =
     match corner_positions with
     | [] -> false
     | (x,y)::t -> let continue = begin
-        let has_left= (y - 1 < 0) || 
-                      (List.mem (x, y-1) piece.position_on_board) 
-        in 
-        let has_right= (y + 1 >= Array.length board) || List.mem (x, y+1) 
-                         piece.position_on_board in 
-        let has_top= (x - 1 < 0) || List.mem (x-1, y) piece.position_on_board 
-        in 
-        let has_bottom= (x + 1 >= Array.length board) || List.mem (x+1, y) 
-                          piece.position_on_board in 
-        if has_bottom && has_top <> true && has_left && has_right <> true then 
-          begin if (board.(x-1).(y+1)) = piece.color then true else false end  
-        else if has_bottom && has_top <> true && has_left <> true && has_right  
+        let has_left= (y - 1 < 0) ||
+                      (List.mem (x, y-1) piece.position_on_board)
+        in
+        let has_right= (y + 1 >= Array.length board) || List.mem (x, y+1)
+                         piece.position_on_board in
+        let has_top= (x - 1 < 0) || List.mem (x-1, y) piece.position_on_board
+        in
+        let has_bottom= (x + 1 >= Array.length board) || List.mem (x+1, y)
+                          piece.position_on_board in
+        if has_bottom && has_top <> true && has_left && has_right <> true then
+          begin if (board.(x-1).(y+1)) = piece.color then true else false end 
+        else if has_bottom && has_top <> true && has_left <> true && has_right 
         then begin
-          if (board.(x-1).(y-1)) = piece.color then true else false end 
-        else if has_bottom <> true && has_top && has_left && has_right <> true 
+          if (board.(x-1).(y-1)) = piece.color then true else false end
+        else if has_bottom <> true && has_top && has_left && has_right <> true
         then begin
-          if (board.(x+1).(y+1)) = piece.color then true else false end 
-        else if (has_top && has_right) && not (has_bottom && has_left) 
+          if (board.(x+1).(y+1)) = piece.color then true else false end
+        else if has_top && has_right && has_bottom <> true && has_left <> true
         then begin
-          if (board.(x+1).(y-1)) = piece.color then true else false end 
-        else if has_top && has_bottom <> true && 
+          if (board.(x+1).(y-1)) = piece.color then true else false end
+        else if has_top && has_bottom <> true &&
                 has_left <> true && has_right <> true then begin
-          if ((board.(x+1).(y-1)) = piece.color || 
-              (board.(x+1).(y+1)) = piece.color) then true else false end 
-        else if has_bottom && has_top <> true && 
+          if ((board.(x+1).(y-1)) = piece.color ||
+              (board.(x+1).(y+1)) = piece.color) then true else false end
+        else if has_bottom && has_top <> true &&
                 has_left <>true  && has_right <> true then begin (* change *)
-          if ((board.(x-1).(y-1)) = piece.color || 
-              (board.(x-1).(y+1)) = piece.color) then true else false end 
-        else if has_left && has_bottom <> true && 
-                has_top <> true && has_right <>true then begin
-          if ((board.(x-1).(y+1)) = piece.color || 
-              (board.(x+1).(y+1)) = piece.color) then true else false end 
-        else if has_right && not has_bottom && not has_top && not has_left 
+          if ((board.(x-1).(y-1)) = piece.color ||
+              (board.(x-1).(y+1)) = piece.color) then true else false end
+        else if has_left && has_bottom <> true &&
+                has_top <> true && has_right <> true then begin
+          if ((board.(x-1).(y+1)) = piece.color ||
+              (board.(x+1).(y+1)) = piece.color) then true else false end
+        else if has_right && has_bottom <> true && has_top <> true &&
+                has_left <> true
         then begin
-          if ((board.(x-1).(y-1)) = piece.color || 
-              (board.(x+1).(y-1)) = piece.color) then true else false end 
-        else if has_bottom && has_top then false 
-        else if has_right && has_left then false 
-        else false end 
+          if ((board.(x-1).(y-1)) = piece.color ||
+              (board.(x+1).(y-1)) = piece.color) then true else false end
+        else if 
+          (not has_right && not has_left && not has_top && not has_bottom)
+        then begin
+          if (board.(x-1).(y-1) = piece.color || 
+              board.(x-1).(y+1) = piece.color
+              || board.(x+1).(y+1) = piece.color || 
+              board.(x+1).(y-1) = piece.color)
+          then true else false end
+        else if has_bottom && has_top then false
+        else if has_right && has_left then false
+        else false
+      end
       in if continue then true else helper t board
-  in 
+  in
   helper corner_positions board
+
 
 (* [check_faces piece game] checks that the placed piece does not 
    touch faces of pieces the same color. *)
