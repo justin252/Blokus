@@ -1,35 +1,41 @@
-(* Testing plan
+(*
+  Testing Plan
 
-   We have used glassbox testing to test our functions. Checking to see if each of
-   our functions and it's helper functions are passing the test cases taking into
-   consideration all the possible conditions for each function.
+  We tested all the functions in our two signatures Player & Game differently. 
+  For the Player module, we designed our test suite to test all of its 
+  functions automatically using black box & glass box testing. Since our game 
+  is only designed for 4 players where each player has 21 unique pieces, that
+  reduced the number of edge cases we had to account for in Black-Box Testing.
+  For instance, functions with inputs of player lists are capped at a size of 4,
+  inventory lists can only range from 0 to 21 pieces, etc.. With Glass Box 
+  Testing we made sure to test our Player functions by using certain inputs
+  that would carry us through all various branches of both our match and if
+  statements. The only branch cases we ommitted from testing were in the
+  impossible cases of match statements that would lead us to an exception
+  Failure. All the other branches were used/called in our Player tests.
+  As a final safety net for our Player functions before running the text based
+  game, we added some tests with random inputs as long as they fit in the
+  ranges of particular inputs we described above. For the Game module, we
+  manually tested nearly all its functions except the functions add_scores
+  and update_board which was tested automatically and designed similarly 
+  to our Player functions. The function player_list is simply the list of all
+  4 players playing. All the rest of our functions in Game were print functions. 
+  We tested those print functions in our OUnit test suite by observing the 
+  printed orientations, boards, and pieces for correction. We left the testing
+  observation of print_scores for when we ran the actual game to see how it
+  would behave after having played multiple games with different outcomes.
+  Our entire testing approach ensures the correctness of our Blokus game,
+  because we created building block functions throughout our modules that
+  followed the game rules & guidelines. We also ensured those functions behave
+  correctly in all possible game scenarios, like different placement locations
+  with respect to both your opponents and your own pieces, before combining
+  those building blocks in our module Main.
 
-   The OUnit test cases tests the correctness of the program as it includes
-   testing if the piece is removed from the player's inventory correctly by
-   testing the placed_piece function and testing if the piece is added to the
-   board correctly by testing place_piece function. It tests if the chosen move
-   is valid by testing the main isvalid function that tests if it matches all
-   the conditions for the move to be valid in addition to testing it's helper
-   functions is_touching_corner that checks if the piece meets the condition of
-   touching the corner of one of its pieces on the board, is_not_touching_face
-   function that checks if the piece meets the condition of not touching the
-   face of any of its pieces on the board, can_place_piece to check if the
-   piece is not placed outside the board or on top of any existing pieces on the
-   board.
-
-   We have not tested functions like the printer functions because we tested it out
-   using the make play function and seeing if it prints the desired output
-   correctly at each step.
-
-*)
+ *)
 
 open OUnit2
 open Player
 open Game
-
-(********************************************************************
-   Here are some helper functions for your testing of set-like lists. 
- ********************************************************************)
 
 (** [cmp_set_like_lists lst1 lst2] compares two lists to see whether
     they are equivalent set-like lists.  That means checking two things.
@@ -60,20 +66,6 @@ let pp_list pp_elt lst =
         else loop (n + 1) (acc ^ (pp_elt h1) ^ "; ") t'
     in loop 0 "" lst
   in "[" ^ pp_elts lst ^ "]"
-
-(* These tests demonstrate how to use [cmp_set_like_lists] and 
-   [pp_list] to get helpful output from OUnit. *)
-let cmp_demo = 
-  [
-    "order is irrelevant" >:: (fun _ -> 
-        assert_equal ~cmp:cmp_set_like_lists ~printer:(pp_list pp_string)
-          ["foo"; "bar"] ["bar"; "foo"]);
-    (* Uncomment this test to see what happens when a test case fails.
-       "duplicates not allowed" >:: (fun _ -> 
-        assert_equal ~cmp:cmp_set_like_lists ~printer:(pp_list pp_string)
-          ["foo"; "foo"] ["foo"]);
-    *)
-  ]
 
 
 let placed_piece_test 
@@ -279,6 +271,14 @@ let adjust_playerlist_test
       assert_equal ~cmp:cmp_set_like_lists 
         expected_output (adjust_playerlist lst player))
 
+let add_scores_test 
+    (name : string)
+    (piece : Player.piece)
+    (player : Player.player)
+    (expected_output : Player.player) : test =
+  name >:: (fun _-> 
+      assert_equal expected_output (Game.add_points piece player))
+
 let player_tests =
   [
 
@@ -351,7 +351,7 @@ let player_tests =
       tetromino_p4 {inventory = [domino; tromino_p1; 
                                  tetromino_p5; tetromino_p3; tetromino_p1; 
                                  tetromino_p2; monomino]; 
-                    points = 14; 
+                    points = 14;
                     color = 'G'};
 
     place_piece_test "Testing mono" 
@@ -422,6 +422,30 @@ let player_tests =
                      color = 'G'}; 
        player_red; player_yellow];
 
+    add_scores_test "adding the score of placing a monomino to a player with 0 
+    points" monomino {inventory = [domino; tromino_p1; tetromino_p5; 
+                                   tetromino_p3; tetromino_p1; tetromino_p2; 
+                                   monomino]; points = 0; color = 'G'} 
+      {inventory = [domino; tromino_p1; tetromino_p5; tetromino_p3; 
+                    tetromino_p1; tetromino_p2; monomino]; points = 1; 
+       color = 'G'};
+    add_scores_test "adding the score of placing a tromino to a player with 0
+    points" tromino_p1 {inventory = [domino; tromino_p1; tetromino_p5; 
+                                     tetromino_p1; tetromino_p2; monomino]; 
+                        points = 0; color = 'B'} 
+      {inventory = [domino; tromino_p1; tetromino_p5; tetromino_p1; 
+                    tetromino_p2; monomino]; points = 3; color = 'B'};
+    add_scores_test "adding the score of placing a tetromino to a player with 
+    10 points" tetromino_p1 {inventory = [domino; tetromino_p4; tromino_p1; 
+                                          tromino_p2; tetromino_p5; 
+                                          tetromino_p3; tetromino_p1; 
+                                          tetromino_p2; monomino]; points = 10; 
+                             color = 'Y'} 
+      {inventory = [domino; tetromino_p4; tromino_p1; tromino_p2; tetromino_p5; 
+                    tetromino_p3; tetromino_p1; tetromino_p2; monomino]; 
+       points = 14;  color = 'Y'};
+
+
   ]
 
 (********************************************************************
@@ -463,14 +487,14 @@ let board1 = [|
 |]
 
 let board2 = [|
-  [|'R';'R';'W';'W';'W';'W';'W';'W'|];
-  [|'R';'R';'R';'W';'W';'W';'W';'W'|];
-  [|'W';'R';'R';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'R';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'x';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'x';'x';'x';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W'|]
+  [|'R';'R';'-';'-';'-';'-';'-';'-'|];
+  [|'R';'R';'R';'-';'-';'-';'-';'-'|];
+  [|'-';'R';'R';'-';'-';'-';'-';'-'|];
+  [|'-';'-';'R';'-';'-';'-';'-';'-'|];
+  [|'-';'-';'x';'-';'-';'-';'-';'-'|];
+  [|'-';'-';'x';'x';'x';'-';'-';'-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-'|]
 |]
 
 let board_edge = [|
@@ -494,75 +518,137 @@ let board5x5 = [|
 
 
 let emptyboard20x20 = [|
-  [|'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-'|];
-  [|'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-'|];
-  [|'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-'|];
-  [|'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-'|];
-  [|'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-'|];
-  [|'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-'|];
-  [|'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-'|];
-  [|'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-'|];
-  [|'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-'|];
-  [|'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-'|];
-  [|'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-'|];
-  [|'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-'|];
-  [|'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-'|];
-  [|'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-'|];
-  [|'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-'|];
-  [|'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-'|];
-  [|'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-'|];
-  [|'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-'|];
-  [|'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-'|];
-  [|'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-'|];
-  [|'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';
+    '-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';
+    '-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';
+    '-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';
+    '-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';
+    '-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';
+    '-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';
+    '-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';
+    '-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';
+    '-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';
+    '-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';
+    '-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';
+    '-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';
+    '-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';
+    '-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';
+    '-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';
+    '-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';
+    '-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';
+    '-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';
+    '-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';
+    '-'|];
+  [|'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';'-';
+    '-'|];
 |]
 
 let board_20x20_c = [|
-  [|'B';'W';'W';'B';'W';'W';'W';'B';'B';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'B';'B';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'B';'W';'W';'B';'W';'W';'W';'W';'W';'W';'W';'W';'B';'W';'B';'W';'B';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'B';'B';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'B';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'B';'W';'W';'B';'W';'W';'W';'W'|];
-  [|'B';'W';'B';'W';'W';'W';'B';'W';'W';'B';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'B';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'B';'W';'W';'B';'W';'B';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'B';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'B';'W';'B';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'B';'W';'W';'B';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
+  [|'B';'W';'W';'B';'W';'W';'W';'B';'B';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';
+    'W'|]; 
+  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';
+    'W'|];
+  [|'W';'W';'W';'W';'W';'W';'W';'B';'B';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';
+    'W'|];
+  [|'B';'W';'W';'B';'W';'W';'W';'W';'W';'W';'W';'W';'B';'W';'B';'W';'B';'W';'W';
+    'W'|];
+  [|'W';'W';'W';'W';'W';'W';'W';'B';'B';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';
+    'W'|];
+  [|'W';'W';'W';'B';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';
+    'W'|];
+  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'B';'W';'W';'B';'W';'W';'W';
+    'W'|];
+  [|'B';'W';'B';'W';'W';'W';'B';'W';'W';'B';'W';'W';'W';'W';'W';'W';'W';'W';'W';
+    'W'|];
+  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';
+    'W'|];
+  [|'B';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';
+    'W'|];
+  [|'W';'W';'B';'W';'W';'B';'W';'B';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';
+    'W'|];
+  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'B';'W';'W';'W';'W';'W';'W';'W';'W';
+    'W'|];
+  [|'W';'W';'W';'W';'W';'B';'W';'B';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';
+    'W'|];
+  [|'B';'W';'W';'B';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';
+    'W'|];
+  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';
+    'W'|];
+  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';
+    'W'|];
+  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';
+    'W'|];
+  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';
+    'W'|];
+  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';
+    'W'|];
+  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';
+    'W'|];
+  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';
+    'W'|];
 |]
 
 
 let board20x20 = [|
-  [|'B';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_'|];(*0 *)
-  [|'_';'B';'B';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_'|];(*1 *)
-  [|'_';'_';'B';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_'|];(*2 *)
-  [|'_';'_';'B';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_'|];(*3 *)
-  [|'_';'_';'B';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_'|];(*4 *)
-  [|'_';'_';'_';'B';'B';'B';'B';'B';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_'|];(*5 *)
-  [|'_';'_';'_';'_';'_';'_';'_';'_';'B';'B';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_'|];(*6 *)
-  [|'_';'_';'_';'_';'_';'_';'_';'_';'B';'B';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_'|];(*7 *)
-  [|'_';'_';'_';'_';'_';'_';'_';'B';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_'|];(*8 *)
-  [|'_';'_';'_';'_';'_';'_';'_';'B';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_'|];(*9 *)
-  [|'_';'_';'_';'_';'_';'_';'B';'B';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_'|];(*10 *)
-  [|'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_'|];(*11 *)
-  [|'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_'|];(*12 *)
-  [|'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'R';'R';'_';'_';'_';'_';'_';'_';'_';'_'|];(*13 *)
-  [|'_';'_';'_';'R';'R';'_';'_';'_';'_';'R';'R';'_';'_';'_';'_';'_';'_';'_';'G';'_'|];(*14 *)
-  [|'_';'_';'_';'_';'R';'_';'_';'_';'_';'R';'_';'_';'_';'_';'_';'_';'_';'_';'G';'_'|];(*15 *)
-  [|'_';'_';'_';'_';'R';'_';'_';'R';'R';'_';'_';'_';'_';'_';'_';'_';'_';'_';'G';'_'|];(*16 *)
-  [|'_';'_';'_';'_';'_';'R';'R';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'G';'_'|];(*17 *)
-  [|'_';'_';'_';'_';'_';'R';'R';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'G';'_'|];(*18 *)
-  [|'R';'R';'R';'R';'R';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'G'|];(*19 *)
+  [|'B';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';
+    '_'|];(*0 *)
+  [|'_';'B';'B';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';
+    '_'|];(*1 *)
+  [|'_';'_';'B';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';
+    '_'|];(*2 *)
+  [|'_';'_';'B';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';
+    '_'|];(*3 *)
+  [|'_';'_';'B';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';
+    '_'|];(*4 *)
+  [|'_';'_';'_';'B';'B';'B';'B';'B';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';
+    '_'|];(*5 *)
+  [|'_';'_';'_';'_';'_';'_';'_';'_';'B';'B';'_';'_';'_';'_';'_';'_';'_';'_';'_';
+    '_'|];(*6 *)
+  [|'_';'_';'_';'_';'_';'_';'_';'_';'B';'B';'_';'_';'_';'_';'_';'_';'_';'_';'_';
+    '_'|];(*7 *)
+  [|'_';'_';'_';'_';'_';'_';'_';'B';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';
+    '_'|];(*8 *)
+  [|'_';'_';'_';'_';'_';'_';'_';'B';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';
+    '_'|];(*9 *)
+  [|'_';'_';'_';'_';'_';'_';'B';'B';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';
+    '_'|];(*10 *)
+  [|'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';
+    '_'|];(*11 *)
+  [|'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';
+    '_'|];(*12 *)
+  [|'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'R';'R';'_';'_';'_';'_';'_';'_';'_';
+    '_'|];(*13 *)
+  [|'_';'_';'_';'R';'R';'_';'_';'_';'_';'R';'R';'_';'_';'_';'_';'_';'_';'_';'G';
+    '_'|];(*14 *)
+  [|'_';'_';'_';'_';'R';'_';'_';'_';'_';'R';'_';'_';'_';'_';'_';'_';'_';'_';'G';
+    '_'|];(*15 *)
+  [|'_';'_';'_';'_';'R';'_';'_';'R';'R';'_';'_';'_';'_';'_';'_';'_';'_';'_';'G';
+    '_'|];(*16 *)
+  [|'_';'_';'_';'_';'_';'R';'R';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'G';
+    '_'|];(*17 *)
+  [|'_';'_';'_';'_';'_';'R';'R';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'G';
+    '_'|];(*18 *)
+  [|'R';'R';'R';'R';'R';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';'_';
+    'G'|];(*19 *)
 |]
 
 let piece1 = {color = 'R'; 
@@ -741,10 +827,10 @@ let face_tests =[
     piece7 board_edge false;
   is_not_touching_face_test "corner touches but block above it touches face" 
     piece5x5 board5x5 false;
-  is_not_touching_face_test "Adding monomino to the corner: does not touch face"
-    piece_for_face2 board20x20 true;
-  is_not_touching_face_test "Adding pentomino to the corner: does not touch face"
-    piece_for_face3 board20x20 true;
+  is_not_touching_face_test "Adding monomino to the corner: does not touch 
+  face" piece_for_face2 board20x20 true;
+  is_not_touching_face_test "Adding pentomino to the corner: does not touch 
+  face" piece_for_face3 board20x20 true;
   is_not_touching_face_test 
     "Adding a piece for red player: does not touch face" piece_for_face1 
     board20x20 true;
@@ -755,8 +841,8 @@ let face_tests =[
     "Adding domino for blue player: touches two block's face" piece_for_face5
     board20x20 false;
   is_not_touching_face_test 
-    "Adding domino for red player: touches two blue face: passes" piece_for_face6
-    board20x20 true;
+    "Adding domino for red player: touches two blue face: passes" 
+    piece_for_face6 board20x20 true;
   is_not_touching_face_test 
     "Adding pentomino for yellow player: touches no corners, touches no faces" 
     piece_for_face7 board20x20 true;
@@ -1001,21 +1087,24 @@ let piece28c =
             }]
   }
 let piece29c = 
-  {color = 'B'; position_on_board = [(11, 6); (11, 5); (11, 7); (10, 6); (12, 6)]; 
+  {color = 'B'; position_on_board = [(11, 6); (11, 5); (11, 7); (10, 6); 
+                                     (12, 6)]; 
    position_on_board_corners= [(11, 5); (11, 7); (10, 6); (12, 6)]; 
    shape = [{coordinates = []; 
              corners = []
             }]
   }
 let piece30c = 
-  {color = 'B'; position_on_board = [(10, 9); (10, 10); (12, 9); (12, 10); (11, 10)]; 
+  {color = 'B'; position_on_board = [(10, 9); (10, 10); (12, 9); (12, 10); 
+                                     (11, 10)]; 
    position_on_board_corners= [(10, 9); (10, 10); (12, 9); (12, 10)]; 
    shape = [{coordinates = []; 
              corners = []
             }]
   }
 let piece31c = 
-  {color = 'B'; position_on_board = [(10, 13); (12, 13); (12, 14); (11, 14); (11, 13)]; 
+  {color = 'B'; position_on_board = [(10, 13); (12, 13); (12, 14); (11, 14); 
+                                     (11, 13)]; 
    position_on_board_corners= [(10, 13); (12, 13); (12, 14); (11, 14);]; 
    shape = [{coordinates = []; 
              corners = []
@@ -1105,15 +1194,6 @@ let is_valid_several_tests = [
   is_valid_test "emptyboard 20x20 placing initial correctly" piece12 lst1 lst2 
     emptyboard20x20 (0,0) true;
 
-
-
-  is_valid_test "yo" piece12 lst1 lst2 board1 (2,2) false;
-  is_valid_test "yeet" piece12 lst1 lst2 board1 (5,5) false;
-  is_valid_test "ya" piece22 lst3 lst4 emptyboard (3,0) false;
-  is_valid_test "yun" piece12 lst1 lst2 board1 (1,1) false;
-  is_valid_test "yup" piece12 lst1 lst2 board1 (5,5) false;
-
-
 ] 
 
 let can_place_piece_test 
@@ -1127,11 +1207,15 @@ let can_place_piece_test
 
 let can_place_tests = [
 
-  can_place_piece_test "can 1" piece1 newemptyboard true;
-  can_place_piece_test "can 2" piece2 newemptyboard true;
-  can_place_piece_test "can 3" piece3 newemptyboard true;
-  can_place_piece_test "can 4" piece1 board2 false;
-  can_place_piece_test "can 5" piece1 board2 false;
+  can_place_piece_test "placing piece1 on an emptyboard" piece1 
+    newemptyboard true;
+  can_place_piece_test "placing piece2 on an emptyboard" piece2 
+    newemptyboard true;
+  can_place_piece_test "placing piece3 on an emptyboard" piece3 
+    newemptyboard true;
+  can_place_piece_test "placing piece1 in an invalid location" piece1 
+    board2 false;
+  can_place_piece_test "placing piece2 in a valid location" piece2 board2 true;
 
 ] 
 
@@ -1150,9 +1234,9 @@ let print_pieces_test
       assert_equal expected_output (Game.print_pieces input))
 
 let print_tests = [
-  print_board_test "" board1 ();
-  print_board_test "" board2 ();
-  print_pieces_test "" Player.player_yellow ();
+  print_board_test "printing board1" board1 ();
+  print_board_test "printing board2" board2 ();
+  print_pieces_test "printing yellow player pieces" Player.player_yellow ();
 
 ] 
 
@@ -1239,9 +1323,8 @@ let suite =
     player_tests;
     is_valid_several_tests;
     can_place_tests;
-
     print_tests;
     board_tests;
-
   ]
 let _ = run_test_tt_main suite
+

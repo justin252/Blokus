@@ -40,5 +40,6 @@
 
  ************************************************************)  
 
-(** [hours_worked] is the number of hours you worked on this assignment. *)
+(** [hours_worked] is the total number of hours worked on this 
+    assignment. *)
 val hours_worked : int

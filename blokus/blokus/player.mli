@@ -1,5 +1,5 @@
 (**
-   This module is the game engine.
+   This module defines player functions and is the game engine.
 *)
 
 (** The type containing the orientation for a specific piece. *)
@@ -98,8 +98,3 @@ val add_player: player list -> player list -> player -> player list
     on the [board] given that the coordinates in [p]'s position_on_board
     list are empty on the actual board. *)
 val can_place_piece: piece -> char array array -> bool
-
-
-(*val update_pos_on_board: piece -> (int * int) list -> int * int -> unit*)
-
-(*val update_corn_on_board: piece -> (int * int) list -> int * int -> unit*)

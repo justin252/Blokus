@@ -11,13 +11,6 @@ exception Empty
 
 exception Malformed
 
-let parse_first str =
-  let string_list= String.split_on_char ' ' str in
-  let filtered_string_list= List.filter (fun x-> x <> "") string_list in
-  match filtered_string_list with
-  | [] -> raise Empty
-  | h::t -> if h= "quit" then Quit else Continue
-
 let parse_int str =
   try int_of_string str with Failure _ -> -1
 

@@ -93,40 +93,47 @@ let play_game ()=
 let main () =
 
   ANSITerminal.(print_string [red] "\n\nWelcome to Blokus Game!
-  Game Rules:
-  - Each player chooses a color and places that set of 21 pieces in front of 
-  ``his/her side of the board.
-  - The order of play is as follows: blue, yellow, red, green.
-  - The first piece played by each player must cover a corner square.
-  - Each new piece must touch at least one other piece of the same color, but 
-    only at the corners.
-  - Pieces of the same color cannot be in contact along an edge.
-  - There are no restrictions on how many pieces of different colors may be in 
-    contact with each other.
-  - Once a piece has been placed on the board it cannot be moved during 
-    subsequent turns.
-  - The game ends when all players quit the game
-  - Scores are tallied, and the player with the highest score is the winner.
-  - Each player then counts the number of unit squares in his/her remaining 
-    pieces (1 unit square = -1 point).
-  During each player’s turn, they will be given a choice on whether they want to 
-  continue the game if they think they have more movements left or whether they 
-  want to quit the game. If they choose to quit the game, they won’t have their 
-  turn. Else, they will be prompted to choose a piece, if it's an invalid piece 
-  they have chosen a number for the piece that does not exist, the game will 
-  have an error. They are then prompted to choose the orientation for the piece 
-  that they have chosen. Again, if the orientation number for that piece does 
-  not exist, the game will end with an error. Next, the player will be prompted 
-  to place the piece on the board. If the placed piece position is valid, i.e it 
-  touches the corner of one if the same colored pieces on the board but does not 
-  touch any of the faces of same colored pieces and does not overlap on any of
-  the existing pieces on the board, the piece will be placed. Then another 
-  player will be prompted to do the same. If the placed piece position is 
-  invalid, the player’s turn will be skipped.
-  \n");
+  Game Rules: (Official General Blokus Rules)
+ - There are four players in the game (Red, Blue, Green and Yellow) and each 
+ of them have a set of 21 pieces.
+ - The first piece played by each player must be placed to cover their corner 
+ of the board.
+ - Each player must place a piece such that the block placed must touch one of 
+ the corners of its own piece already on the board but should not touch any of 
+ the faces of its own color.
+ - There are no restrictions on how many pieces of different colors may be in 
+ contact with each other.
+ - Once a piece has been placed on the board it cannot be moved during 
+ subsequent turns.
+ - The game ends when all players quit the game
+ - Scores are tallied after each round by adding the number of the blocks 
+ placed on the board to the players cumulative sum and the player with the 
+ highest score is the winner.
+GAME PLAY DIRECTIONS:
+During each player’s turn, they will be given a choice on whether they want to 
+quit the game if they think they don’t have any remaining moves by entering 
+“quit”. If they choose to quit the game, they will be removed from the game and 
+the next player will be prompted to make a decision. If they want to place a 
+piece, they can enter the number for the piece they want to place. for example, 
+if they want to place the piece labeled number 2 they can enter the command “2” 
+If they enter a number not present in their inventory, they will be prompted to 
+choose another piece.
+The player will then be prompted to choose the orientation for the piece. 
+For example, if they want to choose orientation 2 they can enter the command 
+“2” If they enter a number not present in their inventory, they will be 
+prompted to choose another piece. The player will then be prompted to place the 
+piece on the board. They will choose the coordinates of the left-most and 
+top-most coordinate of their selected piece. If the placed piece position 
+is valid, i.e it touches the corner of one if the same colored pieces on the 
+board but does not touch any of the faces of same colored pieces and does not 
+overlap on any of the existing pieces on the board, the piece will be placed. 
+Then another player will be prompted to do the same. If the placed piece 
+position is invalid, the player’s turn will be skipped.
+The game ends when all four players have chosen to quit the game.
+The final scores will be displayed and the player with the highest number of 
+votes wins the game.
+ \n");
   play_game ()
-
-(* Execute the game engine. *)
 
 
 let () = main ()
