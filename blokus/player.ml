@@ -441,22 +441,6 @@ let player_yellow =
     points = 0; 
     color = 'Y' }
 
-(** same_orientation returns true if two pieces, [piece1] and [piece2] are the 
-    same piece with either the same exact orientation or a different orientation 
-    or returns false otherwise, i.e. two unique/distinct pieces.*)
-let rec same_orientation piece1 piece2 e =
-  match piece1 with
-  | [] -> true
-  | h :: t -> 
-    match piece2 with
-    | [] -> true
-    | a :: b ->
-      if (h = a) then (
-        same_orientation t b e
-      ) else (
-        false
-      )
-
 let rec get_next_index lst current x =
   match lst with
   | [] -> failwith "impossible"
@@ -495,9 +479,6 @@ let rec remove_player lst playerr =
     then t
     else h :: remove_player t playerr
 
-let return_inventory player =
-  player.inventory
-
 let rec placed_piece_helper inv piece =
   match inv with
   | [] -> failwith "Piece not in Inventory"
@@ -515,9 +496,6 @@ let placed_piece piece player =
    color = player.color; 
    points = player.points}
 
-
-let is_eliminated player = 
-  if player.inventory = [] then true else false
 
 let rec corner_place_algo piece coordinate = 
   match piece with
@@ -546,12 +524,7 @@ let rec place_algo piece coordinate =
 let get_head piece =
   match piece with
   |[]->(0,0)
-  |(x,y)::t -> (x,y)
-
-let get_tail piece = 
-  match piece with
-  |[]->[]
-  |(x,y)::t -> t
+  |(x,y):: _ -> (x,y)
 
 let rec subtract_from_init piece head = 
   match piece with
@@ -706,7 +679,6 @@ let is_valid piece coordlst cornerlst board coordinate =
   end
   else false
 
-let actually_place_piece piece baord = ()
 
 let rec add_player lst playerr = 
   match lst with

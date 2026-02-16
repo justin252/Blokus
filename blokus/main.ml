@@ -83,7 +83,7 @@ let play_game ()=
 
 (** [main ()] prompts for the game to play, then starts it. *)
 let main () =
-  (**not printing this statement!!!*)
+  (* not printing this statement *)
   ANSITerminal.(print_string [red] "\n\nWelcome to Blokus Game!
   Game Rules:
   - Each player chooses a color and places that set of 21 pieces in front of 

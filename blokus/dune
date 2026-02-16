@@ -1,0 +1,15 @@
+(library
+ (name blokus_lib)
+ (libraries ANSITerminal)
+ (wrapped false)
+ (modules player command game))
+
+(executable
+ (name main)
+ (libraries blokus_lib ANSITerminal)
+ (modules main))
+
+(test
+ (name test)
+ (libraries blokus_lib ounit2)
+ (modules test))

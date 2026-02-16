@@ -1,2 +1,0 @@
-Download zip and unzip like a normal assignment. Then open via Visual
-Studio Code. Use classic make functions to build and test.

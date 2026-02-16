@@ -1,46 +1,13 @@
-MODULES=player author game main command
-OBJECTS=$(MODULES:=.cmo)
-MLS=$(MODULES:=.ml)
-MLIS=$(MODULES:=.mli)
-TEST=test.byte
-MAIN=main.byte
-OCAMLBUILD=ocamlbuild -use-ocamlfind
-
-default: build
-	utop
-
-build:
-	$(OCAMLBUILD) $(OBJECTS)
-
-test:
-	$(OCAMLBUILD) -tag 'debug' $(TEST) && ./$(TEST)
+.PHONY: play build test clean
 
 play:
-	$(OCAMLBUILD) $(MAIN) && ./$(MAIN)
+	dune exec ./main.exe
 
-check:
-	bash checkenv.sh && bash checktypes.sh
-	
-finalcheck: check
-	bash checkzip.sh
-	bash finalcheck.sh
+build:
+	dune build
 
-zip:
-	zip blokus.zip *.ml* *.json* *.txt _tags Makefile
-	
-docs: docs-public docs-private
-	
-docs-public: build
-	mkdir -p doc.public
-	ocamlfind ocamldoc -I _build -package yojson,ANSITerminal \
-		-html -stars -d doc.public $(MLIS)
-
-docs-private: build
-	mkdir -p doc.private
-	ocamlfind ocamldoc -I _build -package yojson,ANSITerminal \
-		-html -stars -d doc.private \
-		-inv-merge-ml-mli -m A $(MLIS) $(MLS)
+test:
+	dune test
 
 clean:
-	ocamlbuild -clean
-	rm -rf blokus.zip
+	dune clean
