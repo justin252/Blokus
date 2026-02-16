@@ -3,20 +3,17 @@ type command =
   | Continue
   | Choose of int
 
-exception Empty
+(** Result type — Option/Result over exceptions *)
+type parse_result = Ok of command | Empty_input | Bad_input
 
-exception Malformed
-
-let parse_int str =
-  try int_of_string str with Failure _ -> -1
+let parse_int str = int_of_string_opt str
 
 let parse str =
-  let string_list = String.split_on_char ' ' str in
-  let filtered_string_list = List.filter (fun x -> x <> "") string_list in
-  match filtered_string_list with
-  | [] -> raise Empty
+  let words = String.split_on_char ' ' str |> List.filter (fun x -> x <> "") in
+  match words with
+  | [] -> Empty_input
   | h :: _ ->
-    if h = "quit" then Quit
-    else if parse_int str = -1 then Continue
-    else if parse_int str <> -1 then Choose (int_of_string str)
-    else raise Malformed
+    if h = "quit" then Ok Quit
+    else match int_of_string_opt str with
+      | Some n -> Ok (Choose n)
+      | None -> Ok Continue
