@@ -1,6 +1,6 @@
 # Blokus
 
-Terminal-based 4-player [Blokus](https://en.wikipedia.org/wiki/Blokus) board game written in OCaml.
+4-player [Blokus](https://en.wikipedia.org/wiki/Blokus) board game written in OCaml, with both terminal and GUI (Bogue/SDL2) interfaces.
 
 ## Quick Start
 
@@ -30,10 +30,17 @@ If you prefer to install manually:
    opam install -y dune ounit2 ANSITerminal
    ```
 
-4. **Build and run:**
+4. **Install GUI dependencies (optional):**
+   ```bash
+   brew install sdl2 sdl2_image sdl2_ttf
+   opam install bogue
+   ```
+
+5. **Build and run:**
    ```bash
    cd blokus/
-   make play
+   make play   # terminal UI
+   make gui    # graphical UI
    ```
 
 ## Build Commands
@@ -41,7 +48,8 @@ If you prefer to install manually:
 All commands run from the `blokus/` directory:
 
 ```bash
-make play    # compile and run the game
+make play    # compile and run the terminal game
+make gui     # compile and run the GUI (Bogue/SDL2)
 make build   # compile all modules
 make test    # run OUnit2 test suite
 make clean   # remove build artifacts
@@ -83,4 +91,5 @@ Score = total squares across your unplaced pieces. **Lowest score wins** (place 
 | `game.ml` | Board and piece rendering with ANSITerminal colors |
 | `main.ml` | Game loop and turn management |
 | `command.ml` | User input parsing (`quit`, `continue`, piece number) |
+| `gui_main.ml` | GUI entry point — Bogue/SDL2 graphical interface |
 | `test.ml` | OUnit2 test suite |

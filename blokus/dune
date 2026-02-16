@@ -13,3 +13,8 @@
  (name test)
  (libraries blokus_lib ounit2)
  (modules test))
+
+(executable
+ (name gui_main)
+ (libraries blokus_lib bogue)
+ (modules gui_main))
