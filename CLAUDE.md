@@ -41,6 +41,7 @@ GUI requires SDL2: `brew install sdl2 sdl2_image sdl2_ttf && opam install bogue`
 - **`main.ml`** — Game loop and turn management. Handles piece selection → orientation selection → row/col input.
 - **`command.ml`** — Parses user input: `quit`, `continue`, or piece number.
 - **`gui_main.ml`** — GUI entry point using Bogue/SDL2. Renders clickable 20x20 board. Independent from terminal UI (`game.ml`/`main.ml`).
+- **`gui_state.ml`** — GUI game state and transitions. Wraps `player.ml` validation with per-player first-move tracking.
 
 ## Key Types (player.mli)
 

@@ -17,4 +17,4 @@
 (executable
  (name gui_main)
  (libraries blokus_lib bogue)
- (modules gui_main))
+ (modules gui_main gui_state))

@@ -92,4 +92,5 @@ Score = total squares across your unplaced pieces. **Lowest score wins** (place 
 | `main.ml` | Game loop and turn management |
 | `command.ml` | User input parsing (`quit`, `continue`, piece number) |
 | `gui_main.ml` | GUI entry point — Bogue/SDL2 graphical interface |
+| `gui_state.ml` | GUI game state and pure transitions |
 | `test.ml` | OUnit2 test suite |
