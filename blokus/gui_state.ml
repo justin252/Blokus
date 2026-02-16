@@ -33,6 +33,33 @@ let current_coords st =
     let orient = List.nth p.shape st.selected_orient in
     Some orient.coordinates
 
+let select_piece st idx =
+  let n = List.length st.current.inventory in
+  if idx >= 0 && idx < n then
+    { st with selected_piece = idx; selected_orient = 0 }
+  else st
+
+let cycle_orient st =
+  match current_piece st with
+  | None -> st
+  | Some p ->
+    let n = List.length p.shape in
+    { st with selected_orient = (st.selected_orient + 1) mod n }
+
+let preview_cells st (row, col) =
+  match current_coords st with
+  | None -> None
+  | Some coords ->
+    let color = st.current.color in
+    match validate_placement color coords st.board (row, col) (is_first_move st) with
+    | Some cells -> Some (cells, true)
+    | None ->
+      let cells = translate coords (row, col) in
+      let in_bounds = List.filter (fun (r, c) ->
+        r >= 0 && r < board_size && c >= 0 && c < board_size
+      ) cells in
+      Some (in_bounds, false)
+
 let place st (row, col) =
   match current_coords st with
   | None -> st
