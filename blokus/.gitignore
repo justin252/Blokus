@@ -3,6 +3,9 @@ doc.public
 doc.private
 adventure.zip
 
+# generated
+.merlin
+
 # ocaml
 *.cmo
 *.cma

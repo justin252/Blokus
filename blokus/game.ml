@@ -35,12 +35,12 @@ let piece_printer piece =
   done
 
 
-let piece_to_piecearray piece color= 
+let piece_to_piecearray piece color=
   let matrix = Array.make_matrix 5 5 ' ' in
   let rec helper piece =
     match piece with
-    |[]->[]
-    |(x,y)::t -> matrix.(x).(y) <- color; helper t
+    | [] -> ()
+    | (x,y)::t -> matrix.(x).(y) <- color; helper t
   in
   helper piece;
   matrix
@@ -54,18 +54,17 @@ let print_individual_piece indpiece color =
 
 let print_pieces piecesplayer = 
   let allpieces = piecesplayer.inventory in
-  let rec helper allpieces index = 
+  let rec helper allpieces index =
     match allpieces with
-    |[] -> []
-    |h::t -> begin
+    | [] -> ()
+    | h::t -> begin
         print_newline();
         print_string("Piece: "^ string_of_int(index)); 
         print_individual_piece h piecesplayer.color; 
         helper t (index+1)
       end
-  in 
-  helper allpieces 0;
-  ()
+  in
+  helper allpieces 0
 
 let player_list = [player_blue;
                    player_green;
@@ -73,10 +72,10 @@ let player_list = [player_blue;
                    player_yellow]
 
 let update_board player coordinate board =  
-  let rec helper coordinate = 
+  let rec helper coordinate =
     match coordinate with
-    |[]->[]
-    |(x,y)::t -> board.(x).(y) <- player.color; helper t
+    | [] -> ()
+    | (x,y)::t -> board.(x).(y) <- player.color; helper t
   in
   helper coordinate;
   board
@@ -129,15 +128,6 @@ let rec orientation_print_helper lst num color =
 let print_orientation piece = 
   orientation_print_helper piece.shape 0 piece.color
 
-let check_isvalid piece coordlst cornerlst board coordinate =
-  is_valid piece coordlst cornerlst board coordinate
-
-let check_inventory player =
-  match player with
-  | {inventory = inv; points = p; color = c} -> 
-    match inv with
-    | [] -> false
-    | _ -> true
 
 let match_color color score =
   if color = 'R'
