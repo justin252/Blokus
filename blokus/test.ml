@@ -1,460 +1,363 @@
 open OUnit2
 open Player
 
-(********************************************************************
-   Here are some helper functions for your testing of set-like lists. 
- ********************************************************************)
+(* --- Pretty printers for test output --- *)
 
-(** [cmp_set_like_lists lst1 lst2] compares two lists to see whether
-    they are equivalent set-like lists.  That means checking two things.
-    First, they must both be {i set-like}, meaning that they do not
-    contain any duplicates.  Second, they must contain the same elements,
-    though not necessarily in the same order. *)
-let cmp_set_like_lists lst1 lst2 =
-  let uniq1 = List.sort_uniq compare lst1 in
-  let uniq2 = List.sort_uniq compare lst2 in
-  List.length lst1 = List.length uniq1
-  &&
-  List.length lst2 = List.length uniq2
-  &&
-  uniq1 = uniq2
+let pp_pair (r, c) = Printf.sprintf "(%d,%d)" r c
 
-(** [pp_string s] pretty-prints string [s]. *)
-let pp_string s = "\"" ^ s ^ "\""
+let pp_list lst =
+  "[" ^ String.concat "; " (List.map pp_pair lst) ^ "]"
 
-(** [pp_list pp_elt lst] pretty-prints list [lst], using [pp_elt]
-    to pretty-print each element of [lst]. *)
-let pp_list pp_elt lst =
-  let pp_elts lst =
-    let rec loop n acc = function
-      | [] -> acc
-      | [h] -> acc ^ pp_elt h
-      | h1 :: (_h2 :: _t as t') ->
-        if n = 100 then acc ^ "..."  (* stop printing long list *)
-        else loop (n + 1) (acc ^ (pp_elt h1) ^ "; ") t'
-    in loop 0 "" lst
-  in "[" ^ pp_elts lst ^ "]"
+let pp_opt = function
+  | None -> "None"
+  | Some lst -> "Some " ^ pp_list lst
 
-(* These tests demonstrate how to use [cmp_set_like_lists] and 
-   [pp_list] to get helpful output from OUnit. *)
-let cmp_demo = 
-  [
-    "order is irrelevant" >:: (fun _ -> 
-        assert_equal ~cmp:cmp_set_like_lists ~printer:(pp_list pp_string)
-          ["foo"; "bar"] ["bar"; "foo"]);
-    (* Uncomment this test to see what happens when a test case fails.
-       "duplicates not allowed" >:: (fun _ -> 
-        assert_equal ~cmp:cmp_set_like_lists ~printer:(pp_list pp_string)
-          ["foo"; "foo"] ["foo"]);
-    *)
+let cmp_set lst1 lst2 =
+  List.sort compare lst1 = List.sort compare lst2
+
+(* --- Test helpers --- *)
+
+let empty_board () = Array.make_matrix 20 20 '_'
+
+let set_cells board color cells =
+  List.iter (fun (r, c) -> board.(r).(c) <- color) cells;
+  board
+
+(* ================================================================
+   compute_corners: given piece cells, returns diagonal positions
+   that aren't the cells themselves and aren't face-adjacent to any
+   cell. These are the valid "corner touch" points for Blokus.
+   ================================================================ *)
+
+let compute_corners_tests = "compute_corners" >::: [
+    (* Single cell: all 4 diagonals are corners *)
+    "monomino (0,0)" >:: (fun _ ->
+        assert_equal ~cmp:cmp_set ~printer:pp_list
+          [(-1,-1); (-1,1); (1,-1); (1,1)]
+          (compute_corners [(0,0)]));
+
+    (* Horizontal domino: middle diags are face-adjacent, only ends remain *)
+    "domino horizontal" >:: (fun _ ->
+        assert_equal ~cmp:cmp_set ~printer:pp_list
+          [(-1,-1); (-1,2); (1,-1); (1,2)]
+          (compute_corners [(0,0); (0,1)]));
+
+    "domino vertical" >:: (fun _ ->
+        assert_equal ~cmp:cmp_set ~printer:pp_list
+          [(-1,-1); (-1,1); (2,-1); (2,1)]
+          (compute_corners [(0,0); (1,0)]));
+
+    (* L-shape: 5 corners (the inner bend has none) *)
+    "L-tromino" >:: (fun _ ->
+        let corners = compute_corners [(0,0); (0,1); (1,1)] in
+        assert_equal ~cmp:cmp_set ~printer:pp_list
+          [(-1,-1); (-1,2); (1,-1); (2,0); (2,2)]
+          corners);
+
+    "straight tromino" >:: (fun _ ->
+        assert_equal ~cmp:cmp_set ~printer:pp_list
+          [(-1,-1); (-1,3); (1,-1); (1,3)]
+          (compute_corners [(0,0); (0,1); (0,2)]));
+
+    (* 2x2 square: only the 4 outer diagonals *)
+    "2x2 square" >:: (fun _ ->
+        assert_equal ~cmp:cmp_set ~printer:pp_list
+          [(-1,-1); (-1,2); (2,-1); (2,2)]
+          (compute_corners [(0,0); (0,1); (1,0); (1,1)]));
+
+    (* T-shape: 6 corners — inner diags are face-adjacent *)
+    "T-tetromino" >:: (fun _ ->
+        assert_equal ~cmp:cmp_set ~printer:pp_list
+          [(-1,0); (-1,2); (0,-1); (0,3); (2,-1); (2,3)]
+          (compute_corners [(0,1); (1,0); (1,1); (1,2)]));
   ]
 
-(********************************************************************
-   End helper functions.
- ********************************************************************)
+(* ================================================================
+   translate: offset piece coords to board position.
+   Replaces the old place_piece/subtract_from_init/place_algo chain.
+   ================================================================ *)
 
-(* You are welcome to add strings containing JSON here, and use them as the
-   basis for unit tests.  Or you can add .json files in this directory and
-   use them, too.  Any .json files in this directory will be included
-   by [make zip] as part of your CMS submission. *)
+let translate_tests = "translate" >::: [
+    "zero offset" >:: (fun _ ->
+        assert_equal [(0,0); (0,1)]
+          (translate [(0,0); (0,1)] (0,0)));
 
-(*let corners_test 
-    (name : string) 
-    (input: bool array array) 
-    (expected_output : (int * int) list) : test = 
-  name >:: (fun _ -> 
-      assert_equal expected_output (Player.get_all_corners input))
-  let is_touching_simple_test 
-    (name : string) 
-    (input: int*int) 
-    (gameboard: game)
-    (expected_output : bool) : test = 
-  name >:: (fun _ -> 
-      assert_equal expected_output (Player.is_touching_simple input gameboard))*)
+    "positive offset" >:: (fun _ ->
+        assert_equal [(5,5); (5,6); (6,5)]
+          (translate [(0,0); (0,1); (1,0)] (5,5)));
 
-let placed_piece_test 
-    (name : string)
-    (player : Player.player) 
-    (piece : Player.piece) 
-    (expected_output : Player.player) : test =
-  name >:: (fun _->
-      assert_equal expected_output (placed_piece piece player))
-
-let place_piece_test 
-    (name : string)
-    (piece : (int * int) list) 
-    (coordinate : (int * int)) 
-    (expected_output : (int * int) list) : test =
-  name >:: (fun _->
-      assert_equal expected_output (place_piece piece coordinate))
-
-
-let monomino_piece = [(1,1)]
-let domino_piece = [(1,1); (2,1)]
-let tromino_piece1 = [(1,1); (1,2); (2,1)]
-let tromino_piece2 = [(1,1); (2,1); (3,1)]
-let tetromino_piece1 = [(1,1); (2,1); (3,1); (4,1)]
-let tetromino_piece2 = [(1,1); (2,1); (3,1); (2,2)]
-let tetromino_piece3 = [(1,1); (2,1); (3,1); (3,2)]
-let tetromino_piece4 = [(1,1); (2,1); (1,2); (2,2)]
-let tetromino_piece5 = [(1,1); (2,1); (2,2); (3,2)]
-let pentomino_piece1 = [(1,1); (2,1); (3,1); (4,1); (5,1)]
-
-let player_tests =
-  [
-    (* TODO: add tests for the Adventure module here *)
-    (*corners_test "idk" unitbool [];
-      corners_test "checking" piecearray [(4,3);(4,1);(2,2)];
-      corners_test "another one" fourcorner [(4, 4); (4, 0); (0, 4); (0, 0)];
-      is_touching_simple_test "first" (1,3) testboard true;
-      is_touching_simple_test "snd" (1,1) testboard true;
-      is_touching_simple_test "third" (4,3) testboard true;
-      (*is_touching_simple_test "fourth" (2,0) testboard true;*)
-      placed_piece_test "Player with an inventory of just one monomino after
-      placing that one piece" {inventory = [{color = "red"; shape = monomino_piece}]; 
-                             color = "red"; points = 12} 
-      {color = "red"; shape = monomino_piece} 
-      {inventory = []; color = "red"; points = 12};
-      placed_piece_test "Player with an inventory with 4 unique pieces after 
-      placing one" {inventory = [{color = "blue"; shape = monomino_piece}; 
-                               {color = "blue"; shape = domino_piece}; 
-                               {color = "blue";  shape = tromino_piece1}; 
-                               {color = "blue"; shape = tromino_piece2}]; 
-                  color = "blue"; points = 24} 
-      {color = "blue"; shape = tromino_piece1} 
-      {inventory = [{color = "blue"; shape = monomino_piece}; 
-                    {color = "blue"; shape = domino_piece}; 
-                    {color = "blue"; shape = tromino_piece2}]; 
-       color = "blue"; points = 24};
-      placed_piece_test "Player with an inventory with 4 unique pieces after 
-      placing one" {inventory = [{color = "blue"; shape = domino_piece}; 
-                               {color = "blue"; shape = tetromino_piece1}; 
-                               {color = "blue";  shape = tromino_piece1}; 
-                               {color = "blue"; shape = tromino_piece2};
-                               {color = "blue"; shape = tetromino_piece2};
-                               {color = "blue"; shape = tetromino_piece3}]; 
-                  color = "blue"; points = 2} 
-      {color = "blue"; shape = tetromino_piece2}
-      {inventory = [{color = "blue"; shape = domino_piece}; 
-                    {color = "blue"; shape = tetromino_piece1}; 
-                    {color = "blue";  shape = tromino_piece1}; 
-                    {color = "blue"; shape = tromino_piece2};
-                    {color = "blue"; shape = tetromino_piece3}]; 
-       color = "blue"; points = 2};
-      placed_piece_test "Player with an inventory with 4 unique pieces after 
-      placing one" {inventory = [{color = "blue"; shape = domino_piece}; 
-                               {color = "blue"; shape = tetromino_piece4}; 
-                               {color = "blue";  shape = tromino_piece1}; 
-                               {color = "blue"; shape = tromino_piece2};
-                               {color = "blue"; shape = tetromino_piece5};
-                               {color = "blue"; shape = tetromino_piece3};
-                               {color = "blue"; shape = tetromino_piece1};
-                               {color = "blue"; shape = tetromino_piece2};
-                               {color = "blue"; shape = monomino_piece}
-                              ]; 
-                  color = "blue"; points = 18} 
-      {color = "blue"; shape = monomino_piece}
-      {inventory = [{color = "blue"; shape = domino_piece}; 
-                    {color = "blue"; shape = tetromino_piece4}; 
-                    {color = "blue";  shape = tromino_piece1}; 
-                    {color = "blue"; shape = tromino_piece2};
-                    {color = "blue"; shape = tetromino_piece5};
-                    {color = "blue"; shape = tetromino_piece3};
-                    {color = "blue"; shape = tetromino_piece1};
-                    {color = "blue"; shape = tetromino_piece2}]; 
-       color = "blue"; points = 18}*)
-
-    place_piece_test "Testing mono" 
-      monomino_piece (14,14) [(14,14)];
-    place_piece_test "Testing dom" 
-      domino_piece (14,14) [(14,14);(15,14)];
-    place_piece_test "Testing tro" 
-      tromino_piece1 (14,14) [(14,14);(14,15);(15,14)];
-    place_piece_test "Testing dom bad" 
-      domino_piece (19,19) [(19,19)];
-    place_piece_test "Testing tetr" 
-      tetromino_piece1 (18,18) [(18,18); (19,18)]
-
-
-
+    "negative offset" >:: (fun _ ->
+        assert_equal [(-1,-1); (-1,0)]
+          (translate [(0,0); (0,1)] (-1,-1)));
   ]
 
-(********************************************************************
-   Hard-coded board 
- ********************************************************************)
+(* ================================================================
+   check_corners: Blokus rule — placed piece must diagonally touch
+   at least one same-color cell already on the board.
+   ================================================================ *)
 
+let check_corners_tests = "check_corners" >::: [
+    "empty board — nothing to touch" >:: (fun _ ->
+        let board = empty_board () in
+        assert_equal false
+          (check_corners 'R' [(2,2); (3,2)] board));
 
-let emptyboard = [|
-  [|'_';'_';'_';'_';'_';'_';'_';'_'|];
-  [|'_';'_';'_';'_';'_';'_';'_';'_'|];
-  [|'_';'_';'_';'_';'_';'_';'_';'_'|];
-  [|'_';'_';'_';'_';'_';'_';'_';'_'|];
-  [|'_';'_';'_';'_';'_';'_';'_';'_'|];
-  [|'_';'_';'_';'_';'_';'_';'_';'_'|];
-  [|'_';'_';'_';'_';'_';'_';'_';'_'|];
-  [|'_';'_';'_';'_';'_';'_';'_';'_'|]
-|]
+    "diagonal touch same color — valid" >:: (fun _ ->
+        let board = set_cells (empty_board ()) 'R'
+            [(0,0); (0,1); (1,0); (1,1)] in
+        assert_equal true
+          (check_corners 'R' [(2,2)] board));
 
-let board1 = [|
-  [|'R';'R';'W';'W';'W';'W';'W';'W'|];
-  [|'R';'R';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W'|]
-|]
+    "face touch only — doesn't count as corner" >:: (fun _ ->
+        let board = set_cells (empty_board ()) 'R' [(0,0)] in
+        assert_equal false
+          (check_corners 'R' [(1,0)] board));
 
-let board2 = [|
-  [|'R';'R';'W';'W';'W';'W';'W';'W'|];
-  [|'R';'R';'R';'W';'W';'W';'W';'W'|];
-  [|'W';'R';'R';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'R';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'x';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'x';'x';'x';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W'|]
-|]
+    "diagonal touch different color — doesn't count" >:: (fun _ ->
+        let board = set_cells (empty_board ()) 'B' [(0,0)] in
+        assert_equal false
+          (check_corners 'R' [(1,1)] board));
 
-let board_edge = [|
-  [|'R';'R';'W';'R';'R';'x';'W';'W'|];
-  [|'R';'R';'R';'W';'R';'x';'W';'W'|];
-  [|'W';'R';'R';'W';'W';'x';'W';'W'|];
-  [|'x';'x';'W';'W';'W';'W';'W';'W'|];
-  [|'x';'x';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W'|]
-|]
-let board5x5 = [|
-  [|'R';'x';'R';'W';'W'|];
-  [|'W';'x';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W'|]
-|]
+    "diagonal at board edge" >:: (fun _ ->
+        let board = set_cells (empty_board ()) 'R' [(0,0)] in
+        assert_equal true
+          (check_corners 'R' [(1,1)] board));
 
-let board20x20 = [|
-  [|'B';'B';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'B';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'B';'B';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'B';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-  [|'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W';'W'|];
-|]
-(* 
-has_left = true
-has_bottom = true
-has_top = false
-has_right = false
-*)
-let piece1 = {color = 'R'; 
-              position_on_board = [(2, 2); (3, 2)]; 
-              position_on_board_corners= [(2, 2); (3, 2)]; 
-              shape = [{coordinates = []; 
-                        corners = []}]}
-let piece2 = {color = 'R'; 
-              position_on_board = [(3, 0); (4, 0); (5, 0); (5,1)]; 
-              position_on_board_corners= [(3, 0); (5, 0); (5,1)]; 
-              shape = [{coordinates = []; 
-                        corners = []}]}
-let piece3 = {color = 'R'; 
-              position_on_board = [(4, 2); (5, 2); (5, 3); (5,4)]; 
-              position_on_board_corners= [(4, 2); (5, 2); (5, 4)]; 
-              shape = [{coordinates = []; 
-                        corners = []}]}
-let piece4 = {color = 'R'; 
-              position_on_board = [(3, 0); (4, 0); (4, 1); (4,2)]; 
-              position_on_board_corners= [(3, 0); (4, 0); (4,2)]; 
-              shape = [{coordinates = []; 
-                        corners = []}]}
-let piece5= {color = 'R'; 
-             position_on_board = [(7, 7); (7, 6); (6, 7); (5,7)]; 
-             position_on_board_corners= [(7, 7); (7, 6); (5,7)]; 
-             shape = [{coordinates = []; 
-                       corners = []}]}
-let piece_top = {color = 'R'; 
-                 position_on_board = [(0, 5); (1, 5); (2,5)]; 
-                 position_on_board_corners= [(0, 5); (2, 5)]; 
-                 shape = [{coordinates = []; 
-                           corners = []}]}
-let piece6= {color = 'R'; 
-             position_on_board = [(6, 0); (7, 0); (6, 1); (7,1)]; 
-             position_on_board_corners= [(6, 0); (7, 0); (6, 1); (7,1)]; 
-             shape = [{coordinates = []; 
-                       corners = []}]}
-let piece7= {color = 'R'; 
-             position_on_board = [(3, 0); (3, 1); (4, 0); (4,1)]; 
-             position_on_board_corners= [(3, 0); (3, 1); (4, 0); (4,1)]; 
-             shape = [{coordinates = []; 
-                       corners = []}]}
+    "multi-cell piece, one cell touches diag" >:: (fun _ ->
+        let board = set_cells (empty_board ()) 'R'
+            [(0,0); (0,1); (1,0); (1,1)] in
+        assert_equal true
+          (check_corners 'R' [(2,2); (2,3); (3,2)] board));
 
-let piece5x5 = {color = 'R'; 
-                position_on_board = [(0, 1); (1, 1)]; 
-                position_on_board_corners = [(0, 1); (1, 1)]; 
-                shape = [{coordinates = []; 
-                          corners = []}]}
+    "cell on top of existing — excluded from diag check" >:: (fun _ ->
+        let board = set_cells (empty_board ()) 'R' [(5,5)] in
+        (* placing on (5,5) itself: diag neighbor is itself, shouldn't count *)
+        assert_equal false
+          (check_corners 'R' [(5,5)] board));
+  ]
 
-let is_touching_corner_test 
-    (name : string) 
-    (input: Player.piece) 
-    (input2: Player.gameboard) 
-    (expected_output : bool) : test = 
-  name >:: (fun _ -> 
-      assert_equal expected_output (Player.check_corners input input2))
+(* ================================================================
+   check_faces: Blokus rule — placed piece must NOT share an edge
+   with any same-color cell on the board.
+   ================================================================ *)
 
-let corner_tests =[
-  is_touching_corner_test "empty corner" piece1 emptyboard false;
-  is_touching_corner_test "Generic test" piece1 board1 true;
-  is_touching_corner_test "Generic test 2" piece2 board2 true;
-  is_touching_corner_test "Not touching, box piece" piece3 board2 false; 
-  is_touching_corner_test "left edge" piece4 board_edge true;
-  is_touching_corner_test "right corner edge" piece5 board_edge false;
-  is_touching_corner_test "left corner edge" piece6 board_edge false;
-  is_touching_corner_test "passes touching corner but fails touching face" 
-    piece7 board_edge true;
-  (* is_touching_corner_test "touch_corner also checks touching edge" piece5x5 board5x5 true; *)
-]
+let check_faces_tests = "check_faces" >::: [
+    "empty board — no contact" >:: (fun _ ->
+        assert_equal true
+          (check_faces 'R' [(5,5)] (empty_board ())));
 
-let is_not_touching_face_test
-    (name : string) 
-    (input: Player.piece) 
-    (input2: Player.gameboard) 
-    (expected_output : bool) : test = 
-  name >:: (fun _ -> 
-      assert_equal expected_output (Player.check_faces input input2))
+    "face-adjacent same color — invalid" >:: (fun _ ->
+        let board = set_cells (empty_board ()) 'R' [(4,5)] in
+        assert_equal false
+          (check_faces 'R' [(5,5)] board));
 
-let face_tests =[
-  is_not_touching_face_test "empty face" piece1 emptyboard true; 
-  is_not_touching_face_test "top edge" piece_top board_edge false; 
-  is_not_touching_face_test "Generic test" piece1 board1 true;
-  is_not_touching_face_test "Generic test 2" piece2 board2 true;
-  is_not_touching_face_test "Not touching, box piece" piece3 board2 false;  
-  is_not_touching_face_test "left edge" piece4 board_edge true;
-  is_not_touching_face_test "right corner edge" piece5 board_edge true;
-  is_not_touching_face_test "left corner edge" piece6 board_edge true;
-  is_not_touching_face_test "passes touching corner but fails touching face"
-    piece7 board_edge false;
-  is_not_touching_face_test "corner touches but block above it touches face" 
-    piece5x5 board5x5 false;
+    "face-adjacent different color — ok" >:: (fun _ ->
+        let board = set_cells (empty_board ()) 'B' [(4,5)] in
+        assert_equal true
+          (check_faces 'R' [(5,5)] board));
 
-]
+    "diagonal same color — ok (not a face)" >:: (fun _ ->
+        let board = set_cells (empty_board ()) 'R' [(4,4)] in
+        assert_equal true
+          (check_faces 'R' [(5,5)] board));
 
-let piece12 = {color = 'R'; 
-               position_on_board = []; 
-               position_on_board_corners= []; 
-               shape = [{coordinates = []; corners = []}]}
-let piece22 = {color = 'R'; 
-               position_on_board = []; 
-               position_on_board_corners= []; 
-               shape = [{coordinates = []; corners = []}]}
+    "multi-cell, one face touches" >:: (fun _ ->
+        let board = set_cells (empty_board ()) 'R' [(3,0)] in
+        assert_equal false
+          (check_faces 'R' [(4,0); (5,0); (5,1)] board));
 
-let lst1 = [(2, 2); (3, 2)]
-let lst2 = [(2, 2); (3, 2)]
+    "at board edge — doesn't wrap" >:: (fun _ ->
+        let board = empty_board () in
+        assert_equal true
+          (check_faces 'R' [(0,0)] board));
+  ]
 
-let lst3 = [(3, 0); (4, 0); (5, 0); (5,1)]
-let lst4 = [(3, 0); (5, 0); (5,1)]
+(* ================================================================
+   starting_pos: first move must cover one of the 4 board corners.
+   ================================================================ *)
 
-let is_valid_test 
-    (name : string)
-    (input1: Player.piece) 
-    (input2: (int * int) list) 
-    (input3: (int * int) list)
-    (input4: Player.gameboard)
-    (input5: int * int) 
-    (expected_output : bool) : test = 
-  name >:: (fun _ -> 
-      assert_equal expected_output 
-        (Player.is_valid input1 input2 input3 input4 input5))
+let starting_pos_tests = "starting_pos" >::: [
+    "covers (0,0)" >:: (fun _ ->
+        assert_equal true (starting_pos [(0,0); (0,1)]));
 
-let is_valid_several_tests = [
+    "covers (0,19)" >:: (fun _ ->
+        assert_equal true (starting_pos [(0,18); (0,19)]));
 
-  is_valid_test "emptyboard1" piece12 lst1 lst2 emptyboard (1,1) true;
-  is_valid_test "emptyboard2" piece12 lst1 lst2 emptyboard (0,0) true;
-  is_valid_test "emptyboard3" piece12 lst1 lst2 emptyboard (1,2) true;
-  is_valid_test "emptyboard4" piece12 lst1 lst2 emptyboard (5,5) true;
+    "covers (19,0)" >:: (fun _ ->
+        assert_equal true (starting_pos [(19,0)]));
 
+    "covers (19,19)" >:: (fun _ ->
+        assert_equal true (starting_pos [(18,19); (19,19)]));
 
-  is_valid_test "yo" piece12 lst1 lst2 board1 (2,2) true;
-  is_valid_test "yeet" piece12 lst1 lst2 board1 (5,5) true;
-  is_valid_test "ya" piece22 lst3 lst4 emptyboard (3,0) true;
-  is_valid_test "yun" piece12 lst1 lst2 board1 (1,1) false;
-  is_valid_test "yup" piece12 lst1 lst2 board1 (5,5) false;
+    "middle of board — invalid" >:: (fun _ ->
+        assert_equal false (starting_pos [(5,5); (5,6)]));
+  ]
 
+(* ================================================================
+   validate_placement: full integration — translates coords, checks
+   bounds, emptiness, faces, corners/starting_pos. Returns Some cells
+   if valid, None if not. No mutation.
+   ================================================================ *)
 
-] 
+let validate_placement_tests = "validate_placement" >::: [
+    "first move on corner — valid" >:: (fun _ ->
+        let board = empty_board () in
+        let result = validate_placement 'B' [(0,0); (0,1)] board (0,0) true in
+        assert_equal ~printer:pp_opt
+          (Some [(0,0); (0,1)]) result);
 
-let can_place_piece_test 
-    (name : string)
-    (input1: Player.piece) 
-    (input2: Player.gameboard)
-    (expected_output : bool) : test = 
-  name >:: (fun _ -> 
-      assert_equal expected_output 
-        (Player.can_place_piece input1 input2))
+    "first move not on corner — invalid" >:: (fun _ ->
+        let board = empty_board () in
+        let result = validate_placement 'B' [(0,0)] board (5,5) true in
+        assert_equal ~printer:pp_opt None result);
 
-let can_place_tests = [
+    "first move bottom-right corner" >:: (fun _ ->
+        let board = empty_board () in
+        let result = validate_placement 'B' [(0,0)] board (19,19) true in
+        assert_equal ~printer:pp_opt (Some [(19,19)]) result);
 
-  can_place_piece_test "can 1" piece1 emptyboard true;
-  can_place_piece_test "can 2" piece2 emptyboard true;
-  can_place_piece_test "can 3" piece3 emptyboard true;
-  can_place_piece_test "can 4" piece1 board2 false;
-  can_place_piece_test "can 5" piece1 board2 false;
+    "out of bounds — invalid" >:: (fun _ ->
+        let board = empty_board () in
+        let result = validate_placement 'B' [(0,0); (0,1)] board (19,19) true in
+        assert_equal ~printer:pp_opt None result);
 
+    "overlap with existing piece — invalid" >:: (fun _ ->
+        let board = set_cells (empty_board ()) 'R' [(0,0)] in
+        let result = validate_placement 'B' [(0,0)] board (0,0) true in
+        assert_equal ~printer:pp_opt None result);
 
+    "second move with corner touch — valid" >:: (fun _ ->
+        let board = set_cells (empty_board ()) 'R'
+            [(0,0); (0,1); (1,0); (1,1)] in
+        let result = validate_placement 'R' [(0,0)] board (2,2) false in
+        assert_equal ~printer:pp_opt (Some [(2,2)]) result);
 
+    "second move no corner touch — invalid" >:: (fun _ ->
+        let board = set_cells (empty_board ()) 'R' [(0,0)] in
+        let result = validate_placement 'R' [(0,0)] board (5,5) false in
+        assert_equal ~printer:pp_opt None result);
 
+    "second move face touch — invalid" >:: (fun _ ->
+        let board = set_cells (empty_board ()) 'R' [(0,0)] in
+        let result = validate_placement 'R' [(0,0)] board (1,0) false in
+        assert_equal ~printer:pp_opt None result);
 
-] 
+    "L-piece valid placement" >:: (fun _ ->
+        let board = set_cells (empty_board ()) 'G'
+            [(0,0); (0,1); (1,1)] in
+        let coords = [(0,0); (0,1); (1,0)] in
+        let result = validate_placement 'G' coords board (2,2) false in
+        assert_equal ~printer:pp_opt
+          (Some [(2,2); (2,3); (3,2)]) result);
+  ]
 
-let print_board_test
-    (name : string)  
-    (input: Player.gameboard) 
-    (expected_output : unit) : test = 
-  name >:: (fun _ -> 
-      assert_equal expected_output (Game.print_board input))
+(* ================================================================
+   score: derived from inventory. Each remaining cell = -1 point.
+   ================================================================ *)
 
-let print_pieces_test
-    (name : string)  
-    (input: Player.player) 
-    (expected_output : unit) : test = 
-  name >:: (fun _ -> 
-      assert_equal expected_output (Game.print_pieces input))
+let score_tests = "score" >::: [
+    "full inventory is -89" >:: (fun _ ->
+        assert_equal ~printer:string_of_int (-89) (score player_blue));
 
-let print_tests = [
-  print_board_test "" board1 ();
-  print_board_test "" board2 ();
+    "empty inventory is 0" >:: (fun _ ->
+        assert_equal ~printer:string_of_int
+          0 (score { inventory = []; color = 'R' }));
 
-  print_pieces_test "" Player.player_yellow ();
+    "removing monomino gains 1 point" >:: (fun _ ->
+        let monomino_b = List.hd player_blue.inventory in
+        let p = placed_piece monomino_b player_blue in
+        assert_equal ~printer:string_of_int (-88) (score p));
+  ]
 
-] 
+(* ================================================================
+   piece definitions: spot-check correctness of the 21 pieces.
+   ================================================================ *)
 
+let piece_count_tests = "piece definitions" >::: [
+    "21 pieces total" >:: (fun _ ->
+        assert_equal ~printer:string_of_int 21 (List.length pieces));
 
-let suite = 
-  "test suite"  >::: List.flatten [
-    corner_tests;
-    face_tests;
+    "monomino has 1 cell" >:: (fun _ ->
+        let p = List.nth pieces 0 in
+        List.iter (fun o ->
+          assert_equal ~printer:string_of_int 1 (List.length o.coordinates)
+        ) p.shape);
+
+    "domino has 2 cells" >:: (fun _ ->
+        let p = List.nth pieces 1 in
+        List.iter (fun o ->
+          assert_equal ~printer:string_of_int 2 (List.length o.coordinates)
+        ) p.shape);
+
+    "pentominoes have 5 cells" >:: (fun _ ->
+        for i = 9 to List.length pieces - 1 do
+          let p = List.nth pieces i in
+          List.iter (fun o ->
+            assert_equal ~printer:string_of_int
+              ~msg:(Printf.sprintf "piece %d" i)
+              5 (List.length o.coordinates)
+          ) p.shape
+        done);
+
+    "all orientations same cell count per piece" >:: (fun _ ->
+        List.iteri (fun i p ->
+          match p.shape with
+          | [] -> ()
+          | first :: rest ->
+            let n = List.length first.coordinates in
+            List.iter (fun o ->
+              assert_equal ~printer:string_of_int
+                ~msg:(Printf.sprintf "piece %d orientation mismatch" i)
+                n (List.length o.coordinates)
+            ) rest
+        ) pieces);
+  ]
+
+(* ================================================================
+   player management: inventory, turn order, removal.
+   ================================================================ *)
+
+let player_tests = "player management" >::: [
+    "placed_piece removes from inventory" >:: (fun _ ->
+        let monomino_b = List.hd player_blue.inventory in
+        let p = placed_piece monomino_b player_blue in
+        assert_equal ~printer:string_of_int
+          (List.length player_blue.inventory - 1)
+          (List.length p.inventory));
+
+    "get_next_player wraps around" >:: (fun _ ->
+        let players =
+          [player_blue; player_green; player_red; player_yellow] in
+        let next = get_next_player players player_yellow in
+        assert_equal 'B' next.color);
+
+    "get_next_player advances" >:: (fun _ ->
+        let players =
+          [player_blue; player_green; player_red; player_yellow] in
+        let next = get_next_player players player_blue in
+        assert_equal 'G' next.color);
+
+    "remove_player reduces list" >:: (fun _ ->
+        let players = [player_blue; player_green; player_red] in
+        let result = remove_player players player_green in
+        assert_equal ~printer:string_of_int 2 (List.length result));
+  ]
+
+(* ================================================================
+   Run all tests
+   ================================================================ *)
+
+let suite =
+  "blokus tests" >::: [
+    compute_corners_tests;
+    translate_tests;
+    check_corners_tests;
+    check_faces_tests;
+    starting_pos_tests;
+    validate_placement_tests;
+    score_tests;
+    piece_count_tests;
     player_tests;
-    (*is_valid_several_tests;*)
-    can_place_tests;
-
-    (*print_tests;*)
-
   ]
-let _ = run_test_tt_main suite
+
+let () = run_test_tt_main suite

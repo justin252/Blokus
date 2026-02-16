@@ -1,14 +1,14 @@
 open Player
 
-val print_board: gameboard -> unit
+val print_board : gameboard -> unit
 
-val print_pieces: Player.player -> unit
+val print_pieces : Player.player -> unit
 
-val print_orientation: Player.piece -> unit
+val print_orientation : Player.piece -> unit
 
-val player_list: player list
+val player_list : player list
 
-val update_board: 
+val update_board :
   Player.player -> (int * int) list -> char array array -> char array array
 
-val print_scores: Player.player list -> unit
+val print_scores : Player.player list -> unit
