@@ -17,10 +17,10 @@ let cmp_set lst1 lst2 =
 
 (* --- Test helpers --- *)
 
-let empty_board () = Array.make_matrix 20 20 '_'
+let empty_board () = Array.init 20 (fun _ -> Array.make 20 None)
 
 let set_cells board color cells =
-  List.iter (fun (r, c) -> board.(r).(c) <- color) cells;
+  List.iter (fun (r, c) -> board.(r).(c) <- Some color) cells;
   board
 
 (* ================================================================
@@ -30,13 +30,11 @@ let set_cells board color cells =
    ================================================================ *)
 
 let compute_corners_tests = "compute_corners" >::: [
-    (* Single cell: all 4 diagonals are corners *)
     "monomino (0,0)" >:: (fun _ ->
         assert_equal ~cmp:cmp_set ~printer:pp_list
           [(-1,-1); (-1,1); (1,-1); (1,1)]
           (compute_corners [(0,0)]));
 
-    (* Horizontal domino: middle diags are face-adjacent, only ends remain *)
     "domino horizontal" >:: (fun _ ->
         assert_equal ~cmp:cmp_set ~printer:pp_list
           [(-1,-1); (-1,2); (1,-1); (1,2)]
@@ -47,7 +45,6 @@ let compute_corners_tests = "compute_corners" >::: [
           [(-1,-1); (-1,1); (2,-1); (2,1)]
           (compute_corners [(0,0); (1,0)]));
 
-    (* L-shape: 5 corners (the inner bend has none) *)
     "L-tromino" >:: (fun _ ->
         let corners = compute_corners [(0,0); (0,1); (1,1)] in
         assert_equal ~cmp:cmp_set ~printer:pp_list
@@ -59,13 +56,11 @@ let compute_corners_tests = "compute_corners" >::: [
           [(-1,-1); (-1,3); (1,-1); (1,3)]
           (compute_corners [(0,0); (0,1); (0,2)]));
 
-    (* 2x2 square: only the 4 outer diagonals *)
     "2x2 square" >:: (fun _ ->
         assert_equal ~cmp:cmp_set ~printer:pp_list
           [(-1,-1); (-1,2); (2,-1); (2,2)]
           (compute_corners [(0,0); (0,1); (1,0); (1,1)]));
 
-    (* T-shape: 6 corners — inner diags are face-adjacent *)
     "T-tetromino" >:: (fun _ ->
         assert_equal ~cmp:cmp_set ~printer:pp_list
           [(-1,0); (-1,2); (0,-1); (0,3); (2,-1); (2,3)]
@@ -74,7 +69,6 @@ let compute_corners_tests = "compute_corners" >::: [
 
 (* ================================================================
    translate: offset piece coords to board position.
-   Replaces the old place_piece/subtract_from_init/place_algo chain.
    ================================================================ *)
 
 let translate_tests = "translate" >::: [
@@ -100,40 +94,39 @@ let check_corners_tests = "check_corners" >::: [
     "empty board — nothing to touch" >:: (fun _ ->
         let board = empty_board () in
         assert_equal false
-          (check_corners 'R' [(2,2); (3,2)] board));
+          (check_corners Red [(2,2); (3,2)] board));
 
     "diagonal touch same color — valid" >:: (fun _ ->
-        let board = set_cells (empty_board ()) 'R'
+        let board = set_cells (empty_board ()) Red
             [(0,0); (0,1); (1,0); (1,1)] in
         assert_equal true
-          (check_corners 'R' [(2,2)] board));
+          (check_corners Red [(2,2)] board));
 
     "face touch only — doesn't count as corner" >:: (fun _ ->
-        let board = set_cells (empty_board ()) 'R' [(0,0)] in
+        let board = set_cells (empty_board ()) Red [(0,0)] in
         assert_equal false
-          (check_corners 'R' [(1,0)] board));
+          (check_corners Red [(1,0)] board));
 
     "diagonal touch different color — doesn't count" >:: (fun _ ->
-        let board = set_cells (empty_board ()) 'B' [(0,0)] in
+        let board = set_cells (empty_board ()) Blue [(0,0)] in
         assert_equal false
-          (check_corners 'R' [(1,1)] board));
+          (check_corners Red [(1,1)] board));
 
     "diagonal at board edge" >:: (fun _ ->
-        let board = set_cells (empty_board ()) 'R' [(0,0)] in
+        let board = set_cells (empty_board ()) Red [(0,0)] in
         assert_equal true
-          (check_corners 'R' [(1,1)] board));
+          (check_corners Red [(1,1)] board));
 
     "multi-cell piece, one cell touches diag" >:: (fun _ ->
-        let board = set_cells (empty_board ()) 'R'
+        let board = set_cells (empty_board ()) Red
             [(0,0); (0,1); (1,0); (1,1)] in
         assert_equal true
-          (check_corners 'R' [(2,2); (2,3); (3,2)] board));
+          (check_corners Red [(2,2); (2,3); (3,2)] board));
 
     "cell on top of existing — excluded from diag check" >:: (fun _ ->
-        let board = set_cells (empty_board ()) 'R' [(5,5)] in
-        (* placing on (5,5) itself: diag neighbor is itself, shouldn't count *)
+        let board = set_cells (empty_board ()) Red [(5,5)] in
         assert_equal false
-          (check_corners 'R' [(5,5)] board));
+          (check_corners Red [(5,5)] board));
   ]
 
 (* ================================================================
@@ -144,32 +137,32 @@ let check_corners_tests = "check_corners" >::: [
 let check_faces_tests = "check_faces" >::: [
     "empty board — no contact" >:: (fun _ ->
         assert_equal true
-          (check_faces 'R' [(5,5)] (empty_board ())));
+          (check_faces Red [(5,5)] (empty_board ())));
 
     "face-adjacent same color — invalid" >:: (fun _ ->
-        let board = set_cells (empty_board ()) 'R' [(4,5)] in
+        let board = set_cells (empty_board ()) Red [(4,5)] in
         assert_equal false
-          (check_faces 'R' [(5,5)] board));
+          (check_faces Red [(5,5)] board));
 
     "face-adjacent different color — ok" >:: (fun _ ->
-        let board = set_cells (empty_board ()) 'B' [(4,5)] in
+        let board = set_cells (empty_board ()) Blue [(4,5)] in
         assert_equal true
-          (check_faces 'R' [(5,5)] board));
+          (check_faces Red [(5,5)] board));
 
     "diagonal same color — ok (not a face)" >:: (fun _ ->
-        let board = set_cells (empty_board ()) 'R' [(4,4)] in
+        let board = set_cells (empty_board ()) Red [(4,4)] in
         assert_equal true
-          (check_faces 'R' [(5,5)] board));
+          (check_faces Red [(5,5)] board));
 
     "multi-cell, one face touches" >:: (fun _ ->
-        let board = set_cells (empty_board ()) 'R' [(3,0)] in
+        let board = set_cells (empty_board ()) Red [(3,0)] in
         assert_equal false
-          (check_faces 'R' [(4,0); (5,0); (5,1)] board));
+          (check_faces Red [(4,0); (5,0); (5,1)] board));
 
     "at board edge — doesn't wrap" >:: (fun _ ->
         let board = empty_board () in
         assert_equal true
-          (check_faces 'R' [(0,0)] board));
+          (check_faces Red [(0,0)] board));
   ]
 
 (* ================================================================
@@ -196,57 +189,57 @@ let starting_pos_tests = "starting_pos" >::: [
 (* ================================================================
    validate_placement: full integration — translates coords, checks
    bounds, emptiness, faces, corners/starting_pos. Returns Some cells
-   if valid, None if not. No mutation.
+   if valid, None if not.
    ================================================================ *)
 
 let validate_placement_tests = "validate_placement" >::: [
     "first move on corner — valid" >:: (fun _ ->
         let board = empty_board () in
-        let result = validate_placement 'B' [(0,0); (0,1)] board (0,0) true in
+        let result = validate_placement Blue [(0,0); (0,1)] board (0,0) true in
         assert_equal ~printer:pp_opt
           (Some [(0,0); (0,1)]) result);
 
     "first move not on corner — invalid" >:: (fun _ ->
         let board = empty_board () in
-        let result = validate_placement 'B' [(0,0)] board (5,5) true in
+        let result = validate_placement Blue [(0,0)] board (5,5) true in
         assert_equal ~printer:pp_opt None result);
 
     "first move bottom-right corner" >:: (fun _ ->
         let board = empty_board () in
-        let result = validate_placement 'B' [(0,0)] board (19,19) true in
+        let result = validate_placement Blue [(0,0)] board (19,19) true in
         assert_equal ~printer:pp_opt (Some [(19,19)]) result);
 
     "out of bounds — invalid" >:: (fun _ ->
         let board = empty_board () in
-        let result = validate_placement 'B' [(0,0); (0,1)] board (19,19) true in
+        let result = validate_placement Blue [(0,0); (0,1)] board (19,19) true in
         assert_equal ~printer:pp_opt None result);
 
     "overlap with existing piece — invalid" >:: (fun _ ->
-        let board = set_cells (empty_board ()) 'R' [(0,0)] in
-        let result = validate_placement 'B' [(0,0)] board (0,0) true in
+        let board = set_cells (empty_board ()) Red [(0,0)] in
+        let result = validate_placement Blue [(0,0)] board (0,0) true in
         assert_equal ~printer:pp_opt None result);
 
     "second move with corner touch — valid" >:: (fun _ ->
-        let board = set_cells (empty_board ()) 'R'
+        let board = set_cells (empty_board ()) Red
             [(0,0); (0,1); (1,0); (1,1)] in
-        let result = validate_placement 'R' [(0,0)] board (2,2) false in
+        let result = validate_placement Red [(0,0)] board (2,2) false in
         assert_equal ~printer:pp_opt (Some [(2,2)]) result);
 
     "second move no corner touch — invalid" >:: (fun _ ->
-        let board = set_cells (empty_board ()) 'R' [(0,0)] in
-        let result = validate_placement 'R' [(0,0)] board (5,5) false in
+        let board = set_cells (empty_board ()) Red [(0,0)] in
+        let result = validate_placement Red [(0,0)] board (5,5) false in
         assert_equal ~printer:pp_opt None result);
 
     "second move face touch — invalid" >:: (fun _ ->
-        let board = set_cells (empty_board ()) 'R' [(0,0)] in
-        let result = validate_placement 'R' [(0,0)] board (1,0) false in
+        let board = set_cells (empty_board ()) Red [(0,0)] in
+        let result = validate_placement Red [(0,0)] board (1,0) false in
         assert_equal ~printer:pp_opt None result);
 
     "L-piece valid placement" >:: (fun _ ->
-        let board = set_cells (empty_board ()) 'G'
+        let board = set_cells (empty_board ()) Green
             [(0,0); (0,1); (1,1)] in
         let coords = [(0,0); (0,1); (1,0)] in
-        let result = validate_placement 'G' coords board (2,2) false in
+        let result = validate_placement Green coords board (2,2) false in
         assert_equal ~printer:pp_opt
           (Some [(2,2); (2,3); (3,2)]) result);
   ]
@@ -261,7 +254,7 @@ let score_tests = "score" >::: [
 
     "empty inventory is 0" >:: (fun _ ->
         assert_equal ~printer:string_of_int
-          0 (score { inventory = []; color = 'R' }));
+          0 (score { inventory = []; color = Red }));
 
     "removing monomino gains 1 point" >:: (fun _ ->
         let monomino_b = List.hd player_blue.inventory in
@@ -329,13 +322,13 @@ let player_tests = "player management" >::: [
         let players =
           [player_blue; player_green; player_red; player_yellow] in
         let next = get_next_player players player_yellow in
-        assert_equal 'B' next.color);
+        assert_equal Blue next.color);
 
     "get_next_player advances" >:: (fun _ ->
         let players =
           [player_blue; player_green; player_red; player_yellow] in
         let next = get_next_player players player_blue in
-        assert_equal 'G' next.color);
+        assert_equal Green next.color);
 
     "remove_player reduces list" >:: (fun _ ->
         let players = [player_blue; player_green; player_red] in

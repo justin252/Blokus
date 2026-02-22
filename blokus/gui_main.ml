@@ -6,7 +6,6 @@ let grid_size = Player.board_size
 let cell_logical = 30
 let board_logical = grid_size * cell_logical
 
-(* Piece panel: 3 columns × 7 rows *)
 let thumb_cell = 7
 let thumb_pad = 6
 let panel_cols = 3
@@ -20,23 +19,29 @@ let panel_bg = (50, 50, 55, 255)
 let select_color = (255, 255, 255, 180)
 let invalid_overlay = (0, 0, 0, 160)
 
-let ghost_color_of_char = function
-  | 'B' -> (50, 100, 220, 120)
-  | 'G' -> (50, 180, 80, 120)
-  | 'R' -> (220, 60, 60, 120)
-  | 'Y' -> (230, 200, 50, 120)
-  | _ -> (180, 180, 180, 120)
+(** Map color variant to RGBA — takes Player.color directly *)
+let color_of_player = function
+  | Player.Blue -> (50, 100, 220, 255)
+  | Player.Green -> (50, 180, 80, 255)
+  | Player.Red -> (220, 60, 60, 255)
+  | Player.Yellow -> (230, 200, 50, 255)
 
-let color_of_char = function
-  | 'B' -> (50, 100, 220, 255)
-  | 'G' -> (50, 180, 80, 255)
-  | 'R' -> (220, 60, 60, 255)
-  | 'Y' -> (230, 200, 50, 255)
-  | _ -> empty_color
+let ghost_color_of_player = function
+  | Player.Blue -> (50, 100, 220, 120)
+  | Player.Green -> (50, 180, 80, 120)
+  | Player.Red -> (220, 60, 60, 120)
+  | Player.Yellow -> (230, 200, 50, 120)
+
+(** Map board cell (color option) to RGBA *)
+let color_of_cell = function
+  | Some c -> color_of_player c
+  | None -> empty_color
 
 let color_name = function
-  | 'B' -> "Blue" | 'G' -> "Green" | 'R' -> "Red" | 'Y' -> "Yellow" | _ -> "?"
+  | Player.Blue -> "Blue" | Player.Green -> "Green"
+  | Player.Red -> "Red" | Player.Yellow -> "Yellow"
 
+(* Global refs — Bogue's callback model requires mutable state *)
 let state = ref (Gui_state.init ())
 let hover_cell = ref (-1, -1)
 
@@ -44,22 +49,22 @@ let draw_board area =
   let pw, _ph = Sdl_area.drawing_size area in
   let cell_px = pw / grid_size in
   Sdl_area.clear area;
-  for row = 0 to grid_size - 1 do
-    for col = 0 to grid_size - 1 do
+  Array.iteri (fun row row_arr ->
+    Array.iteri (fun col cell ->
       let x = col * cell_px in
       let y = row * cell_px in
-      let color = color_of_char (!state).board.(row).(col) in
+      let color = color_of_cell cell in
       Sdl_area.fill_rectangle area ~color ~w:(cell_px - 1) ~h:(cell_px - 1) (x, y);
       Sdl_area.draw_rectangle area ~color:grid_color ~thick:1 ~w:cell_px ~h:cell_px (x, y)
-    done
-  done;
+    ) row_arr
+  ) (!state).board;
   if not (!state).game_over then begin
     let hr, hc = !hover_cell in
     if hr >= 0 then begin
       match Gui_state.preview_cells !state (hr, hc) with
       | None -> ()
       | Some (cells, is_valid) ->
-        let ghost = ghost_color_of_char (!state).current.Player.color in
+        let ghost = ghost_color_of_player (!state).current.Player.color in
         List.iter (fun (r, c) ->
           if r >= 0 && r < grid_size && c >= 0 && c < grid_size then begin
             let x = c * cell_px and y = r * cell_px in
@@ -87,7 +92,7 @@ let draw_panel panel_area =
   if st.game_over then begin
     Sdl_area.update panel_area
   end else begin
-    let player_color = color_of_char st.current.color in
+    let player_color = color_of_player st.current.color in
     List.iteri (fun i piece ->
       let col = i / panel_rows in
       let row = i mod panel_rows in

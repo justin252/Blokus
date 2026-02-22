@@ -7,14 +7,14 @@ type t = {
   current : player;
   selected_piece : int;
   selected_orient : int;
-  first_moves : char list;
+  first_moves : color list;
   game_over : bool;
 }
 
 let player_order = [player_blue; player_green; player_red; player_yellow]
 
 let init () = {
-  board = Array.init board_size (fun _ -> Array.make board_size '_');
+  board = Array.init board_size (fun _ -> Array.make board_size None);
   players = player_order;
   all_players = player_order;
   current = List.hd player_order;
@@ -71,14 +71,16 @@ let preview_cells st (row, col) =
         Some (in_bounds, false)
 
 let advance_turn st players current =
-  if List.length players = 0 then
+  match players with
+  | [] ->
     { st with players; game_over = true;
       selected_piece = 0; selected_orient = 0 }
-  else
+  | _ ->
     let next = get_next_player players current in
     { st with players; current = next;
       selected_piece = 0; selected_orient = 0 }
 
+(** Copy-on-write board update — Array.init + Array.copy instead of in-place mutation *)
 let place st (row, col) =
   if st.game_over then st
   else
@@ -89,7 +91,13 @@ let place st (row, col) =
       match validate_placement color coords st.board (row, col) (is_first_move st) with
       | None -> st
       | Some cells ->
-        List.iter (fun (r, c) -> st.board.(r).(c) <- color) cells;
+        let board = Array.init (Array.length st.board) (fun r ->
+          let row_arr = Array.copy st.board.(r) in
+          List.iter (fun (pr, pc) ->
+            if pr = r then row_arr.(pc) <- Some color
+          ) cells;
+          row_arr
+        ) in
         let piece = List.nth st.current.inventory st.selected_piece in
         let updated_player = placed_piece piece st.current in
         let players = adjust_playerlist st.players updated_player in
@@ -97,7 +105,7 @@ let place st (row, col) =
         let first_moves =
           List.filter (fun c -> c <> color) st.first_moves
         in
-        let st = { st with board = st.board; players; all_players; first_moves } in
+        let st = { st with board; players; all_players; first_moves } in
         advance_turn st players updated_player
 
 let pass st =
