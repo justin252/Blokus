@@ -7,11 +7,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 All commands run from `blokus/` directory:
 
 ```bash
-make play          # compile and run the game
+make play          # compile and run the terminal game
+make gui           # compile and run the GUI (Bogue/SDL2)
 make build         # compile all modules
 make test          # run OUnit2 tests
 make clean         # remove build artifacts
 ```
+
+GUI dev workflow: `cd blokus/ && dune exec --watch ./gui_main.exe` — auto-recompiles on save.
 
 ## Validation
 
@@ -21,9 +24,13 @@ Before committing, always run:
 cd blokus/ && make build && make test
 ```
 
+Update README.md and CLAUDE.md when changes affect build commands, dependencies, project structure, or new entry points.
+
 ## Language & Dependencies
 
-OCaml project using dune. Dependencies: `ounit2`, `ANSITerminal`.
+OCaml project using dune. Dependencies: `ounit2`, `ANSITerminal`, `bogue` (GUI).
+
+GUI requires SDL2: `brew install sdl2 sdl2_image sdl2_ttf && opam install bogue`.
 
 ## Architecture
 
@@ -33,6 +40,8 @@ OCaml project using dune. Dependencies: `ounit2`, `ANSITerminal`.
 - **`game.ml`** — Board and piece rendering via ANSITerminal colors.
 - **`main.ml`** — Game loop and turn management. Handles piece selection → orientation selection → row/col input.
 - **`command.ml`** — Parses user input: `quit`, `continue`, or piece number.
+- **`gui_main.ml`** — GUI entry point using Bogue/SDL2. Renders clickable 20x20 board. Independent from terminal UI (`game.ml`/`main.ml`).
+- **`gui_state.ml`** — GUI game state and transitions. Wraps `player.ml` validation with per-player first-move tracking.
 
 ## Key Types (player.mli)
 

@@ -1,4 +1,4 @@
-.PHONY: play build test clean
+.PHONY: play build test clean gui
 
 play:
 	dune exec ./main.exe
@@ -8,6 +8,9 @@ build:
 
 test:
 	dune test
+
+gui:
+	dune exec ./gui_main.exe
 
 clean:
 	dune clean
